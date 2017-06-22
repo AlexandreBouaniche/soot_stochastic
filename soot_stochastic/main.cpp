@@ -9,9 +9,11 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <fstream>
 
 #include "mixing.hpp"
 #include "tools.hpp"
+#include "streams.hpp"
 
 using namespace std;
 
@@ -20,11 +22,12 @@ int main()
     cout << "Soot Stochastic" << endl << endl;
     
     //user inputs
-    int Np0 = 10;
-    int Np1 = 10;
+    string pathProject("/Users/bouaniche/Xcode_projects/soot_stochastic");
+    int Np0 = 100;
+    int Np1 = 100;
     double c0 = 0.0;
     double c1 = 1.0;
-    int it = 50;
+    int it = 100;
     
     // time and mixing parameters
     double deltaT(1);
@@ -34,17 +37,19 @@ int main()
     vector<double> allParticles;
     allParticles = initParticles(Np0, Np1, c0, c1);
      
-    // advancing t, mixing and printing
+    // advancing t, mixing, printing and writing an output
     double t(0);
     int j;
+    writeFile(pathProject, "/outputs/trajectory.dat", allParticles);
     for(j=0; j<it; j++ )
     {
         t = t+deltaT;
         mix(allParticles, deltaT, tau, t);
         printParticles(allParticles, t);
+        updateFile(pathProject, "/outputs/trajectory.dat", t, allParticles);
+        
     }
     
     
-     
     return 0;
 }
