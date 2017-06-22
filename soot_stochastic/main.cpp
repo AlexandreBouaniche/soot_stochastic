@@ -24,7 +24,7 @@ int main()
     int Np1 = 10;
     double c0 = 0.0;
     double c1 = 1.0;
-    int it = 100;
+    int it = 50;
     
     // time and mixing parameters
     double deltaT(1);
@@ -37,27 +37,11 @@ int main()
     // advancing t, mixing and printing
     double t(0);
     int j;
-    
-    /*
-    int int1(10);
-    int int2(19);
-    */
-    
     for(j=0; j<it; j++ )
     {
         t = t+deltaT;
         mix(allParticles, deltaT, tau, t);
         printParticles(allParticles, t);
-        
-        /*
-        vector<int> randomL;
-        randomL = randomList(t,int1,int2);
-        int i;
-        for(i=0; i<randomL.size(); i++)
-        {
-            cout << "random int # " << i << " = " << randomL[i] << endl;
-        }
-         */
     }
     
     

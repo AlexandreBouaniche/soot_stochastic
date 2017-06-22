@@ -47,7 +47,13 @@ void mix(std::vector<double>& allParticles, double deltaT, double tau, double t)
     double particlesPicked = deltaT/tau*Nptot;   // number of picked particles depends on tau
     int intPicked = floor(particlesPicked);      // number of picked particles must be an integer
     int nbPicked = intPicked - (intPicked%2);      // number of picked particles must be an even number
-    int maxVal = allParticles.size();
+    int maxVal(0);
+    int k;
+    for(k=0; k<allParticles.size(); k++)
+    {
+        maxVal++;                                // compteur maxVal = allParticles.size
+    }
+    
     maxVal = maxVal - 1;
     vector<int> randomL;
     randomL = randomList(t,nbPicked, maxVal);
@@ -61,19 +67,6 @@ void mix(std::vector<double>& allParticles, double deltaT, double tau, double t)
         allParticles[rank1] = newVal;
         allParticles[rank2] = newVal;
     }
-    
-    /*
-    for(i=0; i<mixEvIt; i++)
-    {
-        double newParticle;
-        newParticle = (allParticles[i] + allParticles[Nptot-i-1]) / 2;
-        allParticles[i] = newParticle;
-        allParticles[Nptot-i-1] = newParticle;
-        cout << "mix event number " << i << " new value: " << newParticle << endl;
-    }
-     */
-    
-    
 }
 
 
