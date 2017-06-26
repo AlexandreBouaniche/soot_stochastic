@@ -12,12 +12,12 @@
 #include <vector>
 
 
-std::vector<double> initParticles(int Np0, int Np1, double c0, double c1);
+std::vector<std::vector<double> > initParticles(int Np0, int Np1, double c0, double c1, double l0, double l1);
 
-void mix(std::vector<double>& allParticles, double deltaT, double tau, double t);
+void mix(std::vector<std::vector<double> >& allParticles, double deltaT, double tau, double t);
 
 
-void printParticles(std::vector<double> const& allParticles, double t);
+void printParticles(std::vector<std::vector<double> > const& allParticles, double t);
 
 #include <stdio.h>
 

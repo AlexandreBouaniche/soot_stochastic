@@ -11,6 +11,7 @@
 		EC70368F1EFBA90B0043132D /* mixing.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EC70368D1EFBA90B0043132D /* mixing.cpp */; };
 		EC7036921EFBEC3F0043132D /* tools.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EC7036901EFBEC3F0043132D /* tools.cpp */; };
 		ECE501D81EFC13DB006964B7 /* streams.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ECE501D61EFC13DB006964B7 /* streams.cpp */; };
+		ECE501DB1EFD607B006964B7 /* nucleation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ECE501D91EFD607B006964B7 /* nucleation.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -34,6 +35,8 @@
 		EC7036911EFBEC3F0043132D /* tools.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = tools.hpp; sourceTree = "<group>"; };
 		ECE501D61EFC13DB006964B7 /* streams.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = streams.cpp; sourceTree = "<group>"; };
 		ECE501D71EFC13DB006964B7 /* streams.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = streams.hpp; sourceTree = "<group>"; };
+		ECE501D91EFD607B006964B7 /* nucleation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nucleation.cpp; sourceTree = "<group>"; };
+		ECE501DA1EFD607B006964B7 /* nucleation.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = nucleation.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -68,6 +71,8 @@
 			children = (
 				EC7036861EFBA6B00043132D /* main.cpp */,
 				ECE501D61EFC13DB006964B7 /* streams.cpp */,
+				ECE501D91EFD607B006964B7 /* nucleation.cpp */,
+				ECE501DA1EFD607B006964B7 /* nucleation.hpp */,
 				ECE501D71EFC13DB006964B7 /* streams.hpp */,
 				EC7036901EFBEC3F0043132D /* tools.cpp */,
 				EC7036911EFBEC3F0043132D /* tools.hpp */,
@@ -135,6 +140,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				EC7036871EFBA6B00043132D /* main.cpp in Sources */,
+				ECE501DB1EFD607B006964B7 /* nucleation.cpp in Sources */,
 				EC70368F1EFBA90B0043132D /* mixing.cpp in Sources */,
 				EC7036921EFBEC3F0043132D /* tools.cpp in Sources */,
 				ECE501D81EFC13DB006964B7 /* streams.cpp in Sources */,

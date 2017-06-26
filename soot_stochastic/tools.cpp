@@ -21,11 +21,11 @@
 using namespace std;
 
 /*
- Picks random integer values. Returns a vector of size nbSorted of random integers with values between 0 and maxVal INCLUDED. 
+ Picks random integer values. Returns a vector of size nbPicked of random integers with values between 0 and maxVal INCLUDED.
  
  DEPENDS ON t!! For the same t, picks the same list. (Random within the list but two identical lists if calculated during the same run without dependency on t)
  
- nbPicked must be an EVEN number
+ nbPicked must be an EVEN number for mixing
  
  */
 vector<int> randomList(double t, int nbPicked, int maxVal)
@@ -41,3 +41,18 @@ vector<int> randomList(double t, int nbPicked, int maxVal)
     }
     return randomList;
 }
+
+
+double maxColi(vector<vector<double> > const& matrix, int col)
+{
+    double max(0);
+    max = matrix[0][col];
+    int i(0);
+    for(i=0; i<matrix.size(); i++)
+    {
+        if(max<matrix[i][col])
+            max = matrix[i][col];
+    }
+    return max;
+}
+

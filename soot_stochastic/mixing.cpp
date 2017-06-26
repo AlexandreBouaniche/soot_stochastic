@@ -17,24 +17,32 @@
 using namespace std;
 
 
-vector<double> initParticles(int Np0, int Np1, double c0, double c1)
+vector<vector<double> > initParticles(int Np0, int Np1, double c0, double c1, double l0, double l1)
 {
-    vector<double> allParticles;
+    vector<vector<double> > allParticles;
     int i(0);
+    vector<double> cL0;
+    cL0.push_back(c0);
+    cL0.push_back(l0);
+    
+    vector<double> cL1;
+    cL1.push_back(c1);
+    cL1.push_back(l1);
+    
     for(i=0; i< Np0; i++)
     {
-        allParticles.push_back(c0);
+        allParticles.push_back(cL0);
     }
     int j(0);
     for(j=0; j< Np1; j++)
     {
-        allParticles.push_back(c1);
+        allParticles.push_back(cL1);
     }
     return allParticles;
 }
 
 
-void mix(std::vector<double>& allParticles, double deltaT, double tau, double t)
+void mix(vector<vector<double> >& allParticles, double deltaT, double tau, double t)
 {
     int Nptot(0);
     int j(0);
@@ -63,20 +71,20 @@ void mix(std::vector<double>& allParticles, double deltaT, double tau, double t)
     {
         int rank1 = randomL[i];
         int rank2 = randomL[i+1];
-        double newVal = (allParticles[rank1] + allParticles[rank2]) /2;
-        allParticles[rank1] = newVal;
-        allParticles[rank2] = newVal;
+        double newVal = (allParticles[rank1][0] + allParticles[rank2][0]) /2;
+        allParticles[rank1][0] = newVal;
+        allParticles[rank2][0] = newVal;
     }
 }
 
 
-void printParticles(std::vector<double> const& allParticles, double t)
+void printParticles(vector<vector<double> > const& allParticles, double t)
 {
     cout << "t = " << t << endl << endl;
     int i;
     for(i=0; i<allParticles.size();i++)
     {
-        cout << allParticles[i] << "   ";
+        cout << "c= " << allParticles[i][0] << "  l= " << allParticles[i][1] << "   ";
     }
     cout << endl <<endl;
 }

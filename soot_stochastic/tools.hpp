@@ -13,6 +13,8 @@
 
 std::vector<int> randomList(double t, int nbPicked, int maxVal);
 
+double maxColi(std::vector<std::vector<double> > const& matrix, int col);
+
 #include <stdio.h>
 
 #endif /* tools_hpp */

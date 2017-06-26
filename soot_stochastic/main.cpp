@@ -14,6 +14,7 @@
 #include "mixing.hpp"
 #include "tools.hpp"
 #include "streams.hpp"
+#include "nucleation.hpp"
 
 using namespace std;
 
@@ -23,31 +24,53 @@ int main()
     
     //user inputs
     string pathProject("/Users/bouaniche/Xcode_projects/soot_stochastic");
-    int Np0 = 100;
-    int Np1 = 100;
-    double c0 = 0.0;
-    double c1 = 1.0;
-    int it = 100;
+    int Np0 = 100;                // initial stochastic particles at inlet0
+    int Np1 = 100;                // initial stochastic particles at inlet1
+    double c0 = 0.0;              // initial progress variable at inlet0
+    double c1 = 1.0;              // initial progress variable at inlet1
+    double l0 = 1.0;              // initial soot size at inlet0
+    double l1 = 50.0;             // initial soot size at inlet1
+    double lp0 = 1.0;             // nascent particles size
+    int it = 10;                 // number of iteration
+    double cSensitivity(0.05);    // distance between two c bins for graphic representation of P(c)
+    double h = 3.0e5;               // constant used for source term of nucleation
+    double nT0 = 1e5;             // initial total soot number density
+    double deltaL = 0.5;           // size of I_\ell^* bins for Lpdf
     
     // time and mixing parameters
-    double deltaT(1);
-    double tau(5);
+    double deltaT(1);             // iteration step time
+    double tau(5);                // characteristic mixing time
     
     // initiate particles
-    vector<double> allParticles;
-    allParticles = initParticles(Np0, Np1, c0, c1);
+    vector<vector<double> > allParticles;
+    allParticles = initParticles(Np0, Np1, c0, c1, l0, l1);
      
-    // advancing t, mixing, printing and writing an output
+    // Initial state. write in output files
     double t(0);
+    double nT = nT0;
+    writeCpdf(pathProject, "/outputs/Cpdf.dat", allParticles, cSensitivity);
+    writeCpdft(pathProject, "/outputs/Cpdf_t/Cpdf", t, allParticles, cSensitivity);
+    updateCpdf(pathProject, "/outputs/Cpdf.dat", t, allParticles, cSensitivity);
+    
+    // advancing t, mixing (Cpdf), source terms, advancing nT and Lpdf
     int j;
-    writeFile(pathProject, "/outputs/trajectory.dat", allParticles);
     for(j=0; j<it; j++ )
     {
-        t = t+deltaT;
-        mix(allParticles, deltaT, tau, t);
-        printParticles(allParticles, t);
-        updateFile(pathProject, "/outputs/trajectory.dat", t, allParticles);
+        t = t+deltaT;                                   // advancing t
+        mix(allParticles, deltaT, tau, t);              // advancing Cpdf = mixing
+        double dotH = nuclSource(allParticles, h);      // calculation of nucleation source term
+        nT = nT + dotH;                                 // advancing nT
+                                                        // advancing Lpdf = reallocating soot particles
         
+        cout << "nT = " << nT << "   " << "dotH = " << dotH << endl;
+        
+        LpdfAlphaH(allParticles, nT, dotH, deltaL, lp0, t);
+        
+        printParticles(allParticles, t);
+        updateCpdf(pathProject, "/outputs/Cpdf.dat", t, allParticles, cSensitivity);
+        writeCpdft(pathProject, "/outputs/Cpdf_t/Cpdf", t, allParticles, cSensitivity);
+        
+        // advancing nT, source terms...
     }
     
     
