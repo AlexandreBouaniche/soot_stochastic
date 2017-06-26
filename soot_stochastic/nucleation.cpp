@@ -29,7 +29,7 @@ double nuclSource(vector<vector< double> > const& allParticles, double h)
     return dotH;
 }
 
-void LpdfAlphaH(vector<vector< double> >& allParticles, double nT, double dotH, double deltaL, double lp0, double t)
+void LpdfAlphaH(vector<vector< double> >& allParticles, double nT, double dotH, double lp0, double t)
 {
     double alphaH = dotH / nT;
     int npL0(0);                             // declaration: number of particles of size l0
@@ -43,8 +43,8 @@ void LpdfAlphaH(vector<vector< double> >& allParticles, double nT, double dotH, 
     {
         Np++;                                // count of Np
         li = allParticles[i][1];
-        if(li < (lp0+deltaL))                 // count of n(lo, t)
-            npL0++;
+        if(li < (lp0*1.5))                 // lp0 * 1.5  represents the superior limit of the bin. geometric logic.
+            npL0++;                        // count of n(lo, t)
     }
     
     int npLstar;
@@ -58,7 +58,7 @@ void LpdfAlphaH(vector<vector< double> >& allParticles, double nT, double dotH, 
     int itemp(0);                            // itemp: int to count size of tempLstar for randomList function argument after
     for(j=0; j<allParticles.size(); j++)
     {
-        if(allParticles[j][1]>=(lp0+deltaL))
+        if(allParticles[j][1]>=(lp0*1.5))
         {
             // temporary vector to separate partcles of size > (l0+deltaL)   putting rank in the vector in the first column and size in the second column
             tempLstar.push_back(vector<double>(2,0));

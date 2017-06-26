@@ -13,7 +13,7 @@
 
 double nuclSource(std::vector<std::vector<double> > const& allParticles, double h);
 
-void LpdfAlphaH(std::vector<std::vector< double> >& allParticles, double nT, double dotH, double deltaL, double lp0, double t);
+void LpdfAlphaH(std::vector<std::vector< double> >& allParticles, double nT, double dotH, double lp0, double t);
 
 #include <stdio.h>
 

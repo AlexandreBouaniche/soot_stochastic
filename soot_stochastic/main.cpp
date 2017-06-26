@@ -15,6 +15,7 @@
 #include "tools.hpp"
 #include "streams.hpp"
 #include "nucleation.hpp"
+#include "agglomeration.hpp"
 
 using namespace std;
 
@@ -37,12 +38,12 @@ int main()
     double pdfGrid(0.01);    // distance between two c bins for graphic representation of P(c)
     double LpdfGrid(1);      // distance between two l bins for graphic representation of P(l)
     double maxValC(1);       // maximum value of c considered for graphic representation of P(l)
-    double maxValL(55);      // maximum value of l considered for graphic representation of P(l)
+    double maxValL(128);      // maximum value of l considered for graphic representation of P(l)
     
     
-    double h = 1.0e3;               // constant used for source term of nucleation
+    double h = 1.0e3;             // constant used for source term of nucleation
+    double a = 1e3;                 // constant used for source term of agglomeration
     double nT0 = 1e5;             // initial total soot number density
-    double deltaL = 0.5;           // size of I_\ell^* bins for Lpdf
     
     // time and mixing parameters
     double deltaT(1);             // iteration step time
@@ -65,12 +66,13 @@ int main()
         t = t+deltaT;                                   // advancing t
         mix(allParticles, deltaT, tau, t);              // advancing Cpdf = mixing
         double dotH = nuclSource(allParticles, h);      // calculation of nucleation source term
-        nT = nT + dotH;                                 // advancing nT
+        double dotAt = geoAggloTotSource(allParticles, maxValL, lp0, a, nT);
+        nT = nT + dotH +dotAt;                                 // advancing nT
         
         cout << "t = " << t << endl;
-        cout << "nT = " << nT << "   " << "dotH = " << dotH << endl;
+        cout << "nT = " << nT << "   " << "dotH = " << dotH << "   dotAt = " << dotAt << endl;
         
-        LpdfAlphaH(allParticles, nT, dotH, deltaL, lp0, t);  // advancing Lpdf = reallocating soot particles
+        LpdfAlphaH(allParticles, nT, dotH, lp0, t);  // advancing Lpdf = reallocating soot particles
         
        // printParticles(allParticles, t);
         writePdft(pathProject, "/outputs/Cpdf_t/Cpdf", t, allParticles, pdfGrid, maxValC, 0);
