@@ -95,7 +95,7 @@ void writeCpdf(string pathProject, string pathTarget, vector<vector<double> > al
 }
 
 
-void writeCpdft(string pathProject, string pathTarget, int it, vector<vector<double> > allParticles, double cSensibility)
+void writePdft(string pathProject, string pathTarget, int it, vector<vector<double> > allParticles, double pdfGrid, double maxVal, int column)
 {
     string finalPath = pathProject.append(pathTarget);
     
@@ -113,11 +113,11 @@ void writeCpdft(string pathProject, string pathTarget, int it, vector<vector<dou
     {
         //cout << "stream OK" << endl;
         
-        stream1 << "#iteration number = " << it << " c bins vertically in column 1"<<endl;
+        stream1 << "#iteration number = " << it << " pdf bins vertically in column 1"<<endl;
         int j;
         double c(0.0);
         double cGrid;
-        cGrid = 1/cSensibility;
+        cGrid = maxVal/pdfGrid;
         int intGrid;
         double count(0);
         int i(0);
@@ -129,7 +129,7 @@ void writeCpdft(string pathProject, string pathTarget, int it, vector<vector<dou
             count = 0;
             for(i=0; i<allParticles.size(); i++)
             {
-                if((allParticles[i][0]>=(c-cSensibility/2))&(allParticles[i][0]<(c+cSensibility/2)))
+                if((allParticles[i][column]>=(c-pdfGrid/2))&(allParticles[i][column]<(c+pdfGrid/2)))
                 {
                     count++;
                 }
@@ -138,7 +138,7 @@ void writeCpdft(string pathProject, string pathTarget, int it, vector<vector<dou
             Pc = count/allParticles.size();
             stream1 << Pc << endl;
 
-            c = c+cSensibility;
+            c = c+pdfGrid;
         }
         stream1 << endl;
     }

@@ -20,7 +20,7 @@ void writeCpdf(std::string pathProject, std::string pathTarget, std::vector<std:
 
 void updateCpdf(std::string pathProject, std::string pathTarget, double t, std::vector<std::vector<double> > allParticles, double cSensibility);
 
-void writeCpdft(std::string pathProject, std::string pathTarget, int it, std::vector<std::vector<double> > allParticles, double cSensibility);
+void writePdft(std::string pathProject, std::string pathTarget, int it, std::vector<std::vector<double> > allParticles, double pdfGrid, double maxVal, int column);
 
 
 #include <stdio.h>

@@ -24,11 +24,8 @@ double nuclSource(vector<vector< double> > const& allParticles, double h)
     {
         double ci(0);
         ci = allParticles[i][0];
-        //cout << "ci = " << ci << "   ";
         dotH = dotH + h * ci * pow((1-ci),5);
-        //cout << "dotHi = " << dotH << "   ";
     }
-    //cout << endl;
     return dotH;
 }
 
@@ -40,8 +37,7 @@ void LpdfAlphaH(vector<vector< double> >& allParticles, double nT, double dotH, 
     int i;
     double li(0);
     
-    cout << "alphaH = " << alphaH << endl;
-    
+    cout << "alphaH = " << alphaH << endl<<endl;
     
     for(i=0; i< allParticles.size(); i++)
     {
@@ -51,16 +47,11 @@ void LpdfAlphaH(vector<vector< double> >& allParticles, double nT, double dotH, 
             npL0++;
     }
     
-    //cout << "npL0 = " << npL0 << endl;
-    
     int npLstar;
     npLstar = Np - npL0;                      // expression for n(l*) for l* != l0
     
-    //cout << "npL* = " << npLstar << endl;
-    
     int nbToPick(0);
     nbToPick = floor(npLstar*alphaH);         // number of particles to switch from l* to l0
-    //cout << "nbToPick = " << nbToPick << endl << endl;
     
     vector<vector<double> > tempLstar;
     int j;
