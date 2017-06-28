@@ -27,10 +27,7 @@ double dotAlStar(double lStar, std::vector<std::vector< double> > const& allPart
 
 std::vector<double> allAlphaCoef(std::vector<std::vector< double> > const& allParticles, double lp0, double a, double nT, double h, double deltaL, std::vector<std::vector< double> > const& lNplNvl);
 
-/*
-void allAlphaPdf(std::vector<double> alphaVector, std::vector<std::vector< double> >& allParticles, double maxValL, double lp0, double t, double h, double a, double nT,std::vector<std::vector< double> > const& lNplNvl);*/
-
-void advancePdf(std::vector<double>const& alphaVector, std::vector<std::vector< double> >& allParticles, std::vector<std::vector< double> > const& lNplNvl, double h, double nT, double a, double deltaL, double t);
+void advancePdf(std::vector<double>const& alphaVector, std::vector<std::vector< double> >& allParticles, std::vector<std::vector< double> > & lNplNvl, double h, double nT, double a, double deltaL, double t);
 
 
 #include <stdio.h>

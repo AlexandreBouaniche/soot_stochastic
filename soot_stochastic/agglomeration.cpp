@@ -209,114 +209,20 @@ vector<double> allAlphaCoef(vector<vector< double> > const& allParticles, double
     return alphaVector;
 }
 
-/*
 
-void allAlphaPdf(vector<double> alphaVector, vector<vector< double> >& allParticles, double maxValL, double lp0, double t, double h, double a, double nT, double deltaL, vector<vector< double> > const& lNplNvl)
+
+void advancePdf(vector<double>const& alphaVector, vector<vector< double> >& allParticles, vector<vector< double> > & lNplNvl, double h, double nT, double a, double deltaL, double t)
 {
-    
-    double dotH(0);
-    double dotAt(0);
-    
-    dotH = nuclSource(allParticles, h);
-    dotAt = aggloTotSource(allParticles, lNplNvl, a);
-    double alphaH = dotH/nT;
-    double alphaAt = dotAt+nT;
-    
- 
-    double li = lp0;
-    vector<double> liVector;
-    while (li<=maxValL)
-    {
-        liVector.push_back(li);
-        li = li*2;
-    }
- 
-    
-    vector<int> particlesToReallocate;
-    vector<double> ranksVectorLi;
-    int nbToPick(0);
-    double toPick(0);
-    
+    //count of Np
+    int Np(0);
     int i(0);
-    for(i=0; i<lNplNvl.size(); i++)
+    for(i=0; i<allParticles.size(); i++)
     {
-        double l1 = lNplNvl[i][0];
-        
-        toPick = (alphaH + alphaAt)*npLstar(l1, allParticles, deltaL);
-        nbToPick = floor(toPick);             // number of particles to pick from np(l*) to put in the vector to reallocate
-        
-        int j=0;
-    
-        for(j=0; j<allParticles.size(); j++)
-        {
-            if ((allParticles[i][1]>=(l1*0.75)) & (allParticles[i][1] < (l1*1.5)))
-            {
-                ranksVectorLi.push_back(allParticles[i][0]);        // vector with ranks of particles of size li
-            }
-        }
-        int npl1 = lNplNvl[i][1];
-        
-        vector<int> randomL = randomList(t+l1, nbToPick, npl1);  // countLi = ranksVectorLi.size()
-        
-        j=0;
-        for(j=0; j<randomL.size(); j++)
-        {
-            int rankInLi(0);
-            rankInLi = randomL[j];
-            int rankGeneral(0);
-            rankGeneral = ranksVectorLi[rankInLi];
-            particlesToReallocate.push_back(rankGeneral);  // we have now a vector with all the ranks of the particles to reallocate
-        }
-        
-    }
-    
-    i=0;
-    int countNp(0);
-    for (i=0; i<allParticles.size(); i++)
-    {
-        countNp++;                                   // count Np
+        Np++;
     }
     
     
-    i=0;
-    int countReallocate(0);
-    for (i=0; i<particlesToReallocate.size(); i++)
-    {
-        countReallocate++;                                   // count Np
-    }
-
-    
-    vector<double> valuesToSet;
-    i=0;
-    for(i=0; i<lNplNvl.size(); i++)
-    {
-        toPick = alphaVector[i] * countNp;
-        nbToPick = floor(toPick);
-        // the particles in the vector to be reallocated were picked randomly. but then to allocate new values we don't need to pick randomly.
-        double li(0);
-        li = lNplNvl[i][0];
-        int k(0);
-        for(k=0; k< nbToPick; k++)
-        {
-            valuesToSet.push_back(li);   // a vector with the values of size we want to set
-        }
-        
-    }
-    
-    i=0;
-    int rankToSet(0);
-    for (i=0; i<particlesToReallocate.size(); i++)
-    {
-        rankToSet = particlesToReallocate[i];
-       // cout << "rankToSet = " << rankToSet << "   ";
-      //  cout << "valueToSet = " << valuesToSet[i] << "   ";
-        
-     //   allParticles[rankToSet][1] = valuesToSet[i];      // resetting the value of li of the picked particles
-    }
-}*/
-
-void advancePdf(vector<double>const& alphaVector, vector<vector< double> >& allParticles, vector<vector< double> > const& lNplNvl, double h, double nT, double a, double deltaL, double t)
-{
+    // calculation of alphaH and alphaAt which are not in alphaVector. All the alphaL* are in alphaVector
     double dotH(0);
     double dotAt(0);
     
@@ -324,45 +230,35 @@ void advancePdf(vector<double>const& alphaVector, vector<vector< double> >& allP
     dotAt = aggloTotSource(allParticles, lNplNvl, a);
     double alphaH = dotH/nT;
     double alphaAt = dotAt/nT;
+    double alphaHplusAt = alphaH + alphaAt;
     
-    //double alphaH = 0.1;        //for testing
-    //double alphaAt = 0.1;       //for testing
     
-    vector<vector<double> > lnbToReallocate;
-    vector<vector<int> > rankLiAndNbToPick;     // building vectors with info of rankLi and nbToPick
-    int i(0);
+    // calculation of np(l*, t+dt)   (called nplDt here) and storing it in lNplNvl. Storing also the Delta np = np(l*,t+dt) - np(l*,t)
+    i = 0;
+    
+    int deltaNplSum(0);
     for(i=0; i<lNplNvl.size(); i++)
     {
-        lnbToReallocate.push_back(vector<double>(2,0));
-        lnbToReallocate[i][0] = lNplNvl[i][0];
-        lnbToReallocate[i][1] = -(alphaH+alphaAt)*lNplNvl[i][1];
-        
-        rankLiAndNbToPick.push_back(vector<int>(2,0));
-        rankLiAndNbToPick[i][0] = i;
-        rankLiAndNbToPick[i][1] = floor(lnbToReallocate[i][1]);
+        double nplDt(0);
+        nplDt = lNplNvl[i][1] * (1 - alphaHplusAt) + alphaVector[i] * Np;
+        int roundednp2 = floor(nplDt);
+        int roundednp1 = floor(lNplNvl[i][1]);
+        lNplNvl[i].push_back(roundednp2);
+        int deltaNpl = roundednp2 - roundednp1;
+        lNplNvl[i].push_back(deltaNpl);
+        //cout << "np(l" << (i+1) << ",t+dt) = " << lNplNvl[i][3] << "   ";
+        //cout << "delta l" << (i+1) << " = " << lNplNvl[i][4] << "   ";
+        deltaNplSum = deltaNplSum + deltaNpl;
     }
+    cout << endl << "deltaNplSum = " << deltaNplSum << endl << endl;
     
     
-
-    cout << "l1 = " << lnbToReallocate[0][0] << "   ";
-    cout << "nbToPick1 = " << rankLiAndNbToPick[0][1] << "   ";
-    
-    cout << "l2 = " << lnbToReallocate[1][0] << "   ";
-    cout << "nbToPick2 = " << rankLiAndNbToPick[1][1] << "   ";
-    
-    cout << "l3 = " << lnbToReallocate[2][0] << "   ";
-    cout << "nbToPick3 = " << rankLiAndNbToPick[2][1] << "   ";
-    
-    cout << "l6 = " << lnbToReallocate[5][0] << "   ";
-    cout << "nbToPick6 = " << rankLiAndNbToPick[5][1] << "   ";
-    
-    cout << "l5 = " << lnbToReallocate[4][0] << "   ";
-    cout << "nbToPick5 = " << rankLiAndNbToPick[4][1] << "   ";
-    
+    // there is a rounding error. deltaNplSum should be equal to 0. we will use its value to correct the error during particles reallocation
     
     
     
     vector<int> ranksToReallocate;
+    vector<double> valuesToRealoc;
     int countRanksToRealoc(0);
     i=0;
     double li(0);
@@ -370,86 +266,81 @@ void advancePdf(vector<double>const& alphaVector, vector<vector< double> >& allP
     //for(i=0; i<1; i++)                 // for testing
     {
         li = lNplNvl[i][0];
-        vector<int> allPartLiRanks;        //vector of int: rank in allParticles of the particles of size li
-        int j(0);
-        for(j=0; j<allParticles.size(); j++)
+        int deltaNpli = lNplNvl[i][4];
+        if(deltaNpli<0)             // here only for li with deltaNpli < 0 (particles "consumed")
         {
-            if(allParticles[j][1]>=(li-deltaL/2) & allParticles[j][1]<(li+deltaL/2))
-               {
-                   allPartLiRanks.push_back(j);
-               }
+            vector<int> allPartLiRanks;        //vector of int: rank in allParticles of the particles of size li
+            int j(0);
+            for(j=0; j<allParticles.size(); j++)
+            {
+                if(allParticles[j][1]>=(li-deltaL/2) & allParticles[j][1]<(li+deltaL/2))
+                {
+                    allPartLiRanks.push_back(j);
+                }
+            }
+            vector<int> randomL = randomList(t, (-deltaNpli), lNplNvl[i][1]);  //lNplNvl[i][1] = np(li) = allPartLiRanks.size.  rankLiAndNbToPick[i][1] particles of size li are picked within the np(li) particles of size li.Their rank IN allPartLiRanks is stored in the vector randomL
+            
+            j=0;
+            for(j=0; j<randomL.size(); j++)            // then we have to "traduce" a rank in allPartLiRanks in a rank in allParticles
+            {
+                int rankToRe(0);
+                int picked(0);
+                picked = randomL[j];                     // picked is the rank in allPartLiRanks
+                rankToRe = allPartLiRanks[picked];       // "traducing" rank in allPartLiRanks in rankToRe which is a rank in allParticles as allPartLiRanks stores the ranks in allParticles for size li
+                ranksToReallocate.push_back(rankToRe);
+                countRanksToRealoc++;
+            }
         }
-        vector<int> randomL = randomList(t, rankLiAndNbToPick[i][1], lNplNvl[i][1]);  //lNplNvl[i][1] = np(li) = allPartLiRanks.size.  rankLiAndNbToPick[i][1] particles of size li are picked within the np(li) particles of size li.Their rank IN allPartLiRanks is stored in the vector randomL
-        
-        j=0;
-        for(j=0; j<randomL.size(); j++)            // then we have to "traduce" a rank in allPartLiRanks in a rank in allParticles
+        if(deltaNpli>0)
         {
-            int rankToRe(0);
-            int picked(0);
-            picked = randomL[j];                     // picked is the rank in allPartLiRanks
-            rankToRe = allPartLiRanks[picked];       // "traducing" rank in allPartLiRanks in rankToRe which is a rank in allParticles as allPartLiRanks stores the ranks in allParticles for size li
-            ranksToReallocate.push_back(rankToRe);
-            countRanksToRealoc++;
+            
+            int j=0;
+            for(j=0; j< deltaNpli; j++)
+            {
+                valuesToRealoc.push_back(li);
+            }
         }
     }
     
-    /*  //print testing ranksToReallocate -> ok
-    i=0;
-    for(i=0; i<ranksToReallocate.size(); i++)
-    {
-        cout << "rankToRe = " << ranksToReallocate[i] << "   ";
-        int rankPrint = ranksToReallocate[i];
-        double liPrint = allParticles[rankPrint][1];
-        cout << "li  = " << liPrint << "  ; ";
-    }
-     */
-    
-    //count of Np
-    int Np(0);
-    i=0;
-    for(i=0; i<allParticles.size(); i++)
-    {
-        Np++;
-    }
-    
-    vector<double> valuesToRealoc;
-    i=0;
-    for(i=0; i<lNplNvl.size(); i++)
-    {
-        double li = lNplNvl[i][0];
-        double alphaLi;
-        alphaLi = alphaVector[i];
-        double toReset(0);
-        toReset = Np*alphaLi;
-        int nbToReset = floor(toReset); // number of particles "received" by Li
-        
-        int j=0;
-        for(j=0; j<nbToReset; j++)
-        {
-            valuesToRealoc.push_back(li);  // filling vector valuesToRealoc with the right number of particles of size li
-        }
-    }
     
     
     //test vector valuesToRealoc  -> ok
     
     i=0;
-    int countValuesToReal(0);
+    int countValuesToRealoc(0);
     for(i=0; i<valuesToRealoc.size(); i++)
     {
-        countValuesToReal++;
+        countValuesToRealoc++;
     }
     
-    cout << "number of values to realoc = " << countValuesToReal;
+    cout << "number of values to realoc = " << countValuesToRealoc;
     cout << endl;
+    
+    
+    //rounding error correction ??
+    /*
+    if(deltaNplSum<0)
+    {
+        int posDeltaNplSum = -deltaNplSum;
+        int j = 0;
+        for(j=0; j<posDeltaNplSum; j++)
+        {
+            ranksToReallocate.pop_back();
+        }
+    }
+    
+    if(deltaNplSum>0)
+    {
+        
+    }
+     */
     
     
     
     // Now reallocating!
     i=0;
-    
-    int min = countValuesToReal;
-    if(countRanksToRealoc < countValuesToReal)
+    int min = countValuesToRealoc;              // due to rounding error
+    if(countRanksToRealoc < countValuesToRealoc)
         min = countRanksToRealoc;
     
     for(i=0; i<min; i++)
@@ -459,7 +350,7 @@ void advancePdf(vector<double>const& alphaVector, vector<vector< double> >& allP
         allParticles[rankParticle][1] = valuesToRealoc[i];
         
     }
-    cout << "number of particles reallocated = " << countRanksToRealoc << endl;  //test
+    cout << "number of ranks reallocated = " << countRanksToRealoc << endl;  //test
     
 }
 

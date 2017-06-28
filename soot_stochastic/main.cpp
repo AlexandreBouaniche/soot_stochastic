@@ -25,14 +25,14 @@ int main()
     
     //user inputs
     string pathProject("/Users/bouaniche/Xcode_projects/soot_stochastic");
-    int Np0 = 100;                // initial stochastic particles at inlet0
-    int Np1 = 100;                // initial stochastic particles at inlet1
+    int Np0 = 200;                // initial stochastic particles at inlet0
+    int Np1 = 200;                // initial stochastic particles at inlet1
     double c0 = 0.0;              // initial progress variable at inlet0
     double c1 = 1.0;              // initial progress variable at inlet1
     double l0 = 3.0;              // initial soot size at inlet0
     double l1 = 5.0;             // initial soot size at inlet1
     double lp0 = 1.0;             // nascent particles size
-    int it = 200;                 // number of iteration
+    int it = 50;                 // number of iteration
     
     
     double pdfGrid(0.01);    // distance between two c bins for graphic representation of P(c)
@@ -42,13 +42,13 @@ int main()
     double deltaL(1);        // spacing between two intervals Il*
     
     
-    double h = 1.0e5;             // constant used for source term of nucleation
-    double a = 1.0e5;                 // constant used for source term of agglomeration
-    double nT0 = 1e6;             // initial total soot number density
+    double h = 1.0e4;             // constant used for source term of nucleation
+    double a = 1.0e4;                 // constant used for source term of agglomeration
+    double nT0 = 2e6;             // initial total soot number density
     
     // time and mixing parameters
     double deltaT(1);             // iteration step time
-    double tau(20);                // characteristic mixing time
+    double tau(5);                // characteristic mixing time
     
     // initiate particles
     vector<vector<double> > allParticles;
@@ -82,63 +82,6 @@ int main()
         vector<double> alphaVector = allAlphaCoef(allParticles, lp0, a, nT, h, deltaL, lAndNpL);
         
         advancePdf(alphaVector, allParticles, lAndNpL, h, nT, a, deltaL, t);
-        
-        
-        
-        double dotAl1  = dotAlStar(1, allParticles, lAndNpL, a, deltaL, nT);
-        cout << "dotAl1 = " << dotAl1 << endl;
-        
-        double dotAl2  = dotAlStar(2, allParticles, lAndNpL, a, deltaL, nT);
-        cout << "dotAl2 = " << dotAl2 << endl;
-        
-        double dotAl3  = dotAlStar(3, allParticles, lAndNpL, a, deltaL, nT);
-        cout << "dotAl3 = " << dotAl3 << endl;
-        
-        double dotAl6  = dotAlStar(6, allParticles, lAndNpL, a, deltaL, nT);
-        cout << "dotAl6 = " << dotAl6 << endl;
-        
-        double dotAl5  = dotAlStar(5, allParticles, lAndNpL, a, deltaL, nT);
-        cout << "dotAl5 = " << dotAl5 << endl;
-        
-        double dotAl8  = dotAlStar(8, allParticles, lAndNpL, a, deltaL, nT);
-        cout << "dotAl8 = " << dotAl8 << endl;
-        
-        double dotAl10  = dotAlStar(10, allParticles, lAndNpL, a, deltaL, nT);
-        cout << "dotAl10 = " << dotAl10 << endl << endl;
-        
-        
-        
-        cout << "a1 = " << alphaVector[0] << "   ";
-        cout << "a2 = " << alphaVector[1] << "   ";
-        cout << "a3 = " << alphaVector[2] << "   ";
-        cout << "a6 = " << alphaVector[5] << "   ";
-        cout << "a5 = " << alphaVector[4] << "   ";
-        cout << "a8 = " << alphaVector[7] << "   ";
-        cout << "a10 = " << alphaVector[9] << "   ";
-        
-        //LpdfAlphaH(allParticles, nT, dotH, lp0, t);  // advancing Lpdf = reallocating soot particles
-        
-        /*
-        int i(0);
-        for(i=0; i<lAndNpL.size(); i++)
-        {
-            cout << "lAndNpL[" << i << "][0] = " << lAndNpL[i][0] << "   ";
-            cout << "lAndNpL[" << i << "][1] = " << lAndNpL[i][1] << "   ";
-            cout << "lAndNpL[" << i << "][2] = " << lAndNpL[i][2] << "   ";
-            cout << endl;
-        }
-         */
-        
-        /*
-        vector<int> randomListw = randomListWithoutDouble(t, 10, 9);
-        int i(0);
-        for(i=0; i<randomListw.size(); i++)
-        {
-            cout << "randomListw[" << i << "] = " << randomListw[i] << "   ";
-        }
-        cout << endl;
-        */
-        
         
         
         //allAlphaPdf(alphaVector, allParticles, maxValL, lp0, t, h, a, nT);

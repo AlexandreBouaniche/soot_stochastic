@@ -77,3 +77,26 @@ double maxColi(vector<vector<double> > const& matrix, int col)
     return max;
 }
 
+/*
+int rounding(double d)
+{
+    double d10 = d*10;
+    int dizaine = floor(d);
+    int dizaine10 = dizaine*10;
+    
+    int integer10 = floor(d10);
+    int reste = integer10%dizaine10;
+    
+    int roundedInt = floor(d);
+    
+    if(reste<5)
+    {
+        return roundedInt;
+    }
+    else
+    {
+        roundedInt = roundedInt+1;
+        return roundedInt;
+    }
+}
+ */
