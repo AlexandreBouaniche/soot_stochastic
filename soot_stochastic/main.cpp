@@ -25,30 +25,30 @@ int main()
     
     //user inputs
     string pathProject("/Users/bouaniche/Xcode_projects/soot_stochastic");
-    int Np0 = 200;                // initial stochastic particles at inlet0
-    int Np1 = 200;                // initial stochastic particles at inlet1
+    int Np0 = 5000;                // initial stochastic particles at inlet0
+    int Np1 = 5000;                // initial stochastic particles at inlet1
     double c0 = 0.0;              // initial progress variable at inlet0
     double c1 = 1.0;              // initial progress variable at inlet1
     double l0 = 3.0;              // initial soot size at inlet0
     double l1 = 5.0;             // initial soot size at inlet1
     double lp0 = 1.0;             // nascent particles size
-    int it = 50;                 // number of iteration
+    int it = 100;                 // number of iteration
     
     
-    double pdfGrid(0.01);    // distance between two c bins for graphic representation of P(c)
+    double pdfGrid(0.1);    // distance between two c bins for graphic representation of P(c)
     double LpdfGrid(1);      // distance between two l bins for graphic representation of P(l)
     double maxValC(1);       // maximum value of c considered for graphic representation of P(l)
-    double maxValL(100);     // maximum value of l considered for graphic representation of P(l)
+    double maxValL(30);     // maximum value of l considered for graphic representation of P(l)
     double deltaL(1);        // spacing between two intervals Il*
     
     
-    double h = 1.0e4;             // constant used for source term of nucleation
-    double a = 1.0e4;                 // constant used for source term of agglomeration
-    double nT0 = 2e6;             // initial total soot number density
+    double h = 1.0e3;             // constant used for source term of nucleation
+    double a = 1.0e3;                 // constant used for source term of agglomeration
+    double nT0 = 1e6;             // initial total soot number density
     
     // time and mixing parameters
     double deltaT(1);             // iteration step time
-    double tau(5);                // characteristic mixing time
+    double tau(10);                // characteristic mixing time
     
     // initiate particles
     vector<vector<double> > allParticles;
