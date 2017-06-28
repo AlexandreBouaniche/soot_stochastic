@@ -13,7 +13,11 @@
 
 std::vector<int> randomList(double t, int nbPicked, int maxVal);
 
+
+//std::vector<int> randomListWithoutDouble(double t, int nbPicked, int maxVal);
+
 double maxColi(std::vector<std::vector<double> > const& matrix, int col);
+
 
 #include <stdio.h>
 

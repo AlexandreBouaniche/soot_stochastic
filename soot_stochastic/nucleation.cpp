@@ -60,7 +60,7 @@ void LpdfAlphaH(vector<vector< double> >& allParticles, double nT, double dotH, 
     {
         if(allParticles[j][1]>=(lp0*1.5))
         {
-            // temporary vector to separate partcles of size > (l0+deltaL)   putting rank in the vector in the first column and size in the second column
+            // temporary vector to separate particles of size > (l0+deltaL)   putting rank in the vector in the first column and size in the second column
             tempLstar.push_back(vector<double>(2,0));
             tempLstar[itemp][0] = j;
             tempLstar[itemp][1] = allParticles[j][1];

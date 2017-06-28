@@ -18,6 +18,7 @@
 #include <cstdlib>
 #include <ctime>
 
+
 using namespace std;
 
 /*
@@ -41,6 +42,26 @@ vector<int> randomList(double t, int nbPicked, int maxVal)
     }
     return randomList;
 }
+
+/*
+vector<int> randomListWithoutDouble(double t, int nbPicked, int maxVal)
+{
+    int random_integer = 0;
+    vector<int> randomList;
+    srand(time(NULL)+t); // initialisation de rand
+    int i;
+    for(i=0; i<nbPicked; i++)
+    {
+        random_integer = rand()%(maxVal+1);
+        
+        while(isIntInRandomList(random_integer, randomList))
+            random_integer = rand()%(maxVal+1);
+        
+        randomList.push_back(random_integer);
+    }
+    return randomList;
+}
+*/
 
 
 double maxColi(vector<vector<double> > const& matrix, int col)

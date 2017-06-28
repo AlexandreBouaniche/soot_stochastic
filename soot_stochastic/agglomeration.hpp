@@ -11,13 +11,26 @@
 
 #include <vector>
 
-int geometricNpLstar(double lStar, std::vector<std::vector<double> > allParticles);
+std::vector<double> liVector(double lp0, double deltaL, double maxValL);
 
-double geometricNLstar(double lStar, std::vector<std::vector<double> > allParticles, double nT);
+int npLstar(double lStar, std::vector<std::vector<double> > allParticles, double deltaL);
+
+std::vector<std::vector<double> > liNpliNvli(std::vector<std::vector<double> > allParticles, std::vector<double> liVector, double deltaL, double nT);
+
+double nvLstar(double lStar, std::vector<std::vector<double> > allParticles, double nT, double deltaL);
 
 double beta(double l1, double l2, double c);   // should depend on T and Knudsen not on c
 
-double geoAggloTotSource(std::vector<std::vector< double> > const& allParticles, double maxValL, double lp0, double a, double nT);
+double aggloTotSource(std::vector<std::vector<double> > const& allParticles, std::vector<std::vector< double> > const& lNplNvl, double a);
+
+double dotAlStar(double lStar, std::vector<std::vector< double> > const& allParticles, std::vector<std::vector< double> > const& lNplNvl, double a, double deltaL, double nT);
+
+std::vector<double> allAlphaCoef(std::vector<std::vector< double> > const& allParticles, double lp0, double a, double nT, double h, double deltaL, std::vector<std::vector< double> > const& lNplNvl);
+
+/*
+void allAlphaPdf(std::vector<double> alphaVector, std::vector<std::vector< double> >& allParticles, double maxValL, double lp0, double t, double h, double a, double nT,std::vector<std::vector< double> > const& lNplNvl);*/
+
+void advancePdf(std::vector<double>const& alphaVector, std::vector<std::vector< double> >& allParticles, std::vector<std::vector< double> > const& lNplNvl, double h, double nT, double a, double deltaL, double t);
 
 
 #include <stdio.h>
