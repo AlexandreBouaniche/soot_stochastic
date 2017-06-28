@@ -84,7 +84,7 @@ void printParticles(vector<vector<double> > const& allParticles, double t)
     int i;
     for(i=0; i<allParticles.size();i++)
     {
-        cout << "c= " << allParticles[i][0] << "  l= " << allParticles[i][1] << "   ";
+        cout << /*"c= " << allParticles[i][0] << */"  l= " << allParticles[i][1] << "   ";
     }
     cout << endl <<endl;
 }

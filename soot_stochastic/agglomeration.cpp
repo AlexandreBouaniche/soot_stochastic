@@ -112,7 +112,9 @@ double beta(double l1, double l2)   // should depend on T and Knudsen not on c
     
     double betaCalc(1);
     betaCalc = K*pow((1/V1+1/V2),0.5)*pow((realL1+realL2),2);
-    return betaCalc;
+    //return betaCalc;
+    double betaTest =1e-11;
+    return betaTest;
 }
 
 
@@ -333,31 +335,42 @@ void advancePdf(vector<double>const& alphaVector, vector<vector< double> >& allP
     {
         lnbToReallocate.push_back(vector<double>(2,0));
         lnbToReallocate[i][0] = lNplNvl[i][0];
-        lnbToReallocate[i][1] = (alphaH+alphaAt)*lNplNvl[i][1];
+        lnbToReallocate[i][1] = -(alphaH+alphaAt)*lNplNvl[i][1];
         
         rankLiAndNbToPick.push_back(vector<int>(2,0));
         rankLiAndNbToPick[i][0] = i;
         rankLiAndNbToPick[i][1] = floor(lnbToReallocate[i][1]);
     }
     
-    /*
-    i=0;
-    for(i=0; i<lNplNvl.size(); i++)
-    {
-        cout << "rank li = " << rankLiAndNbToPick[i][0] << "   ";
-        cout << "li = " << lnbToReallocate[i][0] << "   ";
-        cout << "nbTo = " << rankLiAndNbToPick[i][1] << "   ";
-    }
-     */
     
-    vector<int> allPartLiRanks;
+
+    cout << "l1 = " << lnbToReallocate[0][0] << "   ";
+    cout << "nbToPick1 = " << rankLiAndNbToPick[0][1] << "   ";
+    
+    cout << "l2 = " << lnbToReallocate[1][0] << "   ";
+    cout << "nbToPick2 = " << rankLiAndNbToPick[1][1] << "   ";
+    
+    cout << "l3 = " << lnbToReallocate[2][0] << "   ";
+    cout << "nbToPick3 = " << rankLiAndNbToPick[2][1] << "   ";
+    
+    cout << "l6 = " << lnbToReallocate[5][0] << "   ";
+    cout << "nbToPick6 = " << rankLiAndNbToPick[5][1] << "   ";
+    
+    cout << "l5 = " << lnbToReallocate[4][0] << "   ";
+    cout << "nbToPick5 = " << rankLiAndNbToPick[4][1] << "   ";
+    
+    
+    
+    
     vector<int> ranksToReallocate;
+    int countRanksToRealoc(0);
     i=0;
     double li(0);
     for(i=0; i<lNplNvl.size(); i++)
     //for(i=0; i<1; i++)                 // for testing
     {
         li = lNplNvl[i][0];
+        vector<int> allPartLiRanks;        //vector of int: rank in allParticles of the particles of size li
         int j(0);
         for(j=0; j<allParticles.size(); j++)
         {
@@ -366,16 +379,17 @@ void advancePdf(vector<double>const& alphaVector, vector<vector< double> >& allP
                    allPartLiRanks.push_back(j);
                }
         }
-        vector<int> randomL = randomList(t, rankLiAndNbToPick[i][1], lNplNvl[i][1]);
+        vector<int> randomL = randomList(t, rankLiAndNbToPick[i][1], lNplNvl[i][1]);  //lNplNvl[i][1] = np(li) = allPartLiRanks.size.  rankLiAndNbToPick[i][1] particles of size li are picked within the np(li) particles of size li.Their rank IN allPartLiRanks is stored in the vector randomL
         
         j=0;
-        for(j=0; j<randomL.size(); j++)
+        for(j=0; j<randomL.size(); j++)            // then we have to "traduce" a rank in allPartLiRanks in a rank in allParticles
         {
             int rankToRe(0);
             int picked(0);
-            picked = randomL[j];
-            rankToRe = allPartLiRanks[picked];
+            picked = randomL[j];                     // picked is the rank in allPartLiRanks
+            rankToRe = allPartLiRanks[picked];       // "traducing" rank in allPartLiRanks in rankToRe which is a rank in allParticles as allPartLiRanks stores the ranks in allParticles for size li
             ranksToReallocate.push_back(rankToRe);
+            countRanksToRealoc++;
         }
     }
     
@@ -416,26 +430,36 @@ void advancePdf(vector<double>const& alphaVector, vector<vector< double> >& allP
         }
     }
     
-    /*
+    
     //test vector valuesToRealoc  -> ok
     
     i=0;
-    cout << "values to realoc  ";
+    int countValuesToReal(0);
     for(i=0; i<valuesToRealoc.size(); i++)
     {
-        cout << valuesToRealoc[i] << "   ";
+        countValuesToReal++;
     }
+    
+    cout << "number of values to realoc = " << countValuesToReal;
     cout << endl;
-     */
+    
     
     
     // Now reallocating!
     i=0;
-    for(i=0; i<ranksToReallocate.size(); i++)
+    
+    int min = countValuesToReal;
+    if(countRanksToRealoc < countValuesToReal)
+        min = countRanksToRealoc;
+    
+    for(i=0; i<min; i++)
     {
         int rankParticle(0);
         rankParticle = ranksToReallocate[i];
         allParticles[rankParticle][1] = valuesToRealoc[i];
+        
     }
+    cout << "number of particles reallocated = " << countRanksToRealoc << endl;  //test
+    
 }
 

@@ -32,19 +32,19 @@ int main()
     double l0 = 3.0;              // initial soot size at inlet0
     double l1 = 5.0;             // initial soot size at inlet1
     double lp0 = 1.0;             // nascent particles size
-    int it = 100;                 // number of iteration
+    int it = 200;                 // number of iteration
     
     
     double pdfGrid(0.01);    // distance between two c bins for graphic representation of P(c)
     double LpdfGrid(1);      // distance between two l bins for graphic representation of P(l)
     double maxValC(1);       // maximum value of c considered for graphic representation of P(l)
-    double maxValL(10);     // maximum value of l considered for graphic representation of P(l)
+    double maxValL(100);     // maximum value of l considered for graphic representation of P(l)
     double deltaL(1);        // spacing between two intervals Il*
     
     
-    double h = 1.0e4;             // constant used for source term of nucleation
+    double h = 1.0e5;             // constant used for source term of nucleation
     double a = 1.0e5;                 // constant used for source term of agglomeration
-    double nT0 = 1e4;             // initial total soot number density
+    double nT0 = 1e6;             // initial total soot number density
     
     // time and mixing parameters
     double deltaT(1);             // iteration step time
@@ -83,10 +83,38 @@ int main()
         
         advancePdf(alphaVector, allParticles, lAndNpL, h, nT, a, deltaL, t);
         
-        /*
-        double dotAl  = dotAlStar(10, allParticles, lAndNpL, a, deltaL, nT);
-        cout << "dotAl = " << dotAl << endl << endl;
-        */
+        
+        
+        double dotAl1  = dotAlStar(1, allParticles, lAndNpL, a, deltaL, nT);
+        cout << "dotAl1 = " << dotAl1 << endl;
+        
+        double dotAl2  = dotAlStar(2, allParticles, lAndNpL, a, deltaL, nT);
+        cout << "dotAl2 = " << dotAl2 << endl;
+        
+        double dotAl3  = dotAlStar(3, allParticles, lAndNpL, a, deltaL, nT);
+        cout << "dotAl3 = " << dotAl3 << endl;
+        
+        double dotAl6  = dotAlStar(6, allParticles, lAndNpL, a, deltaL, nT);
+        cout << "dotAl6 = " << dotAl6 << endl;
+        
+        double dotAl5  = dotAlStar(5, allParticles, lAndNpL, a, deltaL, nT);
+        cout << "dotAl5 = " << dotAl5 << endl;
+        
+        double dotAl8  = dotAlStar(8, allParticles, lAndNpL, a, deltaL, nT);
+        cout << "dotAl8 = " << dotAl8 << endl;
+        
+        double dotAl10  = dotAlStar(10, allParticles, lAndNpL, a, deltaL, nT);
+        cout << "dotAl10 = " << dotAl10 << endl << endl;
+        
+        
+        
+        cout << "a1 = " << alphaVector[0] << "   ";
+        cout << "a2 = " << alphaVector[1] << "   ";
+        cout << "a3 = " << alphaVector[2] << "   ";
+        cout << "a6 = " << alphaVector[5] << "   ";
+        cout << "a5 = " << alphaVector[4] << "   ";
+        cout << "a8 = " << alphaVector[7] << "   ";
+        cout << "a10 = " << alphaVector[9] << "   ";
         
         //LpdfAlphaH(allParticles, nT, dotH, lp0, t);  // advancing Lpdf = reallocating soot particles
         
@@ -115,7 +143,7 @@ int main()
         
         //allAlphaPdf(alphaVector, allParticles, maxValL, lp0, t, h, a, nT);
         
-       // printParticles(allParticles, t);
+        //printParticles(allParticles, t);
         writePdft(pathProject, "/outputs/Cpdf_t/Cpdf", t, allParticles, pdfGrid, maxValC, 0);
         writePdft(pathProject, "/outputs/Lpdf_t/Lpdf", t, allParticles, LpdfGrid, maxValL, 1);
     }
