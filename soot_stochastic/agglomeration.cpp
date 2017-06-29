@@ -112,9 +112,9 @@ double beta(double l1, double l2)   // should depend on T and Knudsen not on c
     
     double betaCalc(1);
     betaCalc = K*pow((1/V1+1/V2),0.5)*pow((realL1+realL2),2);
-    //return betaCalc;
-    double betaTest =1e-11;
-    return betaTest;
+    return betaCalc;
+    //double betaTest =1e-11;
+    //return betaTest;
 }
 
 

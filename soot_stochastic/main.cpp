@@ -29,22 +29,22 @@ int main()
     int Np1 = 5000;                // initial stochastic particles at inlet1
     double c0 = 0.0;              // initial progress variable at inlet0
     double c1 = 1.0;              // initial progress variable at inlet1
-    double l0 = 3.0;              // initial soot size at inlet0
-    double l1 = 5.0;             // initial soot size at inlet1
+    double l0 = 2.0;              // initial soot size at inlet0
+    double l1 = 3.0;             // initial soot size at inlet1
     double lp0 = 1.0;             // nascent particles size
-    int it = 100;                 // number of iteration
+    int it = 5000;                 // number of iteration
     
     
     double pdfGrid(0.1);    // distance between two c bins for graphic representation of P(c)
     double LpdfGrid(1);      // distance between two l bins for graphic representation of P(l)
     double maxValC(1);       // maximum value of c considered for graphic representation of P(l)
-    double maxValL(30);     // maximum value of l considered for graphic representation of P(l)
+    double maxValL(100);     // maximum value of l considered for graphic representation of P(l)
     double deltaL(1);        // spacing between two intervals Il*
     
     
     double h = 1.0e3;             // constant used for source term of nucleation
     double a = 1.0e3;                 // constant used for source term of agglomeration
-    double nT0 = 1e6;             // initial total soot number density
+    double nT0 = 1e7;             // initial total soot number density
     
     // time and mixing parameters
     double deltaT(1);             // iteration step time
