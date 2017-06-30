@@ -221,6 +221,14 @@ void advancePdf(vector<double>const& alphaVector, vector<vector< double> >& allP
         Np++;
     }
     
+    // count of li bins (=alphaVector.size() = lNplNvl.size()
+    i=0;
+    int countLiBins(0);
+    for(i=0; i<alphaVector.size(); i++)
+    {
+        countLiBins++;
+    }
+    
     
     // calculation of alphaH and alphaAt which are not in alphaVector. All the alphaL* are in alphaVector
     double dotH(0);
@@ -233,22 +241,25 @@ void advancePdf(vector<double>const& alphaVector, vector<vector< double> >& allP
     double alphaHplusAt = alphaH + alphaAt;
     
     
-    // calculation of np(l*, t+dt)   (called nplDt here) and storing it in lNplNvl. Storing also the Delta np = np(l*,t+dt) - np(l*,t)
-    i = 0;
+    // calculation of np(l*, t+dt)   (called nplDt here) and storing of the corresponding  Delta np = np(l*,t+dt) - np(l*,t) in a new vector: deltaNpInt. New vector because before we were storing integers in a vector of doubles (lNplNvl)
     
+    
+    vector<int> deltaNpInt;
+    
+    i = 0;
     int deltaNplSum(0);
     for(i=0; i<lNplNvl.size(); i++)
     {
         double nplDt(0);
-        nplDt = lNplNvl[i][1] * (1 - alphaHplusAt) + alphaVector[i] * Np;
+        nplDt = lNplNvl[i][1] * (1 - alphaHplusAt) + alphaVector[i] * Np;  //calculation of np(l*,t+dt)
+        
         int roundednp2 = floor(nplDt);
         int roundednp1 = floor(lNplNvl[i][1]);
-        lNplNvl[i].push_back(roundednp2);
         int deltaNpl = roundednp2 - roundednp1;
-        lNplNvl[i].push_back(deltaNpl);
-        //cout << "np(l" << (i+1) << ",t+dt) = " << lNplNvl[i][3] << "   ";
-        //cout << "delta l" << (i+1) << " = " << lNplNvl[i][4] << "   ";
-        deltaNplSum = deltaNplSum + deltaNpl;
+        
+        deltaNpInt.push_back(deltaNpl);                    //filling vector deltaNpInt with DeltaNp(l*) integer
+        
+        deltaNplSum = deltaNplSum + deltaNpl;              // In theory should be zero. with rounding errors not zero
     }
     cout << endl << "deltaNplSum = " << deltaNplSum << endl << endl;
     
@@ -260,25 +271,30 @@ void advancePdf(vector<double>const& alphaVector, vector<vector< double> >& allP
     vector<int> ranksToReallocate;
     vector<double> valuesToRealoc;
     int countRanksToRealoc(0);
+    
     i=0;
     double li(0);
     for(i=0; i<lNplNvl.size(); i++)
-    //for(i=0; i<1; i++)                 // for testing
     {
         li = lNplNvl[i][0];
-        int deltaNpli = lNplNvl[i][4];
+        int deltaNpli = deltaNpInt[i];
         if(deltaNpli<0)             // here only for li with deltaNpli < 0 (particles "consumed")
         {
             vector<int> allPartLiRanks;        //vector of int: rank in allParticles of the particles of size li
+            int countAllPartLi(0);
             int j(0);
             for(j=0; j<allParticles.size(); j++)
             {
                 if(allParticles[j][1]>=(li-deltaL/2) & allParticles[j][1]<(li+deltaL/2))
                 {
                     allPartLiRanks.push_back(j);
+                    countAllPartLi++;
                 }
             }
-            vector<int> randomL = randomList(t, (-deltaNpli), lNplNvl[i][1]);  //lNplNvl[i][1] = np(li) = allPartLiRanks.size.  rankLiAndNbToPick[i][1] particles of size li are picked within the np(li) particles of size li.Their rank IN allPartLiRanks is stored in the vector randomL
+            vector<int> randomL = randomList(t, (-deltaNpli), (countAllPartLi-1));
+            //countAllPartLi = np(li) (integer) = allPartLiRanks.size. We must take this value -1 because the ranks of the vector allPartLiRanks go from 0 to (countAllPartLi - 1) if we don't put -1 RandomL can pick a rank of allPartLiRanks that doesn't exist
+            
+            //rankLiAndNbToPick[i][1] particles of size li are picked within the np(li) particles of size li.Their rank IN allPartLiRanks is stored in the vector randomL
             
             j=0;
             for(j=0; j<randomL.size(); j++)            // then we have to "traduce" a rank in allPartLiRanks in a rank in allParticles
@@ -317,25 +333,6 @@ void advancePdf(vector<double>const& alphaVector, vector<vector< double> >& allP
     cout << endl;
     
     
-    //rounding error correction ??
-    /*
-    if(deltaNplSum<0)
-    {
-        int posDeltaNplSum = -deltaNplSum;
-        int j = 0;
-        for(j=0; j<posDeltaNplSum; j++)
-        {
-            ranksToReallocate.pop_back();
-        }
-    }
-    
-    if(deltaNplSum>0)
-    {
-        
-    }
-     */
-    
-    
     
     // Now reallocating!
     i=0;
@@ -347,6 +344,7 @@ void advancePdf(vector<double>const& alphaVector, vector<vector< double> >& allP
     {
         int rankParticle(0);
         rankParticle = ranksToReallocate[i];
+        cout << "particle at rank = " << rankParticle << " reset to l = " << valuesToRealoc[i] << "   ";
         allParticles[rankParticle][1] = valuesToRealoc[i];
         
     }

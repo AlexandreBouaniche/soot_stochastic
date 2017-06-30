@@ -32,19 +32,19 @@ int main()
     double l0 = 2.0;              // initial soot size at inlet0
     double l1 = 3.0;             // initial soot size at inlet1
     double lp0 = 1.0;             // nascent particles size
-    int it = 5000;                 // number of iteration
+    int it = 10000;                 // number of iteration
     
     
     double pdfGrid(0.1);    // distance between two c bins for graphic representation of P(c)
     double LpdfGrid(1);      // distance between two l bins for graphic representation of P(l)
     double maxValC(1);       // maximum value of c considered for graphic representation of P(l)
-    double maxValL(100);     // maximum value of l considered for graphic representation of P(l)
+    double maxValL(50);     // maximum value of l considered for graphic representation of P(l)
     double deltaL(1);        // spacing between two intervals Il*
     
     
-    double h = 1.0e3;             // constant used for source term of nucleation
-    double a = 1.0e3;                 // constant used for source term of agglomeration
-    double nT0 = 1e7;             // initial total soot number density
+    double h = 1.0e4;             // constant used for source term of nucleation
+    double a = 1.0;                 // constant used for source term of agglomeration
+    double nT0 = 1e10;             // initial total soot number density
     
     // time and mixing parameters
     double deltaT(1);             // iteration step time
@@ -82,9 +82,6 @@ int main()
         vector<double> alphaVector = allAlphaCoef(allParticles, lp0, a, nT, h, deltaL, lAndNpL);
         
         advancePdf(alphaVector, allParticles, lAndNpL, h, nT, a, deltaL, t);
-        
-        
-        //allAlphaPdf(alphaVector, allParticles, maxValL, lp0, t, h, a, nT);
         
         //printParticles(allParticles, t);
         writePdft(pathProject, "/outputs/Cpdf_t/Cpdf", t, allParticles, pdfGrid, maxValC, 0);
