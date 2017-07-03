@@ -261,7 +261,7 @@ void advancePdf(vector<double>const& alphaVector, vector<vector< double> >& allP
         
         deltaNplSum = deltaNplSum + deltaNpl;              // In theory should be zero. with rounding errors not zero
     }
-    cout << endl << "deltaNplSum = " << deltaNplSum << endl << endl;
+    cout << endl << "deltaNplSum = " << deltaNplSum << endl;
     
     
     // there is a rounding error. deltaNplSum should be equal to 0. we will use its value to correct the error during particles reallocation
@@ -329,7 +329,7 @@ void advancePdf(vector<double>const& alphaVector, vector<vector< double> >& allP
         countValuesToRealoc++;
     }
     
-    cout << "number of values to realoc = " << countValuesToRealoc;
+    cout << "number of values to set = " << countValuesToRealoc;
     cout << endl;
     
     
@@ -344,11 +344,10 @@ void advancePdf(vector<double>const& alphaVector, vector<vector< double> >& allP
     {
         int rankParticle(0);
         rankParticle = ranksToReallocate[i];
-        cout << "particle at rank = " << rankParticle << " reset to l = " << valuesToRealoc[i] << "   ";
         allParticles[rankParticle][1] = valuesToRealoc[i];
         
     }
-    cout << "number of ranks reallocated = " << countRanksToRealoc << endl;  //test
+    cout << "number of ranks to reset = " << countRanksToRealoc << endl << endl;  //test
     
 }
 

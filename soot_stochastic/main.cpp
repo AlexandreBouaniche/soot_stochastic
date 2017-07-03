@@ -37,12 +37,13 @@ int main()
     
     double pdfGrid(0.1);    // distance between two c bins for graphic representation of P(c)
     double LpdfGrid(1);      // distance between two l bins for graphic representation of P(l)
-    double maxValC(1);       // maximum value of c considered for graphic representation of P(l)
+    double maxValC(1);       // maximum value of c considered for graphic representation of P(c)
     double maxValL(50);     // maximum value of l considered for graphic representation of P(l)
+    double minValC(0);      // minimum value of c for graphic representation of P(c)
     double deltaL(1);        // spacing between two intervals Il*
     
     
-    double h = 1.0e4;             // constant used for source term of nucleation
+    double h = 1.0e7;             // constant used for source term of nucleation
     double a = 1.0;                 // constant used for source term of agglomeration
     double nT0 = 1e10;             // initial total soot number density
     
@@ -57,8 +58,8 @@ int main()
     // Initial state. write in output files
     double t(0);
     double nT = nT0;
-    writePdft(pathProject, "/outputs/Cpdf_t/Cpdf", t, allParticles, pdfGrid, maxValC, 0);
-    writePdft(pathProject, "/outputs/Lpdf_t/Lpdf", t, allParticles, LpdfGrid, maxValL, 1);
+    writePdft(pathProject, "/outputs/Cpdf_t/Cpdf", t, allParticles, pdfGrid, minValC, maxValC, 0);
+    writePdft(pathProject, "/outputs/Lpdf_t/Lpdf", t, allParticles, LpdfGrid, lp0, maxValL, 1);
     
     // advancing t, mixing (Cpdf), source terms, advancing nT and Lpdf
     int j;
@@ -84,8 +85,8 @@ int main()
         advancePdf(alphaVector, allParticles, lAndNpL, h, nT, a, deltaL, t);
         
         //printParticles(allParticles, t);
-        writePdft(pathProject, "/outputs/Cpdf_t/Cpdf", t, allParticles, pdfGrid, maxValC, 0);
-        writePdft(pathProject, "/outputs/Lpdf_t/Lpdf", t, allParticles, LpdfGrid, maxValL, 1);
+        writePdft(pathProject, "/outputs/Cpdf_t/Cpdf", t, allParticles, pdfGrid, minValC, maxValC, 0);
+        writePdft(pathProject, "/outputs/Lpdf_t/Lpdf", t, allParticles, LpdfGrid, lp0, maxValL, 1);
     }
     
     

@@ -95,7 +95,7 @@ void writeCpdf(string pathProject, string pathTarget, vector<vector<double> > al
 }
 
 
-void writePdft(string pathProject, string pathTarget, int it, vector<vector<double> > allParticles, double pdfGrid, double maxVal, int column)
+void writePdft(string pathProject, string pathTarget, int it, vector<vector<double> > allParticles, double pdfGrid,double minVal, double maxVal, int column)
 {
     string finalPath = pathProject.append(pathTarget);
     
@@ -115,7 +115,7 @@ void writePdft(string pathProject, string pathTarget, int it, vector<vector<doub
         
         stream1 << "#iteration number = " << it << " pdf bins vertically in column 1"<<endl;
         int j;
-        double c(0.0);
+        double c=minVal;
         double cGrid;
         cGrid = maxVal/pdfGrid;
         int intGrid;
