@@ -12,13 +12,6 @@
 #include <vector>
 #include <string>
 
-void writeFile(std::string pathProject, std::string pathTarget, std::vector<std::vector<double> > allParticles);
-
-void updateFile(std::string pathProject, std::string pathTarget, double t, std::vector<std::vector<double> > allParticles);
-
-void writeCpdf(std::string pathProject, std::string pathTarget, std::vector<std::vector<double> > allParticles, double cSensibility);
-
-void updateCpdf(std::string pathProject, std::string pathTarget, double t, std::vector<std::vector<double> > allParticles, double cSensibility);
 
 void writePdft(std::string pathProject, std::string pathTarget, int it, std::vector<std::vector<double> > allParticles, double pdfGrid,double minVal, double maxVal, int column);
 
