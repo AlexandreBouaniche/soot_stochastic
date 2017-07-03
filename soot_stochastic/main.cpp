@@ -34,10 +34,10 @@ int main()
     double c1 = 1.0;              // initial progress variable at inlet1
     
     double lp0 = 1.0;             // nascent particles size
-    double l0 = 2.0;              // initial soot size at inlet0
-    double l1 = 3.0;             // initial soot size at inlet1
-    double l2 = 4.0;
-    double l3 = 5.0;
+    double l0 = 5.0;              // initial soot size at inlet0
+    double l1 = 6.0;             // initial soot size at inlet1
+    double l2 = 7.0;
+    double l3 = 8.0;
     
     int it = 10000;                 // number of iteration
     

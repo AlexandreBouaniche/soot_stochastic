@@ -17,31 +17,6 @@
 using namespace std;
 
 
-vector<vector<double> > initParticles(int Np0, int Np1, double c0, double c1, double l0, double l1)
-{
-    vector<vector<double> > allParticles;
-    int i(0);
-    vector<double> cL0;
-    cL0.push_back(c0);
-    cL0.push_back(l0);
-    
-    vector<double> cL1;
-    cL1.push_back(c1);
-    cL1.push_back(l1);
-    
-    for(i=0; i< Np0; i++)
-    {
-        allParticles.push_back(cL0);
-    }
-    int j(0);
-    for(j=0; j< Np1; j++)
-    {
-        allParticles.push_back(cL1);
-    }
-    return allParticles;
-}
-
-
 vector<vector<double> > initAllParticles(vector<vector<double> > initVector)
 {
     vector<vector<double> > allParticles;
