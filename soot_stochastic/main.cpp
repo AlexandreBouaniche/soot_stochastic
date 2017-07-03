@@ -16,6 +16,7 @@
 #include "streams.hpp"
 #include "nucleation.hpp"
 #include "agglomeration.hpp"
+#include "growth.hpp"
 
 using namespace std;
 
@@ -50,17 +51,19 @@ int main()
     double deltaL(1);        // spacing between two intervals Il*
     
     
-    double h = 1.0e5;             // constant used for source term of nucleation
-    double a = 1.0;                 // constant used for source term of agglomeration
+    // model parameters
+    double h = 0.0e6;             // constant used for source term of nucleation
+    double a = 0.0;                 // constant used for source term of agglomeration
     double nT0 = 1e10;             // initial total soot number density
+    double uniformG = 1.0;   // deltaG for uniformGrowth function
     
     // time and mixing parameters
     double deltaT(1);             // iteration step time
     double tau(10);                // characteristic mixing time
     
     // initiate particles
-    vector<vector<double> > allParticles;
-    vector<vector<double> > initVector;
+    vector<vector<double> > allParticles;  // col0: ci; col1: li
+    vector<vector<double> > initVector;    // col0: ci; col1: li; col2: Npi
     initVector.push_back(vector<double>(3,0));
     initVector[0][0] = c0;
     initVector[0][1] = l0;
@@ -94,11 +97,12 @@ int main()
     for(j=0; j<it; j++ )
     {
         t = t+deltaT;                                   // advancing t
-        mix(allParticles, deltaT, tau, t);              // advancing Cpdf = mixing
+        //mix(allParticles, deltaT, tau, t);              // advancing Cpdf = mixing
+        uniformGrowth(allParticles, uniformG);          // uniform growth
         
         vector<double> lVector = liVector(lp0, deltaL, maxValL);  // vector with all the li
         vector<vector<double> > lAndNpL;
-        lAndNpL = liNpliNvli(allParticles, lVector, deltaL, nT);  // vector with all the li; npli ; nvli
+        lAndNpL = liNpliNvli(allParticles, lVector, deltaL, nT);  // col0: li; col1: npli; col2: nvli
         
         double dotH = nuclSource(allParticles, h);                // calculation of nucleation source term
         double dotAt = aggloTotSource(allParticles, lAndNpL, a);  // calculation of total agglomeration source term
@@ -108,7 +112,7 @@ int main()
         cout << "nT = " << nT << "   " << "dotH = " << dotH << "   dotAt = " << dotAt << endl;
         
         
-        vector<double> alphaVector = allAlphaCoef(allParticles, lp0, a, nT, h, deltaL, lAndNpL);
+        vector<double> alphaVector = allAlphaCoef(allParticles, lp0, a, nT, h, deltaL, lAndNpL);  // coefs used for advancePdf
         
         advancePdf(alphaVector, allParticles, lAndNpL, h, nT, a, deltaL, t);
         
