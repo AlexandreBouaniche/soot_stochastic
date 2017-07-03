@@ -25,13 +25,20 @@ int main()
     
     //user inputs
     string pathProject("/Users/bouaniche/Xcode_projects/soot_stochastic");
-    int Np0 = 5000;                // initial stochastic particles at inlet0
-    int Np1 = 5000;                // initial stochastic particles at inlet1
+    int Np0 = 2500;                // initial stochastic particles at inlet0
+    int Np1 = 2500;                // initial stochastic particles at inlet1
+    int Np2 = 2500;
+    int Np3 = 2500;
+    
     double c0 = 0.0;              // initial progress variable at inlet0
     double c1 = 1.0;              // initial progress variable at inlet1
+    
+    double lp0 = 1.0;             // nascent particles size
     double l0 = 2.0;              // initial soot size at inlet0
     double l1 = 3.0;             // initial soot size at inlet1
-    double lp0 = 1.0;             // nascent particles size
+    double l2 = 4.0;
+    double l3 = 5.0;
+    
     int it = 10000;                 // number of iteration
     
     
@@ -43,7 +50,7 @@ int main()
     double deltaL(1);        // spacing between two intervals Il*
     
     
-    double h = 1.0e7;             // constant used for source term of nucleation
+    double h = 1.0e5;             // constant used for source term of nucleation
     double a = 1.0;                 // constant used for source term of agglomeration
     double nT0 = 1e10;             // initial total soot number density
     
@@ -53,7 +60,28 @@ int main()
     
     // initiate particles
     vector<vector<double> > allParticles;
-    allParticles = initParticles(Np0, Np1, c0, c1, l0, l1);
+    vector<vector<double> > initVector;
+    initVector.push_back(vector<double>(3,0));
+    initVector[0][0] = c0;
+    initVector[0][1] = l0;
+    initVector[0][2] = Np0;
+    
+    initVector.push_back(vector<double>(3,0));
+    initVector[1][0] = c1;
+    initVector[1][1] = l1;
+    initVector[1][2] = Np1;
+    
+    initVector.push_back(vector<double>(3,0));
+    initVector[2][0] = c0;
+    initVector[2][1] = l2;
+    initVector[2][2] = Np2;
+    
+    initVector.push_back(vector<double>(3,0));
+    initVector[3][0] = c1;
+    initVector[3][1] = l3;
+    initVector[3][2] = Np3;
+    
+    allParticles = initAllParticles(initVector);
      
     // Initial state. write in output files
     double t(0);

@@ -42,6 +42,32 @@ vector<vector<double> > initParticles(int Np0, int Np1, double c0, double c1, do
 }
 
 
+vector<vector<double> > initAllParticles(vector<vector<double> > initVector)
+{
+    vector<vector<double> > allParticles;
+    int i(0);
+    for(i=0; i<initVector.size(); i++)
+    {
+        double ci = initVector[i][0];
+        double li = initVector[i][1];
+        double dnpi = initVector[i][2];
+        int npi = floor(dnpi);
+        
+        vector<double> initPdfi;
+        initPdfi.push_back(ci);
+        initPdfi.push_back(li);
+        
+        int j(0);
+        for(j=0; j<npi; j++)
+        {
+            allParticles.push_back(initPdfi);
+        }
+    }
+    return allParticles;
+}
+
+
+
 void mix(vector<vector<double> >& allParticles, double deltaT, double tau, double t)
 {
     int Nptot(0);

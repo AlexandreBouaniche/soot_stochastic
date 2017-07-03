@@ -14,6 +14,8 @@
 
 std::vector<std::vector<double> > initParticles(int Np0, int Np1, double c0, double c1, double l0, double l1);
 
+std::vector<std::vector<double> > initAllParticles(std::vector<std::vector<double> > initVector);
+
 void mix(std::vector<std::vector<double> >& allParticles, double deltaT, double tau, double t);
 
 
