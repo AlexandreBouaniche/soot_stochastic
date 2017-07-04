@@ -52,12 +52,12 @@ int main()
     
     
     // model parameters
-    double h = 1.0e4;              // constant used for source term of nucleation
-    double a = 1.0;                 // constant used for source term of agglomeration
+    double h = 0.0e4;              // constant used for source term of nucleation
+    double a = 0.0;                 // constant used for source term of agglomeration
     double nT0 = 1e10;             // initial total soot number density
     //double uniformG = 0.2;
-    double linearG = 0.1;
-    double linearOxi = -0.1;
+    //double linearG = 0.01;
+    double linearOxi = -0.01;
     
     // time and mixing parameters
     double deltaT(1);             // iteration step time
@@ -101,11 +101,8 @@ int main()
     {
         t = t+deltaT;                                         // advancing t
         mix(allParticles, deltaT, tau, t);                    // advancing Cpdf = mixing
-        //linerarSurfGrowth(allParticles, linearG, lp0);          // growth proportional to the surface
-        linerarSurfOxi(allParticles, linearOxi, lp0);          // oxidation proportional to the surface
-        
-        double dotOx = dotOxi(allParticles, lp0, deltaL);
-        cout << "dotOxi = " << dotOx << endl;
+        //linerarSurfGrowth(allParticles, linearG, lp0, maxValL, deltaL);          // growth proportional to the surface
+        linerarSurfOxi(allParticles, linearOxi, lp0, deltaL);          // oxidation proportional to the surface
         
         vector<double> lVector = liVector(lp0, deltaL, maxValL);  // vector with all the li
         vector<vector<double> > lAndNpL;
@@ -121,7 +118,7 @@ int main()
         
         vector<double> alphaVector = allAlphaCoef(allParticles, lp0, a, nT, h, deltaL, lAndNpL);  // coefs used for advancePdf
         
-        //advancePdf(alphaVector, allParticles, lAndNpL, h, nT, a, deltaL, t);
+        advancePdf(alphaVector, allParticles, lAndNpL, h, nT, a, deltaL, t);
         
         //printParticles(allParticles, t);
         writePdft(pathProject, "/outputs/Cpdf_t/Cpdf", t, allParticles, pdfGrid, minValC, maxValC, 0);

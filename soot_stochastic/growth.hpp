@@ -13,11 +13,10 @@
 
 void uniformGrowth(std::vector<std::vector<double> > &allParticles, double deltaG);
 
-void linerarSurfGrowth(std::vector<std::vector<double> > &allParticles, double deltaM0, double lp0);
+void linerarSurfGrowth(std::vector<std::vector<double> > &allParticles, double deltaM0, double lp0, double maxValL, double deltaL);
 
-void linerarSurfOxi(std::vector<std::vector<double> > &allParticles, double deltaM0, double lp0);
+void linerarSurfOxi(std::vector<std::vector<double> > &allParticles, double deltaM0, double lp0, double deltaL);
 
-double dotOxi(std::vector<std::vector<double> > const& allParticles, double lp0, double deltaL);
 
 #include <stdio.h>
 

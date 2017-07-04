@@ -26,7 +26,7 @@ void uniformGrowth(vector<vector<double> > &allParticles, double deltaG)
 }
 
 
-void linerarSurfGrowth(vector<vector<double> > &allParticles, double deltaM0, double lp0)
+void linerarSurfGrowth(vector<vector<double> > &allParticles, double deltaM0, double lp0, double maxValL, double deltaL)
 {
     double pid = 3.14159265;
     double v0 = lp0;
@@ -38,12 +38,16 @@ void linerarSurfGrowth(vector<vector<double> > &allParticles, double deltaM0, do
         double vi = allParticles[i][1];      // li is actually homogeneous to a volume
         double surfi = pid*pow(vi*6/pid,0.6666);
         double deltaMi = surfi / surf0 * deltaM0;
-        allParticles[i][1] += deltaMi;
+        if(allParticles[i][1]<(maxValL+deltaL/2-deltaMi))
+        {
+            allParticles[i][1] += deltaMi;
+        }
+        
     }
     cout << endl;
 }
 
-void linerarSurfOxi(vector<vector<double> > &allParticles, double deltaM0, double lp0)
+void linerarSurfOxi(vector<vector<double> > &allParticles, double deltaM0, double lp0, double deltaL)
 {
     double pid = 3.14159265;
     double v0 = lp0;
@@ -55,20 +59,14 @@ void linerarSurfOxi(vector<vector<double> > &allParticles, double deltaM0, doubl
         double vi = allParticles[i][1];      // li is actually homogeneous to a volume
         double surfi = pid*pow(vi*6/pid,0.6666);
         double deltaMi = surfi / surf0 * deltaM0;
-        allParticles[i][1] += deltaMi;
+        if(allParticles[i][1]>(lp0-deltaL/2-deltaMi))
+        {
+            allParticles[i][1] += deltaMi;
+        }
+        
     }
     cout << endl;
 }
 
-double dotOxi(vector<vector<double> > const& allParticles, double lp0, double deltaL)
-{
-    int i(0);
-    int countDotOxi(0);
-    for(i=0; i<allParticles.size(); i++)
-    {
-        if(allParticles[i][1]<(lp0-deltaL/2))
-            countDotOxi--;
-    }
-    return countDotOxi;
-}
+
 

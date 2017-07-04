@@ -193,7 +193,7 @@ vector<double> allAlphaCoef(vector<vector< double> > const& allParticles, double
     double dotAl0 = dotAlStar(lp0, allParticles, lNplNvl, a, deltaL, nT);
     double alphaAl0 = dotAl0 /nT;
     
-    double alphaL0 = alphaAl0 + alphaH;
+    double alphaL0 = alphaAl0 + alphaH;  // added oxidation of nascent particles
     
     vector<double> alphaVector;
     alphaVector.push_back(alphaL0);
@@ -236,9 +236,11 @@ void advancePdf(vector<double>const& alphaVector, vector<vector< double> >& allP
     
     dotH = nuclSource(allParticles, h);
     dotAt = aggloTotSource(allParticles, lNplNvl, a);
+    
     double alphaH = dotH/nT;
     double alphaAt = dotAt/nT;
-    double alphaHplusAt = alphaH + alphaAt;
+    
+    double alphaHplusAt = alphaH + alphaAt;   // added oxidation of nascent particles
     
     
     // calculation of np(l*, t+dt)   (called nplDt here) and storing of the corresponding  Delta np = np(l*,t+dt) - np(l*,t) in a new vector: deltaNpInt. New vector because before we were storing integers in a vector of doubles (lNplNvl)
