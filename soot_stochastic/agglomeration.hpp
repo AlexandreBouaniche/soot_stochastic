@@ -19,7 +19,7 @@ std::vector<std::vector<double> > liNpliNvli(std::vector<std::vector<double> > a
 
 double nvLstar(double lStar, std::vector<std::vector<double> > allParticles, double nT, double deltaL);
 
-double beta(double l1, double l2, double c);   // should depend on T and Knudsen not on c
+double beta(double l1, double l2);   // should depend on T and Knudsen not on c
 
 double aggloTotSource(std::vector<std::vector<double> > const& allParticles, std::vector<std::vector< double> > const& lNplNvl, double a);
 

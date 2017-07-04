@@ -26,19 +26,19 @@ int main()
     
     //user inputs
     string pathProject("/Users/bouaniche/Xcode_projects/soot_stochastic");
-    int Np0 = 2500;                // initial stochastic particles at inlet0
-    int Np1 = 2500;                // initial stochastic particles at inlet1
-    int Np2 = 2500;
-    int Np3 = 2500;
+    int Np0 = 5;                // initial stochastic particles at inlet0
+    int Np1 = 5;                // initial stochastic particles at inlet1
+    int Np2 = 5;
+    int Np3 = 5;
     
     double c0 = 0.0;              // initial progress variable at inlet0
     double c1 = 1.0;              // initial progress variable at inlet1
     
     double lp0 = 1.0;             // nascent particles size
-    double l0 = 5.0;              // initial soot size at inlet0
-    double l1 = 6.0;             // initial soot size at inlet1
-    double l2 = 7.0;
-    double l3 = 8.0;
+    double l0 = 10.0;              // initial soot size at inlet0
+    double l1 = 20.0;             // initial soot size at inlet1
+    double l2 = 30.0;
+    double l3 = 40.0;
     
     int it = 10000;                 // number of iteration
     
@@ -52,14 +52,16 @@ int main()
     
     
     // model parameters
-    double h = 0.0e6;             // constant used for source term of nucleation
-    double a = 0.0;                 // constant used for source term of agglomeration
+    double h = 1.0e4;              // constant used for source term of nucleation
+    double a = 1.0;                 // constant used for source term of agglomeration
     double nT0 = 1e10;             // initial total soot number density
-    double uniformG = 1.0;   // deltaG for uniformGrowth function
+    //double uniformG = 0.2;
+    double linearG = 0.1;
+    double linearOxi = -0.1;
     
     // time and mixing parameters
     double deltaT(1);             // iteration step time
-    double tau(10);                // characteristic mixing time
+    double tau(2);                // characteristic mixing time
     
     // initiate particles
     vector<vector<double> > allParticles;  // col0: ci; col1: li
@@ -91,14 +93,19 @@ int main()
     double nT = nT0;
     writePdft(pathProject, "/outputs/Cpdf_t/Cpdf", t, allParticles, pdfGrid, minValC, maxValC, 0);
     writePdft(pathProject, "/outputs/Lpdf_t/Lpdf", t, allParticles, LpdfGrid, lp0, maxValL, 1);
+
     
     // advancing t, mixing (Cpdf), source terms, advancing nT and Lpdf
     int j;
     for(j=0; j<it; j++ )
     {
-        t = t+deltaT;                                   // advancing t
-        //mix(allParticles, deltaT, tau, t);              // advancing Cpdf = mixing
-        uniformGrowth(allParticles, uniformG);          // uniform growth
+        t = t+deltaT;                                         // advancing t
+        mix(allParticles, deltaT, tau, t);                    // advancing Cpdf = mixing
+        //linerarSurfGrowth(allParticles, linearG, lp0);          // growth proportional to the surface
+        linerarSurfOxi(allParticles, linearOxi, lp0);          // oxidation proportional to the surface
+        
+        double dotOx = dotOxi(allParticles, lp0, deltaL);
+        cout << "dotOxi = " << dotOx << endl;
         
         vector<double> lVector = liVector(lp0, deltaL, maxValL);  // vector with all the li
         vector<vector<double> > lAndNpL;
@@ -114,7 +121,7 @@ int main()
         
         vector<double> alphaVector = allAlphaCoef(allParticles, lp0, a, nT, h, deltaL, lAndNpL);  // coefs used for advancePdf
         
-        advancePdf(alphaVector, allParticles, lAndNpL, h, nT, a, deltaL, t);
+        //advancePdf(alphaVector, allParticles, lAndNpL, h, nT, a, deltaL, t);
         
         //printParticles(allParticles, t);
         writePdft(pathProject, "/outputs/Cpdf_t/Cpdf", t, allParticles, pdfGrid, minValC, maxValC, 0);

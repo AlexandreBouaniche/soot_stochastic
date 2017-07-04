@@ -9,6 +9,7 @@
 #include "agglomeration.hpp"
 #include "tools.hpp"
 #include "nucleation.hpp"
+#include "growth.hpp"
 
 #include <iostream>
 #include <string>
@@ -106,9 +107,8 @@ double beta(double l1, double l2)   // should depend on T and Knudsen not on c
     
     double V1 = l1;
     double V2 = l2;
-    double realL1 = pow((6*l1/pi),(1/3));   //realL1 is the diameter the particle would have, to have a volume of "l1"
-    double realL2 = pow((6*l2/pi),(1/3));
-    
+    double realL1 = pow((6*l1/pi),0.3333);   //realL1 is the diameter the particle would have, to have a volume of "l1"
+    double realL2 = pow((6*l2/pi),0.3333);
     
     double betaCalc(1);
     betaCalc = K*pow((1/V1+1/V2),0.5)*pow((realL1+realL2),2);
