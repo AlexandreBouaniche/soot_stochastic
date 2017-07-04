@@ -17,6 +17,8 @@ void linerarSurfGrowth(std::vector<std::vector<double> > &allParticles, double d
 
 void linerarSurfOxi(std::vector<std::vector<double> > &allParticles, double deltaM0, double lp0, double deltaL);
 
+void surfGrowthAging(std::vector<std::vector<double> > &allParticles, double deltaM0, double lp0, double maxValL, double deltaL, double ageFactor);
+
 
 #include <stdio.h>
 
