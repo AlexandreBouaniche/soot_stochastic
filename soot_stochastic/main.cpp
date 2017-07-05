@@ -35,12 +35,12 @@ int main()
     double c1 = 1.0;              // initial progress variable at inlet1
     
     double lp0 = 1.0;             // nascent particles size
-    double l0 = 2.0;              // initial soot size at inlet0
-    double l1 = 3.0;             // initial soot size at inlet1
-    double l2 = 4.0;
-    double l3 = 5.0;
+    double l0 = 1.0;              // initial soot size at inlet0
+    double l1 = 1.0;             // initial soot size at inlet1
+    double l2 = 1.0;
+    double l3 = 1.0;
     
-    int it = 10000;                 // number of iteration
+    int it = 1000;                 // number of iteration
     
     
     double pdfGrid(0.1);    // distance between two c bins for graphic representation of P(c)
@@ -54,11 +54,11 @@ int main()
     // model parameters
     double h = 1.0e4;              // constant used for source term of nucleation
     double a = 1.0;                 // constant used for source term of agglomeration
-    double nT0 = 1e10;             // initial total soot number density
-    //double uniformG = 0.2;
-    double linearG = 0.1;
-    double linearOxi = -0.05;
-    double ageFactor = 1;
+    double nT0 = 1.0e10;             // initial total soot number density
+    //double uniformG = 1.0;
+    double linearG = 0.02;
+    double linearOxi = -0.0005;
+    double ageFactor = 20;
     
     // time and mixing parameters
     double deltaT(1);             // iteration step time
@@ -102,6 +102,7 @@ int main()
     {
         t = t+deltaT;                                         // advancing t
         mix(allParticles, deltaT, tau, t);                    // advancing Cpdf = mixing
+        //uniformGrowth(allParticles, uniformG);
         //linerarSurfGrowth(allParticles, linearG, lp0, maxValL, deltaL);          // growth proportional to the surface
         linerarSurfOxi(allParticles, linearOxi, lp0, deltaL);          // oxidation proportional to the surface
         surfGrowthAging(allParticles, linearG, lp0, maxValL, deltaL, ageFactor);
