@@ -51,7 +51,7 @@ void LpdfAlphaH(vector<vector< double> >& allParticles, double nT, double dotH, 
     npLstar = Np - npL0;                      // expression for n(l*) for l* != l0
     
     int nbToPick(0);
-    nbToPick = floor(npLstar*alphaH);         // number of particles to switch from l* to l0
+    nbToPick = rounding(npLstar*alphaH);         // number of particles to switch from l* to l0
     
     vector<vector<double> > tempLstar;
     int j;

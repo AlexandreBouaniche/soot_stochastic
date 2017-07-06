@@ -98,7 +98,7 @@ int main()
     writePdft(pathProject, "/outputs/Cpdf_t/Cpdf", t, allParticles, pdfGrid, minValC, maxValC, 0);
     writePdft(pathProject, "/outputs/Lpdf_t/Lpdf", t, allParticles, LpdfGrid, lp0, maxValL, 1);
     //printParticles(allParticles, t);
-
+    
     
     // advancing t, mixing (Cpdf), source terms, advancing nT and Lpdf
     int j;
@@ -113,7 +113,7 @@ int main()
         
         vector<double> lVector = liVector(lp0, deltaL, maxValL);  // vector with all the li
         vector<vector<double> > lAndNpL;
-        lAndNpL = liNpliNvli(allParticles, lVector, deltaL, nT);  // col0: li; col1: npli; col2: nvli
+        lAndNpL = liNpliNvli(allParticles, lVector, deltaL, nT);  // col0: li; col1: npli; col2: nvli. calculated BEFORE ADVANCING nT to nT(t+deltat) !
         
         cout << "lVector0 = " << lVector[0] << endl;
         cout << "lVector1 = " << lVector[1] << endl;

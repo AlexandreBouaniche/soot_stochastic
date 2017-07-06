@@ -54,7 +54,7 @@ void mix(vector<vector<double> >& allParticles, double deltaT, double tau, doubl
     
     // construction of the vector randomL of random picked particles for mixing
     double particlesPicked = deltaT/tau*Nptot;   // number of picked particles depends on tau
-    int intPicked = floor(particlesPicked);      // number of picked particles must be an integer
+    int intPicked = rounding(particlesPicked);      // number of picked particles must be an integer
     int nbPicked = intPicked - (intPicked%2);      // number of picked particles must be an even number
     int maxVal(0);
     int k;
@@ -99,7 +99,7 @@ vector<vector<double> > initCustomized()
     for(i=0; i<10; i++)
     {
         double ci = 0.5;
-        int npi = 5000;
+        int npi = 50;
         
         vector<double> initPdfi;
         initPdfi.push_back(ci);

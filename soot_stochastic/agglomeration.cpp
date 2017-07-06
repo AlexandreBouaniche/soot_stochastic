@@ -259,15 +259,27 @@ void advancePdf(vector<double>const& alphaVector, vector<vector< double> >& allP
         double nplDt(0);
         nplDt = lNplNvl[i][1] * (1 - alphaHplusAt) + alphaVector[i] * Np;  //calculation of np(l*,t+dt)
         
-        int roundednp2 = floor(nplDt);
-        int roundednp1 = floor(lNplNvl[i][1]);
+        int roundednp2 = rounding(nplDt);                 // rounding function
+        int roundednp1 = rounding(lNplNvl[i][1]);         // rounding function
         int deltaNpl = roundednp2 - roundednp1;
         
         deltaNpInt.push_back(deltaNpl);                    //filling vector deltaNpInt with DeltaNp(l*) integer
         
         deltaNplSum = deltaNplSum + deltaNpl;              // In theory should be zero. with rounding errors not zero
+        
+        cout << "np2[" << i << "] = " << nplDt << "   ;";
+        cout << "rounded np2 = " << roundednp2 << "   ;";
+        cout << "np1 = " << lNplNvl[i][1] << "   ;";
+        cout << "rounded np1 = " << roundednp1 << "   ;";
+        cout << endl << endl;
     }
     cout << endl << "deltaNplSum = " << deltaNplSum << endl;
+    
+    i=0;
+    for(i=0; i< deltaNpInt.size(); i++)
+    {
+        cout << "deltaNp[" << i << "] = " << deltaNpInt[i] << "   ;";
+    }
     
     
     // there is a rounding error. deltaNplSum should be equal to 0. we will use its value to correct the error during particles reallocation
