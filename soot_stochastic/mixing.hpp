@@ -19,6 +19,8 @@ void mix(std::vector<std::vector<double> >& allParticles, double deltaT, double 
 
 void printParticles(std::vector<std::vector<double> > const& allParticles, double t);
 
+std::vector<std::vector<double> > initCustomized();
+
 #include <stdio.h>
 
 #endif /* mixing_hpp */

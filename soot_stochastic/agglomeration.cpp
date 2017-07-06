@@ -21,9 +21,11 @@ using namespace std;
 vector<double> liVector(double lp0, double deltaL, double maxValL)
 {
     int i(0);
+    double steps = (maxValL - lp0) / deltaL;
+    int stepsInt = floor(steps) + 1;
     vector<double> lVector;
     double li(lp0);
-    for(i=0; i<maxValL; i++)
+    for(i=0; i<stepsInt; i++)
     {
         lVector.push_back(li);
         li = li+deltaL;
@@ -112,9 +114,9 @@ double beta(double l1, double l2)   // should depend on T and Knudsen not on c
     
     double betaCalc(1);
     betaCalc = K*pow((1/V1+1/V2),0.5)*pow((realL1+realL2),2);
-    return betaCalc;
-    //double betaTest =1e-11;
-    //return betaTest;
+    //return betaCalc;
+    double betaTest =1.0;
+    return betaTest;
 }
 
 
@@ -179,18 +181,20 @@ double dotAlStar(double lStar, vector<vector< double> > const& allParticles, vec
         lc = ls-li;
         AlStarPos = AlStarPos + a * 0.5 * beta(lc,li) * nvLstar(lc, allParticles, nT, deltaL) * lNplNvl[i][2];
         //positive term of Al*
+        
     }
+    
     double AlStarTot(0);
     AlStarTot = AlStarPos + AlStarNeg;   // Al* total
     return AlStarTot;
 }
 
 
-vector<double> allAlphaCoef(vector<vector< double> > const& allParticles, double lp0, double a, double nT, double h, double deltaL, vector<vector< double> > const& lNplNvl)
+vector<double> allAlphaCoef(vector<vector< double> > const& allParticles, double lp0, double a, double nT, double nTtminusOne, double h, double deltaL, vector<vector< double> > const& lNplNvl)
 {
     double dotH = nuclSource(allParticles, h);
     double alphaH = dotH / nT;
-    double dotAl0 = dotAlStar(lp0, allParticles, lNplNvl, a, deltaL, nT);
+    double dotAl0 = dotAlStar(lp0, allParticles, lNplNvl, a, deltaL, nTtminusOne);  //nT(t-deltat)
     double alphaAl0 = dotAl0 /nT;
     
     double alphaL0 = alphaAl0 + alphaH;  // added oxidation of nascent particles
@@ -202,7 +206,7 @@ vector<double> allAlphaCoef(vector<vector< double> > const& allParticles, double
     for(i=1; i<lNplNvl.size(); i++)     // begins at i=1 because we already calculated the first term alphaL0 (corresponds to lp0 and i = 0)
     {
         double l1 = lNplNvl[i][0];
-        double dotALi = dotAlStar(l1, allParticles, lNplNvl, a, deltaL, nT);
+        double dotALi = dotAlStar(l1, allParticles, lNplNvl, a, deltaL, nTtminusOne); //nT(t-deltat)
         double alphaLi = dotALi/nT;
         alphaVector.push_back(alphaLi);
     }

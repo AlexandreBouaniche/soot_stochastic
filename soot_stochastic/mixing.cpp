@@ -91,3 +91,27 @@ void printParticles(vector<vector<double> > const& allParticles, double t)
 }
 
 
+vector<vector<double> > initCustomized()
+{
+    vector<vector<double> > allParticles;
+    int i(0);
+    double li(0.01);
+    for(i=0; i<10; i++)
+    {
+        double ci = 0.5;
+        int npi = 5000;
+        
+        vector<double> initPdfi;
+        initPdfi.push_back(ci);
+        initPdfi.push_back(li);
+        
+        int j(0);
+        for(j=0; j<npi; j++)
+        {
+            allParticles.push_back(initPdfi);
+        }
+        li += 0.001;
+    }
+    return allParticles;
+}
+
