@@ -99,7 +99,6 @@ int main()
     writePdft(pathProject, "/outputs/Lpdf_t/Lpdf", t, allParticles, LpdfGrid, lp0, maxValL, 1);
     //printParticles(allParticles, t);
     
-    
     // advancing t, mixing (Cpdf), source terms, advancing nT and Lpdf
     int j;
     for(j=0; j<it; j++ )

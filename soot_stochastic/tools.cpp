@@ -43,8 +43,8 @@ vector<int> randomList(double t, int nbPicked, int maxVal)
     return randomList;
 }
 
-/*
-vector<int> randomListWithoutDouble(double t, int nbPicked, int maxVal)
+
+vector<int> randomListWithoutDuplicate(double t, int nbPicked, int maxVal)
 {
     int random_integer = 0;
     vector<int> randomList;
@@ -54,14 +54,14 @@ vector<int> randomListWithoutDouble(double t, int nbPicked, int maxVal)
     {
         random_integer = rand()%(maxVal+1);
         
-        while(isIntInRandomList(random_integer, randomList))
+        while(isIntInlist(random_integer, randomList))
             random_integer = rand()%(maxVal+1);
         
         randomList.push_back(random_integer);
     }
     return randomList;
 }
-*/
+
 
 
 double maxColi(vector<vector<double> > const& matrix, int col)
@@ -85,3 +85,15 @@ int rounding(double d)
     return rounded;
 }
  
+
+bool isIntInlist(int rank, vector<int> list)
+{
+    int i=0;
+    bool is = 0;
+    for(i=0; i< list.size(); i++)
+    {
+        if(list[i] == rank)
+            is = 1;
+    }
+    return is;
+}

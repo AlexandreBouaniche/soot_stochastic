@@ -65,7 +65,7 @@ void mix(vector<vector<double> >& allParticles, double deltaT, double tau, doubl
     
     maxVal = maxVal - 1;
     vector<int> randomL;
-    randomL = randomList(t,nbPicked, maxVal);
+    randomL = randomListWithoutDuplicate(t, nbPicked, maxVal);
     
     int i;
     for(i=0; i<randomL.size(); i=i+2)
@@ -99,7 +99,7 @@ vector<vector<double> > initCustomized()
     for(i=0; i<10; i++)
     {
         double ci = 0.5;
-        int npi = 50;
+        int npi = 20;
         
         vector<double> initPdfi;
         initPdfi.push_back(ci);

@@ -14,12 +14,14 @@
 std::vector<int> randomList(double t, int nbPicked, int maxVal);
 
 
-//std::vector<int> randomListWithoutDouble(double t, int nbPicked, int maxVal);
+std::vector<int> randomListWithoutDuplicate(double t, int nbPicked, int maxVal);
 
 double maxColi(std::vector<std::vector<double> > const& matrix, int col);
 
 
 int rounding(double d);
+
+bool isIntInlist(int rank, std::vector<int> list);
 
 
 #include <stdio.h>

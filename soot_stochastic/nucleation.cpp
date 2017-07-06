@@ -71,7 +71,7 @@ void LpdfAlphaH(vector<vector< double> >& allParticles, double nT, double dotH, 
     
     itemp = itemp-1;                      // -1 because randomList takes values from 0 to maxVal INCLUDED. with -1 EXCLUDED (corresponds to size of tempLstar vector)
 
-    vector<int> randomL = randomList((t+lp0), nbToPick, itemp);   // random pick of particles to be reset to l0. parameter time chosen as t+lp0 so that it is different for each interval l* pick. and for each time iteration t.
+    vector<int> randomL = randomListWithoutDuplicate((t+lp0), nbToPick, itemp);   // random pick of particles to be reset to l0. parameter time chosen as t+lp0 so that it is different for each interval l* pick. and for each time iteration t.
     
     j=0;
     int rankAll(0);                                    // rank in AllParticles vector

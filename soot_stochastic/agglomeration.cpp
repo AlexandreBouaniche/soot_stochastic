@@ -267,19 +267,8 @@ void advancePdf(vector<double>const& alphaVector, vector<vector< double> >& allP
         
         deltaNplSum = deltaNplSum + deltaNpl;              // In theory should be zero. with rounding errors not zero
         
-        cout << "np2[" << i << "] = " << nplDt << "   ;";
-        cout << "rounded np2 = " << roundednp2 << "   ;";
-        cout << "np1 = " << lNplNvl[i][1] << "   ;";
-        cout << "rounded np1 = " << roundednp1 << "   ;";
-        cout << endl << endl;
     }
     cout << endl << "deltaNplSum = " << deltaNplSum << endl;
-    
-    i=0;
-    for(i=0; i< deltaNpInt.size(); i++)
-    {
-        cout << "deltaNp[" << i << "] = " << deltaNpInt[i] << "   ;";
-    }
     
     
     // there is a rounding error. deltaNplSum should be equal to 0. we will use its value to correct the error during particles reallocation
@@ -309,7 +298,7 @@ void advancePdf(vector<double>const& alphaVector, vector<vector< double> >& allP
                     countAllPartLi++;
                 }
             }
-            vector<int> randomL = randomList(t, (-deltaNpli), (countAllPartLi-1));
+            vector<int> randomL = randomListWithoutDuplicate(t, (-deltaNpli), (countAllPartLi-1));
             //countAllPartLi = np(li) (integer) = allPartLiRanks.size. We must take this value -1 because the ranks of the vector allPartLiRanks go from 0 to (countAllPartLi - 1) if we don't put -1 RandomL can pick a rank of allPartLiRanks that doesn't exist
             
             //rankLiAndNbToPick[i][1] particles of size li are picked within the np(li) particles of size li.Their rank IN allPartLiRanks is stored in the vector randomL
@@ -323,6 +312,7 @@ void advancePdf(vector<double>const& alphaVector, vector<vector< double> >& allP
                 rankToRe = allPartLiRanks[picked];       // "traducing" rank in allPartLiRanks in rankToRe which is a rank in allParticles as allPartLiRanks stores the ranks in allParticles for size li
                 ranksToReallocate.push_back(rankToRe);
                 countRanksToRealoc++;
+                //cout << "rank["<< i << "] to reallocate = " << rankToRe << "   ;";
             }
         }
         if(deltaNpli>0)
