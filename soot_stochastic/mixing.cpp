@@ -95,11 +95,12 @@ vector<vector<double> > initCustomized()
 {
     vector<vector<double> > allParticles;
     int i(0);
-    double li(0.01);
-    for(i=0; i<10; i++)
+    double li = 2.2;
+    for(i=0; i<9; i++)
     {
         double ci = 0.5;
-        int npi = 20;
+        double fli = 1/pow(0.32*3.141592653,0.5)*exp(-500*pow(0.1*li-0.3, 2));
+        int npi = rounding(100*fli);
         
         vector<double> initPdfi;
         initPdfi.push_back(ci);
@@ -110,8 +111,97 @@ vector<vector<double> > initCustomized()
         {
             allParticles.push_back(initPdfi);
         }
-        li += 0.001;
+        li += 0.2;
     }
     return allParticles;
 }
+
+
+
+
+//cas pure growth
+/*
+vector<vector<double> > initCustomized()
+{
+    vector<vector<double> > allParticles;
+    int i(0);
+    double li = 2.2;
+    for(i=0; i<9; i++)
+    {
+        double ci = 0.5;
+        double fli = 1/pow(0.32*3.141592653,0.5)*exp(-500*pow(0.1*li-0.3, 2));
+        int npi = rounding(100*fli);
+        
+        vector<double> initPdfi;
+        initPdfi.push_back(ci);
+        initPdfi.push_back(li);
+        
+        int j(0);
+        for(j=0; j<npi; j++)
+        {
+            allParticles.push_back(initPdfi);
+        }
+        li += 0.2;
+    }
+    
+    li = 6.2;
+    for(i=0; i<9; i++)
+    {
+        double ci = 0.5;
+        double fli = 1;
+        int npi = rounding(100*fli);
+        
+        vector<double> initPdfi;
+        initPdfi.push_back(ci);
+        initPdfi.push_back(li);
+        
+        int j(0);
+        for(j=0; j<npi; j++)
+        {
+            allParticles.push_back(initPdfi);
+        }
+        li += 0.2;
+    }
+    
+    li = 10.2;
+    for(i=0; i<9; i++)
+    {
+        double ci = 0.5;
+        double fli = 1 - abs(li-11);
+        int npi = rounding(100*fli);
+        
+        vector<double> initPdfi;
+        initPdfi.push_back(ci);
+        initPdfi.push_back(li);
+        
+        int j(0);
+        for(j=0; j<npi; j++)
+        {
+            allParticles.push_back(initPdfi);
+        }
+        li += 0.2;
+    }
+    
+    li = 14.2;
+    for(i=0; i<9; i++)
+    {
+        double ci = 0.5;
+        double fli = pow(1 - 100*pow(0.1*li-1.5,2),0.5);
+        int npi = rounding(100*fli);
+        
+        vector<double> initPdfi;
+        initPdfi.push_back(ci);
+        initPdfi.push_back(li);
+        
+        int j(0);
+        for(j=0; j<npi; j++)
+        {
+            allParticles.push_back(initPdfi);
+        }
+        li += 0.2;
+    }
+    
+    return allParticles;
+}
+ */
 

@@ -34,29 +34,29 @@ int main()
     double c0 = 0.0;              // initial progress variable at inlet0
     double c1 = 1.0;              // initial progress variable at inlet1
     
-    double lp0 = 0.01;             // nascent particles size
+    double lp0 = 0.2;             // nascent particles size
     
     double l0 = 0.01;              // initial soot size at inlet0
     double l1 = 0.01;             // initial soot size at inlet1
     double l2 = 0.01;
     double l3 = 0.01;
     
-    int it = 1;                 // number of iteration
+    int it = 10;                 // number of iteration
     
     
     double pdfGrid(0.1);    // distance between two c bins for graphic representation of P(c)
-    double LpdfGrid(0.001);      // distance between two l bins for graphic representation of P(l)
+    double LpdfGrid(0.2);      // distance between two l bins for graphic representation of P(l)
     double maxValC(1);       // maximum value of c considered for graphic representation of P(c)
-    double maxValL(0.041);     // maximum value of l considered for graphic representation of P(l)
+    double maxValL(20.0);     // maximum value of l considered for graphic representation of P(l)
     double minValC(0);      // minimum value of c for graphic representation of P(c)
-    double deltaL(0.001);        // spacing between two intervals Il*
+    double deltaL(0.2);        // spacing between two intervals Il*
     
     
     // model parameters
     double h = 0.0;              // constant used for source term of nucleation
-    double a = 1.0;                 // constant used for source term of agglomeration
+    double a = 0.0;                 // constant used for source term of agglomeration
     double nT0 = 1.0;             // initial total soot number density
-    //double uniformG = 0.0001;
+    double uniformG = 0.1;
     //double linearG = 0.02;
     //double linearOxi = -0.0005;
     //double ageFactor = 20;
@@ -105,7 +105,7 @@ int main()
     {
         t = t+deltaT;                                         // advancing t
         //mix(allParticles, deltaT, tau, t);                    // advancing Cpdf = mixing
-        //uniformGrowth(allParticles, uniformG);
+        uniformGrowth(allParticles, uniformG);
         //linerarSurfGrowth(allParticles, linearG, lp0, maxValL, deltaL);          // growth proportional to the surface
         //linerarSurfOxi(allParticles, linearOxi, lp0, deltaL);          // oxidation proportional to the surface
         //surfGrowthAging(allParticles, linearG, lp0, maxValL, deltaL, ageFactor);
