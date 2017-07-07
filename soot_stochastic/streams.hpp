@@ -15,6 +15,8 @@
 
 void writePdft(std::string pathProject, std::string pathTarget, int it, std::vector<std::vector<double> > allParticles, double pdfGrid,double minVal, double maxVal, int column);
 
+void writeNvt(std::string pathProject, std::string pathTarget, int it, std::vector<std::vector<double> > allParticles, double pdfGrid,double minVal, double maxVal, int column, double nT);
+
 
 #include <stdio.h>
 

@@ -34,7 +34,7 @@ int main()
     double c0 = 0.0;              // initial progress variable at inlet0
     double c1 = 1.0;              // initial progress variable at inlet1
     
-    double lp0 = 0.2;             // nascent particles size
+    double lp0 = 0.02;             // nascent particles size
     
     double l0 = 0.01;              // initial soot size at inlet0
     double l1 = 0.01;             // initial soot size at inlet1
@@ -55,7 +55,7 @@ int main()
     // model parameters
     double h = 0.0;              // constant used for source term of nucleation
     double a = 0.0;                 // constant used for source term of agglomeration
-    double nT0 = 1.0;             // initial total soot number density
+    double nT0 = 25.5;             // initial total soot number density
     double uniformG = 0.1;
     //double linearG = 0.02;
     //double linearOxi = -0.0005;
@@ -97,6 +97,7 @@ int main()
     double nTtminusOne = nT;
     writePdft(pathProject, "/outputs/Cpdf_t/Cpdf", t, allParticles, pdfGrid, minValC, maxValC, 0);
     writePdft(pathProject, "/outputs/Lpdf_t/Lpdf", t, allParticles, LpdfGrid, lp0, maxValL, 1);
+    writeNvt(pathProject, "/outputs/Nv_t/Nv", t, allParticles, LpdfGrid, lp0, maxValL, 1, nT);
     //printParticles(allParticles, t);
     
     // advancing t, mixing (Cpdf), source terms, advancing nT and Lpdf
@@ -135,6 +136,7 @@ int main()
         //printParticles(allParticles, t);
         writePdft(pathProject, "/outputs/Cpdf_t/Cpdf", t, allParticles, pdfGrid, minValC, maxValC, 0);
         writePdft(pathProject, "/outputs/Lpdf_t/Lpdf", t, allParticles, LpdfGrid, lp0, maxValL, 1);
+        writeNvt(pathProject, "/outputs/Nv_t/Nv", t, allParticles, LpdfGrid, lp0, maxValL, 1, nT);
     }
     
     

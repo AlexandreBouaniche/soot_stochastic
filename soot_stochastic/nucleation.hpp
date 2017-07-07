@@ -15,6 +15,8 @@ double nuclSource(std::vector<std::vector<double> > const& allParticles, double 
 
 void LpdfAlphaH(std::vector<std::vector< double> >& allParticles, double nT, double dotH, double lp0, double t);
 
+//double nuclSourceCustomized(double it);
+
 #include <stdio.h>
 
 #endif /* nucleation_hpp */
