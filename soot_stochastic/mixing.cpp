@@ -92,18 +92,18 @@ void printParticles(vector<vector<double> > const& allParticles, double t)
 
 
 // case nucleation + growth
-/*
+
 vector<vector<double> > initCustomized()
 {
     vector<vector<double> > allParticles;
     int i(0);
     double li = 0.02;
     
-    for(i=0; i< 19; i++)
+    for(i=0; i< 20; i++)
     {
         double ci = 0.5;
-        double fli = 0.01;
-        int npi = rounding(100*fli);
+        double fli = 10;
+        int npi = rounding(20*fli);
         
         vector<double> initPdfi;
         initPdfi.push_back(ci);
@@ -119,11 +119,11 @@ vector<vector<double> > initCustomized()
     
     li = 0.42;
     i=0;
-    for(i=0; i<9; i++)
+    for(i=0; i<10; i++)
     {
         double ci = 0.5;
         double fli = 100;
-        int npi = rounding(100*fli);
+        int npi = rounding(20*fli);
         
         vector<double> initPdfi;
         initPdfi.push_back(ci);
@@ -139,11 +139,11 @@ vector<vector<double> > initCustomized()
     
     li = 0.62;
     
-    for(i=0; i< 69; i++)
+    for(i=0; i< 70; i++)
     {
         double ci = 0.5;
-        double fli = 0.01;
-        int npi = rounding(100*fli);
+        double fli = 10;
+        int npi = rounding(20*fli);
         
         vector<double> initPdfi;
         initPdfi.push_back(ci);
@@ -159,18 +159,18 @@ vector<vector<double> > initCustomized()
     
     return allParticles;
 }
-*/
+
 
 
 
 //cas pure growth
-
+/*
 vector<vector<double> > initCustomized()
 {
     vector<vector<double> > allParticles;
     int i(0);
-    double li = 2.2;
-    for(i=0; i<9; i++)
+    double li = 2.1;
+    for(i=0; i<19; i++)
     {
         double ci = 0.5;
         double fli = 1/pow(0.32*3.141592653,0.5)*exp(-500*pow(0.1*li-0.3, 2));
@@ -185,11 +185,11 @@ vector<vector<double> > initCustomized()
         {
             allParticles.push_back(initPdfi);
         }
-        li += 0.2;
+        li += 0.1;
     }
     
-    li = 6.2;
-    for(i=0; i<9; i++)
+    li = 6.1;
+    for(i=0; i<19; i++)
     {
         double ci = 0.5;
         double fli = 1;
@@ -204,11 +204,11 @@ vector<vector<double> > initCustomized()
         {
             allParticles.push_back(initPdfi);
         }
-        li += 0.2;
+        li += 0.1;
     }
     
-    li = 10.2;
-    for(i=0; i<9; i++)
+    li = 10.1;
+    for(i=0; i<19; i++)
     {
         double ci = 0.5;
         double fli = 1 - abs(li-11);
@@ -223,11 +223,11 @@ vector<vector<double> > initCustomized()
         {
             allParticles.push_back(initPdfi);
         }
-        li += 0.2;
+        li += 0.1;
     }
     
-    li = 14.2;
-    for(i=0; i<9; i++)
+    li = 14.1;
+    for(i=0; i<19; i++)
     {
         double ci = 0.5;
         double fli = pow(1 - 100*pow(0.1*li-1.5,2),0.5);
@@ -242,9 +242,9 @@ vector<vector<double> > initCustomized()
         {
             allParticles.push_back(initPdfi);
         }
-        li += 0.2;
+        li += 0.1;
     }
     
     return allParticles;
 }
-
+*/

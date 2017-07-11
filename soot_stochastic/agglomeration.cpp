@@ -190,9 +190,10 @@ double dotAlStar(double lStar, vector<vector< double> > const& allParticles, vec
 }
 
 
-vector<double> allAlphaCoef(vector<vector< double> > const& allParticles, double lp0, double a, double nT, double nTtminusOne, double h, double deltaL, vector<vector< double> > const& lNplNvl)
+vector<double> allAlphaCoef(vector<vector< double> > const& allParticles, double lp0, double a, double nT, double nTtminusOne, double h, double deltaL, vector<vector< double> > const& lNplNvl, double t)
 {
-    double dotH = nuclSource(allParticles, h);
+    //double dotH = nuclSource(allParticles, h);
+    double dotH = nuclSourceCustomized(t);
     double alphaH = dotH / nT;
     double dotAl0 = dotAlStar(lp0, allParticles, lNplNvl, a, deltaL, nTtminusOne);  //nT(t-deltat)
     double alphaAl0 = dotAl0 /nT;
@@ -224,6 +225,7 @@ void advancePdf(vector<double>const& alphaVector, vector<vector< double> >& allP
     {
         Np++;
     }
+    cout << "Nptot = " << Np << endl;
     
     // count of li bins (=alphaVector.size() = lNplNvl.size()
     i=0;
@@ -238,7 +240,8 @@ void advancePdf(vector<double>const& alphaVector, vector<vector< double> >& allP
     double dotH(0);
     double dotAt(0);
     
-    dotH = nuclSource(allParticles, h);
+    //dotH = nuclSource(allParticles, h);
+    dotH = nuclSourceCustomized(t);
     dotAt = aggloTotSource(allParticles, lNplNvl, a);
     
     double alphaH = dotH/nT;
@@ -266,6 +269,9 @@ void advancePdf(vector<double>const& alphaVector, vector<vector< double> >& allP
         deltaNpInt.push_back(deltaNpl);                    //filling vector deltaNpInt with DeltaNp(l*) integer
         
         deltaNplSum = deltaNplSum + deltaNpl;              // In theory should be zero. with rounding errors not zero
+        
+        //cout << "deltaNp[" << i << "] = " << deltaNpl << "   ";
+        //cout << "np2 = " << nplDt << "   " << "np1 = " << lNplNvl[i][1] << "   ";
         
     }
     cout << endl << "deltaNplSum = " << deltaNplSum << endl;

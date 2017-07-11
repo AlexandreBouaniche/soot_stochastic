@@ -41,22 +41,22 @@ int main()
     double l2 = 0.01;
     double l3 = 0.01;
     
-    int it = 10;                 // number of iteration
+    int it = 25;                 // number of iteration
     
     
     double pdfGrid(0.1);    // distance between two c bins for graphic representation of P(c)
-    double LpdfGrid(0.2);      // distance between two l bins for graphic representation of P(l)
+    double LpdfGrid(0.02);      // distance between two l bins for graphic representation of P(l)
     double maxValC(1);       // maximum value of c considered for graphic representation of P(c)
-    double maxValL(20.0);     // maximum value of l considered for graphic representation of P(l)
+    double maxValL(2.0);     // maximum value of l considered for graphic representation of P(l)
     double minValC(0);      // minimum value of c for graphic representation of P(c)
-    double deltaL(0.2);        // spacing between two intervals Il*
+    double deltaL(0.02);        // spacing between two intervals Il*
     
     
     // model parameters
-    double h = 0.0;              // constant used for source term of nucleation
+    double h = 1.0;              // constant used for source term of nucleation
     double a = 0.0;                 // constant used for source term of agglomeration
-    double nT0 = 25.5;             // initial total soot number density
-    double uniformG = 0.1;
+    double nT0 = 1900;             // initial total soot number density
+    double uniformG = 0.02;
     //double linearG = 0.02;
     //double linearOxi = -0.0005;
     //double ageFactor = 20;
@@ -98,12 +98,16 @@ int main()
     writePdft(pathProject, "/outputs/Cpdf_t/Cpdf", t, allParticles, pdfGrid, minValC, maxValC, 0);
     writePdft(pathProject, "/outputs/Lpdf_t/Lpdf", t, allParticles, LpdfGrid, lp0, maxValL, 1);
     writeNvt(pathProject, "/outputs/Nv_t/Nv", t, allParticles, LpdfGrid, lp0, maxValL, 1, nT);
+    vector<double> lVector = liVector(lp0, deltaL, maxValL);  // vector with all the li
     //printParticles(allParticles, t);
     
     // advancing t, mixing (Cpdf), source terms, advancing nT and Lpdf
     int j;
     for(j=0; j<it; j++ )
     {
+        vector<vector<double> > lAndNpL;
+        lAndNpL = liNpliNvli(allParticles, lVector, deltaL, nT);  // col0: li; col1: npli; col2: nvli. calculated BEFORE ADVANCING nT to nT(t+deltat) !
+        
         t = t+deltaT;                                         // advancing t
         //mix(allParticles, deltaT, tau, t);                    // advancing Cpdf = mixing
         uniformGrowth(allParticles, uniformG);
@@ -111,14 +115,8 @@ int main()
         //linerarSurfOxi(allParticles, linearOxi, lp0, deltaL);          // oxidation proportional to the surface
         //surfGrowthAging(allParticles, linearG, lp0, maxValL, deltaL, ageFactor);
         
-        vector<double> lVector = liVector(lp0, deltaL, maxValL);  // vector with all the li
-        vector<vector<double> > lAndNpL;
-        lAndNpL = liNpliNvli(allParticles, lVector, deltaL, nT);  // col0: li; col1: npli; col2: nvli. calculated BEFORE ADVANCING nT to nT(t+deltat) !
         
-        cout << "lVector0 = " << lVector[0] << endl;
-        cout << "lVector1 = " << lVector[1] << endl;
-        
-        double dotH = nuclSource(allParticles, h);                // calculation of nucleation source term
+        double dotH = nuclSourceCustomized(t);          // calculation of nucleation source term
         double dotAt = aggloTotSource(allParticles, lAndNpL, a);  // calculation of total agglomeration source term
         
         
@@ -129,7 +127,17 @@ int main()
         cout << "nT = " << nT << "   " << "dotH = " << dotH << "   dotAt = " << dotAt << endl;
         
         
-        vector<double> alphaVector = allAlphaCoef(allParticles, lp0, a, nT,nTtminusOne, h, deltaL, lAndNpL);  // coefs used for advancePdf
+        vector<double> alphaVector = allAlphaCoef(allParticles, lp0, a, nT,nTtminusOne, h, deltaL, lAndNpL, t);  // coefs used for advancePdf
+        
+        /*
+        int i = 0;
+        for(i=0; i<alphaVector.size(); i++)
+        {
+            cout << "alpha[" << i << "] = " << alphaVector[i] << "   ";
+        }
+        cout << endl;
+         */
+         
          
         advancePdf(alphaVector, allParticles, lAndNpL, h, nT, a, deltaL, t);
         
