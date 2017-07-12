@@ -192,13 +192,16 @@ double dotAlStar(double lStar, vector<vector< double> > const& allParticles, vec
 
 vector<double> allAlphaCoef(vector<vector< double> > const& allParticles, double lp0, double a, double nT, double nTtminusOne, double h, double deltaL, vector<vector< double> > const& lNplNvl, double t)
 {
+    // source terms dotH, dotAl, must be calculated in function of n(l,t+growth) but before deltaT. Then for alpha coef divided by nT(t+deltaT) -> use of nTminusOne
+    
     //double dotH = nuclSource(allParticles, h);
     double dotH = nuclSourceCustomized(t);
     double alphaH = dotH / nT;
+    
     double dotAl0 = dotAlStar(lp0, allParticles, lNplNvl, a, deltaL, nTtminusOne);  //nT(t-deltat)
     double alphaAl0 = dotAl0 /nT;
     
-    double alphaL0 = alphaAl0 + alphaH;  // added oxidation of nascent particles
+    double alphaL0 = alphaAl0 + alphaH;
     
     vector<double> alphaVector;
     alphaVector.push_back(alphaL0);
@@ -216,7 +219,7 @@ vector<double> allAlphaCoef(vector<vector< double> > const& allParticles, double
 
 
 
-void advancePdf(vector<double>const& alphaVector, vector<vector< double> >& allParticles, vector<vector< double> > & lNplNvl, double h, double nT, double a, double deltaL, double t)
+void advancePdf(vector<double>const& alphaVector, vector<vector< double> >& allParticles, vector<vector< double> > & lNplNvl, double h, double nT, double a, double deltaL, double t, double maxValL, double lp0, double nTtminusOne)
 {
     //count of Np
     int Np(0);
@@ -242,12 +245,12 @@ void advancePdf(vector<double>const& alphaVector, vector<vector< double> >& allP
     
     //dotH = nuclSource(allParticles, h);
     dotH = nuclSourceCustomized(t);
-    dotAt = aggloTotSource(allParticles, lNplNvl, a);
+    dotAt = aggloTotSource(allParticles, lNplNvl, a); // calculated with lNplNvl. info t-deltaT
     
     double alphaH = dotH/nT;
     double alphaAt = dotAt/nT;
     
-    double alphaHplusAt = alphaH + alphaAt;   // added oxidation of nascent particles
+    double alphaHplusAt = alphaH + alphaAt;
     
     
     // calculation of np(l*, t+dt)   (called nplDt here) and storing of the corresponding  Delta np = np(l*,t+dt) - np(l*,t) in a new vector: deltaNpInt. New vector because before we were storing integers in a vector of doubles (lNplNvl)
@@ -270,8 +273,7 @@ void advancePdf(vector<double>const& alphaVector, vector<vector< double> >& allP
         
         deltaNplSum = deltaNplSum + deltaNpl;              // In theory should be zero. with rounding errors not zero
         
-        //cout << "deltaNp[" << i << "] = " << deltaNpl << "   ";
-        //cout << "np2 = " << nplDt << "   " << "np1 = " << lNplNvl[i][1] << "   ";
+        //cout << "deltaNp["<< i << "] = " << deltaNpl << "   ;";
         
     }
     cout << endl << "deltaNplSum = " << deltaNplSum << endl;
@@ -304,6 +306,9 @@ void advancePdf(vector<double>const& alphaVector, vector<vector< double> >& allP
                     countAllPartLi++;
                 }
             }
+            cout << "allPartLi vector built i = " << i << endl;
+            cout << "countAllPartLi = " << countAllPartLi << endl;
+            
             vector<int> randomL = randomListWithoutDuplicate(t, (-deltaNpli), (countAllPartLi-1));
             //countAllPartLi = np(li) (integer) = allPartLiRanks.size. We must take this value -1 because the ranks of the vector allPartLiRanks go from 0 to (countAllPartLi - 1) if we don't put -1 RandomL can pick a rank of allPartLiRanks that doesn't exist
             
@@ -320,7 +325,10 @@ void advancePdf(vector<double>const& alphaVector, vector<vector< double> >& allP
                 countRanksToRealoc++;
                 //cout << "rank["<< i << "] to reallocate = " << rankToRe << "   ;";
             }
+            cout << "ranksToReallocate vector built" << endl;
         }
+        
+        
         if(deltaNpli>0)
         {
             
@@ -329,10 +337,29 @@ void advancePdf(vector<double>const& alphaVector, vector<vector< double> >& allP
             {
                 valuesToRealoc.push_back(li);
             }
+            
+            cout << "valuesToReallocate vector built" << endl;
         }
+        
+        
     }
     
-    
+    /*
+    // adding to ranksToReallocate the particles whose size is above lmax and below lp0
+    i = 0;
+    int outOfBound(0);
+    for(i=0; i< allParticles.size(); i++)
+    {
+        if((allParticles[i][1] >= (maxValL + deltaL/2))||(allParticles[i][1] < (lp0 - deltaL/2)))
+        {
+            ranksToReallocate.push_back(i);
+            countRanksToRealoc++;
+            outOfBound++;
+        }
+    }
+    cout << "outOfBound = " << outOfBound;
+    cout << endl;
+    */
     
     //test vector valuesToRealoc  -> ok
     

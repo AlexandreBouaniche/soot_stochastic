@@ -98,7 +98,8 @@ int main()
     writePdft(pathProject, "/outputs/Cpdf_t/Cpdf", t, allParticles, pdfGrid, minValC, maxValC, 0);
     writePdft(pathProject, "/outputs/Lpdf_t/Lpdf", t, allParticles, LpdfGrid, lp0, maxValL, 1);
     writeNvt(pathProject, "/outputs/Nv_t/Nv", t, allParticles, LpdfGrid, lp0, maxValL, 1, nT);
-    vector<double> lVector = liVector(lp0, deltaL, maxValL);  // vector with all the li
+    vector<double> lVector = liVector(lp0, deltaL, maxValL);  // vector with all the li from lp0 to maxValL. 
+    
     //printParticles(allParticles, t);
     
     // advancing t, mixing (Cpdf), source terms, advancing nT and Lpdf
@@ -106,7 +107,7 @@ int main()
     for(j=0; j<it; j++ )
     {
         vector<vector<double> > lAndNpL;
-        lAndNpL = liNpliNvli(allParticles, lVector, deltaL, nT);  // col0: li; col1: npli; col2: nvli. calculated BEFORE ADVANCING nT to nT(t+deltat) !
+        lAndNpL = liNpliNvli(allParticles, lVector, deltaL, nT);  // col0: li; col1: npli; col2: nvli. calculated BEFORE ADVANCING nT to nT(t+deltat) ! doesn't "see" particles out of bounds (lp0 and maxValL)
         
         t = t+deltaT;                                         // advancing t
         //mix(allParticles, deltaT, tau, t);                    // advancing Cpdf = mixing
@@ -118,28 +119,26 @@ int main()
         
         double dotH = nuclSourceCustomized(t);          // calculation of nucleation source term
         double dotAt = aggloTotSource(allParticles, lAndNpL, a);  // calculation of total agglomeration source term
+        double dotG = outOfBoundSource(allParticles, nT, maxValL, lp0, deltaL);
         
+        vector<vector<double> > lAndNpLg;            // updated vector lAndNpLg after growth before nT = nT(t+dt) and advancing pdf
+        lAndNpLg = liNpliNvli(allParticles, lVector, deltaL, nT);
+        
+        advanceGrowthPdf(allParticles, nT, maxValL, lp0, deltaL, lAndNpLg);
+        writeNvt(pathProject, "/outputs/Nv_tg/NvG", t, allParticles, LpdfGrid, lp0, maxValL, 1, nT);
         
         nTtminusOne = nT;                                    // storing nT(t-deltat)
-        nT = nT + dotH +dotAt;                                 // advancing nT
+        nT = nT + dotH +dotAt + dotG;                                 // advancing nT
         
         cout << "t = " << t << endl;
         cout << "nT = " << nT << "   " << "dotH = " << dotH << "   dotAt = " << dotAt << endl;
+        cout << "dotG = " << dotG << endl;
         
         
         vector<double> alphaVector = allAlphaCoef(allParticles, lp0, a, nT,nTtminusOne, h, deltaL, lAndNpL, t);  // coefs used for advancePdf
         
-        /*
-        int i = 0;
-        for(i=0; i<alphaVector.size(); i++)
-        {
-            cout << "alpha[" << i << "] = " << alphaVector[i] << "   ";
-        }
-        cout << endl;
-         */
          
-         
-        advancePdf(alphaVector, allParticles, lAndNpL, h, nT, a, deltaL, t);
+        advancePdf(alphaVector, allParticles, lAndNpLg, h, nT, a, deltaL, t, maxValL, lp0, nTtminusOne);
         
         //printParticles(allParticles, t);
         writePdft(pathProject, "/outputs/Cpdf_t/Cpdf", t, allParticles, pdfGrid, minValC, maxValC, 0);

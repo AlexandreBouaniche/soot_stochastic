@@ -19,6 +19,10 @@ void linerarSurfOxi(std::vector<std::vector<double> > &allParticles, double delt
 
 void surfGrowthAging(std::vector<std::vector<double> > &allParticles, double deltaM0, double lp0, double maxValL, double deltaL, double ageFactor);
 
+double outOfBoundSource(std::vector<std::vector<double> >const& allParticles, double nT, double maxValL, double lp0, double deltaL);
+
+void advanceGrowthPdf(std::vector<std::vector<double> >& allParticles, double nT, double maxValL, double lp0, double deltaL, std::vector<std::vector<double> >const& lAndNpL);
+
 
 #include <stdio.h>
 
