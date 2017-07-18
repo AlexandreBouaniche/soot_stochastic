@@ -103,7 +103,7 @@ vector<vector<double> > initCustomized()
     {
         double ci = 0.5;
         double fli = 10;
-        int npi = rounding(20*fli);
+        int npi = rounding(50*fli);
         
         vector<double> initPdfi;
         initPdfi.push_back(ci);
@@ -123,7 +123,7 @@ vector<vector<double> > initCustomized()
     {
         double ci = 0.5;
         double fli = 100;
-        int npi = rounding(20*fli);
+        int npi = rounding(50*fli);
         
         vector<double> initPdfi;
         initPdfi.push_back(ci);
@@ -143,7 +143,7 @@ vector<vector<double> > initCustomized()
     {
         double ci = 0.5;
         double fli = 10;
-        int npi = rounding(20*fli);
+        int npi = rounding(50*fli);
         
         vector<double> initPdfi;
         initPdfi.push_back(ci);

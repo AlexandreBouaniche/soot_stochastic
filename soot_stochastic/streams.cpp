@@ -127,3 +127,71 @@ void writeNvt(string pathProject, string pathTarget, int it, vector<vector<doubl
     }
 }
 
+
+
+void writeCustomNv(string pathProject, string pathTarget, int it, vector<vector<double> > allParticles, double pdfGrid,double minVal, double maxVal, int column, double nT)
+{
+    string finalPath = pathProject.append(pathTarget);
+    
+    int tInt = it;
+    stringstream ss;
+    ss << tInt;
+    string strIt = ss.str();
+    
+    finalPath = finalPath.append(strIt);
+    string dat = ".dat";
+    finalPath = finalPath.append(dat);
+    
+    ofstream stream1(finalPath.c_str());
+    if(stream1) // error test
+    {
+        //cout << "stream OK" << endl;
+        
+        stream1 << "#iteration number = " << it << " pdf bins vertically in column 1"<<endl;
+        int j;
+        double c=0.02;
+        double time(0.5);
+        double nv(0);
+        for(j=0; j<25; j++)
+        {
+            stream1 << c << "   ";
+            nv = 100+1000*exp(-10000*pow((time-0.215),2));
+            stream1 << nv << endl;
+            c = c+pdfGrid;
+            time = time - 0.02;
+        }
+        
+        j=0;
+        for(j=0; j<20; j++)
+        {
+            stream1 << c << "   ";
+            nv = 10;
+            stream1 << nv << endl;
+            c = c+pdfGrid;
+        }
+        
+        j=0;
+        for(j=0; j<10; j++)
+        {
+            stream1 << c << "   ";
+            nv = 100;
+            stream1 << nv << endl;
+            c = c+pdfGrid;
+        }
+        
+        j=0;
+        for(j=0; j<45; j++)
+        {
+            stream1 << c << "   ";
+            nv = 10;
+            stream1 << nv << endl;
+            c = c+pdfGrid;
+        }
+        
+        stream1 << endl;
+    }
+    else
+    {
+        cout << "ERROR: Impossible to open the file." << endl;
+    }
+}

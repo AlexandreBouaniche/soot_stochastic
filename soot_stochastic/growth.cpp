@@ -136,6 +136,7 @@ void advanceGrowthPdf(vector<vector<double> >& allParticles, double nT, double m
             ranksToReallocate.push_back(i);
         }
     }
+    cout << "total number of particles = " << countNp << endl;
     double Np = countNp;
     double out = countOut;
     double ratioOut = out/ Np;

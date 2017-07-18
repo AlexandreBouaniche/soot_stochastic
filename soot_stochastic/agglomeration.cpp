@@ -306,8 +306,8 @@ void advancePdf(vector<double>const& alphaVector, vector<vector< double> >& allP
                     countAllPartLi++;
                 }
             }
-            cout << "allPartLi vector built i = " << i << endl;
-            cout << "countAllPartLi = " << countAllPartLi << endl;
+            //cout << "allPartLi vector built i = " << i << endl;
+            //cout << "countAllPartLi = " << countAllPartLi << endl;
             
             vector<int> randomL = randomListWithoutDuplicate(t, (-deltaNpli), (countAllPartLi-1));
             //countAllPartLi = np(li) (integer) = allPartLiRanks.size. We must take this value -1 because the ranks of the vector allPartLiRanks go from 0 to (countAllPartLi - 1) if we don't put -1 RandomL can pick a rank of allPartLiRanks that doesn't exist
@@ -325,7 +325,7 @@ void advancePdf(vector<double>const& alphaVector, vector<vector< double> >& allP
                 countRanksToRealoc++;
                 //cout << "rank["<< i << "] to reallocate = " << rankToRe << "   ;";
             }
-            cout << "ranksToReallocate vector built" << endl;
+            //cout << "ranksToReallocate vector built" << endl;
         }
         
         
@@ -338,7 +338,7 @@ void advancePdf(vector<double>const& alphaVector, vector<vector< double> >& allP
                 valuesToRealoc.push_back(li);
             }
             
-            cout << "valuesToReallocate vector built" << endl;
+            //cout << "valuesToReallocate vector built" << endl;
         }
         
         

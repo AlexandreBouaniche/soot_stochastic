@@ -101,11 +101,14 @@ int main()
     vector<double> lVector = liVector(lp0, deltaL, maxValL);  // vector with all the li from lp0 to maxValL. 
     
     //printParticles(allParticles, t);
+    writeCustomNv(pathProject, "/outputs/Nv_t/NvRef", 0, allParticles, 0.02, 0.005, maxValL, 1, nT);
     
     // advancing t, mixing (Cpdf), source terms, advancing nT and Lpdf
     int j;
     for(j=0; j<it; j++ )
     {
+        
+        
         vector<vector<double> > lAndNpL;
         lAndNpL = liNpliNvli(allParticles, lVector, deltaL, nT);  // col0: li; col1: npli; col2: nvli. calculated BEFORE ADVANCING nT to nT(t+deltat) ! doesn't "see" particles out of bounds (lp0 and maxValL)
         
