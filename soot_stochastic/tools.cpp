@@ -97,3 +97,9 @@ bool isIntInlist(int rank, vector<int> list)
     }
     return is;
 }
+
+
+double frand_a_b(double a, double b)
+{
+    return ( rand()/(double)RAND_MAX ) * (b-a) + a;
+}

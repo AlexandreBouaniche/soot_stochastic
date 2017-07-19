@@ -105,6 +105,7 @@ vector<vector<double> > initCustomized()
         double fli = 10;
         int npi = rounding(50*fli);
         
+        
         vector<double> initPdfi;
         initPdfi.push_back(ci);
         initPdfi.push_back(li);
@@ -112,6 +113,7 @@ vector<vector<double> > initCustomized()
         int j(0);
         for(j=0; j<npi; j++)
         {
+            initPdfi[1] = frand_a_b(li-0.0099, li+0.0099);
             allParticles.push_back(initPdfi);
         }
         li += 0.02;
@@ -132,6 +134,7 @@ vector<vector<double> > initCustomized()
         int j(0);
         for(j=0; j<npi; j++)
         {
+            initPdfi[1] = frand_a_b(li-0.0099, li+0.0099);
             allParticles.push_back(initPdfi);
         }
         li += 0.02;
@@ -152,6 +155,7 @@ vector<vector<double> > initCustomized()
         int j(0);
         for(j=0; j<npi; j++)
         {
+            initPdfi[1] = frand_a_b(li-0.0099, li+0.0099);
             allParticles.push_back(initPdfi);
         }
         li += 0.02;

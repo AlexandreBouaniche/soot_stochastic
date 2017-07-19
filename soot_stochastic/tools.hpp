@@ -23,6 +23,8 @@ int rounding(double d);
 
 bool isIntInlist(int rank, std::vector<int> list);
 
+double frand_a_b(double a, double b);
+
 
 #include <stdio.h>
 

@@ -195,7 +195,7 @@ vector<double> allAlphaCoef(vector<vector< double> > const& allParticles, double
     // source terms dotH, dotAl, must be calculated in function of n(l,t+growth) but before deltaT. Then for alpha coef divided by nT(t+deltaT) -> use of nTminusOne
     
     //double dotH = nuclSource(allParticles, h);
-    double dotH = nuclSourceCustomized(t);
+    double dotH = nuclSourceCustomized(t, deltaL);
     double alphaH = dotH / nT;
     
     double dotAl0 = dotAlStar(lp0, allParticles, lNplNvl, a, deltaL, nTtminusOne);  //nT(t-deltat)
@@ -244,7 +244,7 @@ void advancePdf(vector<double>const& alphaVector, vector<vector< double> >& allP
     double dotAt(0);
     
     //dotH = nuclSource(allParticles, h);
-    dotH = nuclSourceCustomized(t);
+    dotH = nuclSourceCustomized(t, deltaL);
     dotAt = aggloTotSource(allParticles, lNplNvl, a); // calculated with lNplNvl. info t-deltaT
     
     double alphaH = dotH/nT;
@@ -306,26 +306,42 @@ void advancePdf(vector<double>const& alphaVector, vector<vector< double> >& allP
                     countAllPartLi++;
                 }
             }
-            //cout << "allPartLi vector built i = " << i << endl;
-            //cout << "countAllPartLi = " << countAllPartLi << endl;
+            cout << "coutAllPartL("<<li << ") = " << countAllPartLi << "   ;";
             
-            vector<int> randomL = randomListWithoutDuplicate(t, (-deltaNpli), (countAllPartLi-1));
-            //countAllPartLi = np(li) (integer) = allPartLiRanks.size. We must take this value -1 because the ranks of the vector allPartLiRanks go from 0 to (countAllPartLi - 1) if we don't put -1 RandomL can pick a rank of allPartLiRanks that doesn't exist
+            int minPart = -deltaNpli;
             
-            //rankLiAndNbToPick[i][1] particles of size li are picked within the np(li) particles of size li.Their rank IN allPartLiRanks is stored in the vector randomL
-            
-            j=0;
-            for(j=0; j<randomL.size(); j++)            // then we have to "traduce" a rank in allPartLiRanks in a rank in allParticles
+            if(-deltaNpli > countAllPartLi)
             {
-                int rankToRe(0);
-                int picked(0);
-                picked = randomL[j];                     // picked is the rank in allPartLiRanks
-                rankToRe = allPartLiRanks[picked];       // "traducing" rank in allPartLiRanks in rankToRe which is a rank in allParticles as allPartLiRanks stores the ranks in allParticles for size li
-                ranksToReallocate.push_back(rankToRe);
-                countRanksToRealoc++;
-                //cout << "rank["<< i << "] to reallocate = " << rankToRe << "   ;";
+                cout << "more particles consumed than present for li = " << li << endl;
+                minPart = countAllPartLi;
             }
-            //cout << "ranksToReallocate vector built" << endl;
+            
+
+            if(countAllPartLi>1)
+            {
+                vector<int> randomL = randomListWithoutDuplicate(t, minPart, (countAllPartLi-1));
+                //countAllPartLi = np(li) (integer) = allPartLiRanks.size. We must take this value -1 because the ranks of the vector allPartLiRanks go from 0 to (countAllPartLi - 1) if we don't put -1 RandomL can pick a rank of allPartLiRanks that doesn't exist
+                
+                //rankLiAndNbToPick[i][1] particles of size li are picked within the np(li) particles of size li.Their rank IN allPartLiRanks is stored in the vector randomL
+                
+                j=0;
+                for(j=0; j<randomL.size(); j++)            // then we have to "traduce" a rank in allPartLiRanks in a rank in allParticles
+                {
+                    int rankToRe(0);
+                    int picked(0);
+                    picked = randomL[j];                     // picked is the rank in allPartLiRanks
+                    rankToRe = allPartLiRanks[picked];       // "traducing" rank in allPartLiRanks in rankToRe which is a rank in allParticles as allPartLiRanks stores the ranks in allParticles for size li
+                    ranksToReallocate.push_back(rankToRe);
+                    countRanksToRealoc++;
+                    //cout << "rank["<< i << "] to reallocate = " << rankToRe << "   ;";
+                }
+                //cout << "ranksToReallocate vector built" << endl;
+            }
+            else if (countAllPartLi == 1)
+            {
+                ranksToReallocate.push_back(allPartLiRanks[0]);
+            }
+            
         }
         
         
