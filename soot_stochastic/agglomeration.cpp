@@ -401,7 +401,9 @@ void advancePdf(vector<double>const& alphaVector, vector<vector< double> >& allP
     {
         int rankParticle(0);
         rankParticle = ranksToReallocate[i];
-        allParticles[rankParticle][1] = valuesToRealoc[i];
+        double newVal(0);
+        newVal = frand_a_b(valuesToRealoc[i]-deltaL/2.0, valuesToRealoc[i]+deltaL/2.0); // a random value in the interval of valuesToRealoc[i] is chosen to reset the particle
+        allParticles[rankParticle][1] = newVal;
         
     }
     cout << "number of ranks to reset = " << countRanksToRealoc << endl << endl;  //test

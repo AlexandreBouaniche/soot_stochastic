@@ -41,7 +41,7 @@ int main()
     double l2 = 0.01;
     double l3 = 0.01;
     
-    int itTot = 50;                 // number of iteration
+    int itTot = 100;                 // number of iteration
     
     
     double pdfGrid(0.1);    // distance between two c bins for graphic representation of P(c)
@@ -56,14 +56,14 @@ int main()
     double h = 1.0;              // constant used for source term of nucleation
     double a = 0.0;                 // constant used for source term of agglomeration
     double nT0 = 1900;             // initial total soot number density
-    double uniformG = 0.01;
+    double uniformG = 0.005;
     //double linearG = 0.02;
     //double linearOxi = -0.0005;
     //double ageFactor = 20;
     
     // time and mixing parameters
     double time(0);                 // time
-    double timePerIt = 0.01;        // time per iteration
+    double timePerIt = 0.005;        // time per iteration
     //double tau(2);                // characteristic mixing time as a function of iterations.
     
     // initiate particles
