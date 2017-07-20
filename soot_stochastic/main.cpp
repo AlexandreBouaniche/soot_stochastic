@@ -41,7 +41,7 @@ int main()
     double l2 = 0.01;
     double l3 = 0.01;
     
-    int itTot = 100;                 // number of iteration
+    int itTot = 25;                 // number of iteration
     
     
     double pdfGrid(0.1);    // distance between two c bins for graphic representation of P(c)
@@ -56,14 +56,14 @@ int main()
     double h = 1.0;              // constant used for source term of nucleation
     double a = 0.0;                 // constant used for source term of agglomeration
     double nT0 = 1900;             // initial total soot number density
-    double uniformG = 0.005;
+    double uniformG = 0.02;
     //double linearG = 0.02;
     //double linearOxi = -0.0005;
     //double ageFactor = 20;
     
     // time and mixing parameters
     double time(0);                 // time
-    double timePerIt = 0.005;        // time per iteration
+    double timePerIt = 0.02;        // time per iteration
     //double tau(2);                // characteristic mixing time as a function of iterations.
     
     // initiate particles
@@ -97,13 +97,11 @@ int main()
     double it(0);
     double nT = nT0;
     double nTtminusOne = nT;
-    writePdft(pathProject, "/outputs/Cpdf_t/Cpdf", it, allParticles, pdfGrid, minValC, maxValC, 0);
-    writePdft(pathProject, "/outputs/Lpdf_t/Lpdf", it, allParticles, LpdfGrid, lp0, maxValL, 1);
-    writeNvt(pathProject, "/outputs/Nv_t/Nv", it, allParticles, LpdfGrid, lp0, maxValL, 1, nT);
+    
     vector<double> lVector = liVector(lp0, deltaL, maxValL);  // vector with all the li from lp0 to maxValL. 
     
     //printParticles(allParticles, t);
-    writeCustomNv(pathProject, "/outputs/Nv_t/NvRef", 0, allParticles, 0.02, 0.005, maxValL, 1, nT);
+    writeCustomNv(pathProject, "/outputs/Nv_t/NvRef_0.0025_", 0, allParticles, 0.0025, 0.02, maxValL, 1, nT);
     
     // advancing t, mixing (Cpdf), source terms, advancing nT and Lpdf
     int j;
@@ -114,38 +112,12 @@ int main()
         vector<vector<double> > lAndNpL;
         lAndNpL = liNpliNvli(allParticles, lVector, deltaL, nT);  // col0: li; col1: npli; col2: nvli. calculated BEFORE ADVANCING nT to nT(t+deltat) ! doesn't "see" particles out of bounds (lp0 and maxValL)
         
-        int i=0;
-        double li(0.02);
-        cout << "time = " << time<<endl;
-        for(i=0; i<100; i++)
-        {
-            int countAllPartLi(0);
-            int j(0);
-            for(j=0; j<allParticles.size(); j++)
-            {
-                if(allParticles[j][1]>=(li-0.02/2.0) & allParticles[j][1]<(li+0.02/2.0))
-                {
-                    countAllPartLi++;
-                }
-            }
-            cout << "coutSmallGrid("<<li << ") = " << countAllPartLi << "   ;";
-            li += 0.02;
-        }
-        cout << endl << endl;
         
-        int countNextOut(0);
-        int j = 0;
-        for(j=0; j<allParticles.size(); j++)
-        {
-            if(allParticles[j][1]>=2.0 & allParticles[j][1]<2.01)
-            {
-                countNextOut++;
-            }
-        }
-        cout << "countNextOut = " << countNextOut << endl << endl;
-
+        //printParticles(allParticles, t);
         
-        
+        writePdft(pathProject, "/outputs/Cpdf_t/Cpdf", it, allParticles, pdfGrid, minValC, maxValC, 0, lAndNpL);
+        writePdft(pathProject, "/outputs/Lpdf_t/Lpdf", it, allParticles, LpdfGrid, lp0, maxValL, 1, lAndNpL);
+        writeNvt(pathProject, "/outputs/Nv_t/Nv", it, allParticles, LpdfGrid, lp0, maxValL, 1, nT,lAndNpL);
         
         it = it + 1;                                         // advancing t
         time = it*timePerIt;
@@ -164,7 +136,7 @@ int main()
         lAndNpLg = liNpliNvli(allParticles, lVector, deltaL, nT);
         
         advanceGrowthPdf(allParticles, nT, maxValL, lp0, deltaL, lAndNpLg);
-        writeNvt(pathProject, "/outputs/Nv_tg/NvG", it, allParticles, LpdfGrid, lp0, maxValL, 1, nT);
+        writeNvt(pathProject, "/outputs/Nv_tg/NvG", it, allParticles, LpdfGrid, lp0, maxValL, 1, nT, lAndNpL);
         
         nTtminusOne = nT;                                    // storing nT(t-deltat)
         nT = nT + dotH +dotAt + dotG;                                 // advancing nT
@@ -180,11 +152,18 @@ int main()
          
         advancePdf(alphaVector, allParticles, lAndNpLg, h, nT, a, deltaL, it, maxValL, lp0, nTtminusOne);
         
-        //printParticles(allParticles, t);
-        writePdft(pathProject, "/outputs/Cpdf_t/Cpdf", it, allParticles, pdfGrid, minValC, maxValC, 0);
-        writePdft(pathProject, "/outputs/Lpdf_t/Lpdf", it, allParticles, LpdfGrid, lp0, maxValL, 1);
-        writeNvt(pathProject, "/outputs/Nv_t/Nv", it, allParticles, LpdfGrid, lp0, maxValL, 1, nT);
     }
+    
+    // count of particles one more time for the final step
+    vector<vector<double> > lAndNpL;
+    lAndNpL = liNpliNvli(allParticles, lVector, deltaL, nT);  // col0: li; col1: npli; col2: nvli. calculated BEFORE ADVANCING nT to nT(t+deltat) ! doesn't "see" particles out of bounds (lp0 and maxValL)
+    
+    
+    //printParticles(allParticles, t);
+    
+    writePdft(pathProject, "/outputs/Cpdf_t/Cpdf", it, allParticles, pdfGrid, minValC, maxValC, 0, lAndNpL);
+    writePdft(pathProject, "/outputs/Lpdf_t/Lpdf", it, allParticles, LpdfGrid, lp0, maxValL, 1, lAndNpL);
+    writeNvt(pathProject, "/outputs/Nv_t/Nv", it, allParticles, LpdfGrid, lp0, maxValL, 1, nT, lAndNpL);
     
     
     return 0;

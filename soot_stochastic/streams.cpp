@@ -18,7 +18,7 @@
 using namespace std;
 
 
-void writePdft(string pathProject, string pathTarget, int it, vector<vector<double> > allParticles, double pdfGrid,double minVal, double maxVal, int column)
+void writePdft(string pathProject, string pathTarget, int it, vector<vector<double> > allParticles, double pdfGrid,double minVal, double maxVal, int column, vector<vector<double> > lAndNpl)
 {
     string finalPath = pathProject.append(pathTarget);
     
@@ -38,25 +38,15 @@ void writePdft(string pathProject, string pathTarget, int it, vector<vector<doub
         
         stream1 << "#iteration number = " << it << " pdf bins vertically in column 1"<<endl;
         int j;
+        
         double c=minVal;
-        double cGrid;
-        cGrid = maxVal/pdfGrid;
-        int intGrid;
         double count(0);
-        int i(0);
-        intGrid = floor(cGrid)+1;
-        for(j=0; j<intGrid; j++)
+        
+        for(j=0; j<lAndNpl.size(); j++)
         {
             stream1 << c << "   ";
             
-            count = 0;
-            for(i=0; i<allParticles.size(); i++)
-            {
-                if((allParticles[i][column]>=(c-pdfGrid/2))&(allParticles[i][column]<(c+pdfGrid/2)))
-                {
-                    count++;
-                }
-            }
+            count = lAndNpl[j][1];
             double Pc;
             Pc = count/allParticles.size();
             stream1 << Pc << endl;
@@ -72,7 +62,7 @@ void writePdft(string pathProject, string pathTarget, int it, vector<vector<doub
 }
 
 
-void writeNvt(string pathProject, string pathTarget, int it, vector<vector<double> > allParticles, double pdfGrid,double minVal, double maxVal, int column, double nT)
+void writeNvt(string pathProject, string pathTarget, int it, vector<vector<double> > allParticles, double pdfGrid,double minVal, double maxVal, int column, double nT, vector<vector<double> > lAndNpl)
 {
     string finalPath = pathProject.append(pathTarget);
     
@@ -93,24 +83,12 @@ void writeNvt(string pathProject, string pathTarget, int it, vector<vector<doubl
         stream1 << "#iteration number = " << it << " pdf bins vertically in column 1"<<endl;
         int j;
         double c=minVal;
-        double cGrid;
-        cGrid = maxVal/pdfGrid;
-        int intGrid;
         double count(0);
-        int i(0);
-        intGrid = floor(cGrid)+1;
-        for(j=0; j<intGrid; j++)
+        for(j=0; j<lAndNpl.size(); j++)
         {
             stream1 << c << "   ";
             
-            count = 0;
-            for(i=0; i<allParticles.size(); i++)
-            {
-                if((allParticles[i][column]>=(c-pdfGrid/2))&(allParticles[i][column]<(c+pdfGrid/2)))
-                {
-                    count++;
-                }
-            }
+            count = lAndNpl[j][1];
             double Pc;
             Pc = count/allParticles.size();
             double nv(0);
@@ -149,20 +127,20 @@ void writeCustomNv(string pathProject, string pathTarget, int it, vector<vector<
         
         stream1 << "#iteration number = " << it << " pdf bins vertically in column 1"<<endl;
         int j;
-        double c=0.02;
+        double c=0.0025;
         double time(0.5);
         double nv(0);
-        for(j=0; j<25; j++)
+        for(j=0; j<200; j++)
         {
             stream1 << c << "   ";
             nv = 100+1000*exp(-10000*pow((time-0.215),2));
             stream1 << nv << endl;
             c = c+pdfGrid;
-            time = time - 0.02;
+            time = time - 0.0025;
         }
         
         j=0;
-        for(j=0; j<20; j++)
+        for(j=0; j<160; j++)
         {
             stream1 << c << "   ";
             nv = 10;
@@ -171,7 +149,7 @@ void writeCustomNv(string pathProject, string pathTarget, int it, vector<vector<
         }
         
         j=0;
-        for(j=0; j<10; j++)
+        for(j=0; j<80; j++)
         {
             stream1 << c << "   ";
             nv = 100;
@@ -180,7 +158,7 @@ void writeCustomNv(string pathProject, string pathTarget, int it, vector<vector<
         }
         
         j=0;
-        for(j=0; j<45; j++)
+        for(j=0; j<390; j++)
         {
             stream1 << c << "   ";
             nv = 10;

@@ -180,7 +180,7 @@ void advanceGrowthPdf(vector<vector<double> >& allParticles, double nT, double m
     }
     
     
-    // count valuesToRealpc
+    // count valuesToRealoc
     i=0;
     int countValuesToRealoc(0);
     for(i=0; i<valuesToRealoc.size(); i++)

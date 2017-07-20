@@ -53,6 +53,14 @@ vector<vector<double> > liNpliNvli(vector<vector<double> > allParticles, vector<
 {
     vector<double> lVector = liVector;
     vector<vector<double> > lAndNpl;
+    
+    int j(0);
+    int Np(0);
+    for(j=0;j<allParticles.size();j++)
+    {
+        Np++;                    // count of tot Np for calculating nv from np
+    }
+    
     int i(0);
     for(i=0; i<lVector.size(); i++)
     {
@@ -61,7 +69,8 @@ vector<vector<double> > liNpliNvli(vector<vector<double> > allParticles, vector<
         double nvL(0);
         l = lVector[i];
         npL = npLstar(l, allParticles, deltaL);
-        nvL = nvLstar(l, allParticles, nT, deltaL);
+        //nvL = nvLstar(l, allParticles, nT, deltaL);
+        nvL = double(npL)/double(Np)*nT;
         lAndNpl.push_back(vector<double>(3,0));
         lAndNpl[i][0] = l;
         lAndNpl[i][1] = npL;
@@ -306,7 +315,6 @@ void advancePdf(vector<double>const& alphaVector, vector<vector< double> >& allP
                     countAllPartLi++;
                 }
             }
-            cout << "coutAllPartL("<<li << ") = " << countAllPartLi << "   ;";
             
             int minPart = -deltaNpli;
             

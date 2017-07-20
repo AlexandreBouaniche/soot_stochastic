@@ -89,7 +89,7 @@ void LpdfAlphaH(vector<vector< double> >& allParticles, double nT, double dotH, 
 double nuclSourceCustomized(double it, double deltaL)
 {
     double time(0);
-    double dt = 1.0/200.0;
+    double dt = 1.0/50.0;
     time = it*dt;
     double dotH(0);
     dotH = 100 + 1e3 * exp(-1e4*pow((time-0.215),2));  // expression dotH (derivee par rapport au temps)
