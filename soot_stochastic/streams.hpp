@@ -19,6 +19,8 @@ void writeNvt(std::string pathProject, std::string pathTarget, int it, std::vect
 
 void writeCustomNv(std::string pathProject, std::string pathTarget, int it, std::vector<std::vector<double> > allParticles, double pdfGrid,double minVal, double maxVal, int column, double nT);
 
+void writeGeoNvt(std::string pathProject, std::string pathTarget, int it, std::vector<std::vector<double> > allParticles, double pdfGrid,double minVal, double maxVal, int column, double nT, std::vector<std::vector<double> > lAndNpl);
+
 
 #include <stdio.h>
 

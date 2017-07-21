@@ -11,15 +11,11 @@
 
 #include <vector>
 
-
-std::vector<std::vector<double> > initAllParticles(std::vector<std::vector<double> > initVector);
-
 void mix(std::vector<std::vector<double> >& allParticles, double deltaT, double tau, double t);
 
 
 void printParticles(std::vector<std::vector<double> > const& allParticles, double t);
 
-std::vector<std::vector<double> > initCustomized();
 
 #include <stdio.h>
 

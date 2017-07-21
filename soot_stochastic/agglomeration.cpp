@@ -69,7 +69,6 @@ vector<vector<double> > liNpliNvli(vector<vector<double> > allParticles, vector<
         double nvL(0);
         l = lVector[i];
         npL = npLstar(l, allParticles, deltaL);
-        //nvL = nvLstar(l, allParticles, nT, deltaL);
         nvL = double(npL)/double(Np)*nT;
         lAndNpl.push_back(vector<double>(3,0));
         lAndNpl[i][0] = l;
@@ -203,8 +202,8 @@ vector<double> allAlphaCoef(vector<vector< double> > const& allParticles, double
 {
     // source terms dotH, dotAl, must be calculated in function of n(l,t+growth) but before deltaT. Then for alpha coef divided by nT(t+deltaT) -> use of nTminusOne
     
-    //double dotH = nuclSource(allParticles, h);
-    double dotH = nuclSourceCustomized(t, deltaL);
+    double dotH = nuclSource(allParticles, h);
+    //double dotH = nuclSourceCustomized(t, deltaL);
     double alphaH = dotH / nT;
     
     double dotAl0 = dotAlStar(lp0, allParticles, lNplNvl, a, deltaL, nTtminusOne);  //nT(t-deltat)
@@ -252,8 +251,8 @@ void advancePdf(vector<double>const& alphaVector, vector<vector< double> >& allP
     double dotH(0);
     double dotAt(0);
     
-    //dotH = nuclSource(allParticles, h);
-    dotH = nuclSourceCustomized(t, deltaL);
+    dotH = nuclSource(allParticles, h);
+    //dotH = nuclSourceCustomized(t, deltaL);
     dotAt = aggloTotSource(allParticles, lNplNvl, a); // calculated with lNplNvl. info t-deltaT
     
     double alphaH = dotH/nT;
@@ -368,22 +367,6 @@ void advancePdf(vector<double>const& alphaVector, vector<vector< double> >& allP
         
     }
     
-    /*
-    // adding to ranksToReallocate the particles whose size is above lmax and below lp0
-    i = 0;
-    int outOfBound(0);
-    for(i=0; i< allParticles.size(); i++)
-    {
-        if((allParticles[i][1] >= (maxValL + deltaL/2))||(allParticles[i][1] < (lp0 - deltaL/2)))
-        {
-            ranksToReallocate.push_back(i);
-            countRanksToRealoc++;
-            outOfBound++;
-        }
-    }
-    cout << "outOfBound = " << outOfBound;
-    cout << endl;
-    */
     
     //test vector valuesToRealoc  -> ok
     

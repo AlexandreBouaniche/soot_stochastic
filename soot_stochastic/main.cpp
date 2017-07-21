@@ -17,6 +17,8 @@
 #include "nucleation.hpp"
 #include "agglomeration.hpp"
 #include "growth.hpp"
+#include "init.hpp"
+#include "geometric.hpp"
 
 using namespace std;
 
@@ -26,6 +28,57 @@ int main()
     
     //user inputs
     string pathProject("/Users/bouaniche/Xcode_projects/soot_stochastic");
+    
+    double lp0 = 1;             // nascent particles size
+    int itTot = 100;                 // number of iteration
+    double pdfGrid(0.1);    // distance between two c bins for graphic representation of P(c)
+    double LpdfGrid(0.02);      // distance between two l bins for graphic representation of P(l)
+    double maxValC(1);       // maximum value of c considered for graphic representation of P(c)
+    double maxValL(1e6);     // maximum value of l considered for graphic representation of P(l)
+    double minValC(0);      // minimum value of c for graphic representation of P(c)
+    double deltaL(0.02);        // spacing between two intervals Il*
+    
+    
+    // model parameters
+    double h = 0.0;              // constant used for source term of nucleation
+    double a = 0.0;                 // constant used for source term of agglomeration
+    double nT0 = 1900;             // initial total soot number density
+    double uniformG = 0.05;
+    //double linearG = 0.02;
+    //double linearOxi = -0.0005;
+    //double ageFactor = 20;
+    
+    // time and mixing parameters
+    double time(0);                 // time
+    double timePerIt = 0.05;        // time per iteration
+    //double tau(2);                // characteristic mixing time as a function of iterations.
+    
+    
+    // Parameters for geometric grid construction
+    int nBins = 30;
+    double geoQ = 1.2;
+    
+    
+    // construction of the mesh for the bins. Regular or geometric
+    //vector<double> lVector = liVector(lp0, deltaL, maxValL);  // vector with all the li from lp0 to maxValL.
+    vector<double> lVector = initGeoMesh(lp0, maxValL, nBins, geoQ);
+    
+    
+    int i(0);
+    cout << endl;
+    for(i=0; i<lVector.size();i++)
+    {
+        cout << "l["<<i<<"] = "<<lVector[i] << "   ";
+    }
+    cout << endl;
+    
+    
+    // initiate particles
+    vector<vector<double> > allParticles;  // col0: ci; col1: li
+    
+    
+    // Standard initVector
+    /*
     int Np0 = 500;                // initial stochastic particles at inlet0
     int Np1 = 500;                // initial stochastic particles at inlet1
     int Np2 = 500;
@@ -34,40 +87,14 @@ int main()
     double c0 = 0.0;              // initial progress variable at inlet0
     double c1 = 1.0;              // initial progress variable at inlet1
     
-    double lp0 = 0.02;             // nascent particles size
-    
     double l0 = 0.01;              // initial soot size at inlet0
     double l1 = 0.01;             // initial soot size at inlet1
     double l2 = 0.01;
-    double l3 = 0.01;
+    double l3 = 0.01
+     */
+
     
-    int itTot = 25;                 // number of iteration
-    
-    
-    double pdfGrid(0.1);    // distance between two c bins for graphic representation of P(c)
-    double LpdfGrid(0.02);      // distance between two l bins for graphic representation of P(l)
-    double maxValC(1);       // maximum value of c considered for graphic representation of P(c)
-    double maxValL(2.0);     // maximum value of l considered for graphic representation of P(l)
-    double minValC(0);      // minimum value of c for graphic representation of P(c)
-    double deltaL(0.02);        // spacing between two intervals Il*
-    
-    
-    // model parameters
-    double h = 1.0;              // constant used for source term of nucleation
-    double a = 0.0;                 // constant used for source term of agglomeration
-    double nT0 = 1900;             // initial total soot number density
-    double uniformG = 0.02;
-    //double linearG = 0.02;
-    //double linearOxi = -0.0005;
-    //double ageFactor = 20;
-    
-    // time and mixing parameters
-    double time(0);                 // time
-    double timePerIt = 0.02;        // time per iteration
-    //double tau(2);                // characteristic mixing time as a function of iterations.
-    
-    // initiate particles
-    vector<vector<double> > allParticles;  // col0: ci; col1: li
+    /*
     vector<vector<double> > initVector;    // col0: ci; col1: li; col2: Npi
     initVector.push_back(vector<double>(3,0));
     initVector[0][0] = c0;
@@ -88,9 +115,15 @@ int main()
     initVector[3][0] = c1;
     initVector[3][1] = l3;
     initVector[3][2] = Np3;
+    */
+    
+    //Customized Init
     
     //allParticles = initAllParticles(initVector);
-    allParticles = initCustomized();
+    allParticles = initCustomAgglo(lVector, maxValL);
+    
+    
+    
     
     
     // Initial state. write in output files
@@ -98,26 +131,26 @@ int main()
     double nT = nT0;
     double nTtminusOne = nT;
     
-    vector<double> lVector = liVector(lp0, deltaL, maxValL);  // vector with all the li from lp0 to maxValL. 
-    
-    //printParticles(allParticles, t);
+    // write analytical Ref customized
     writeCustomNv(pathProject, "/outputs/Nv_t/NvRef_0.0025_", 0, allParticles, 0.0025, 0.02, maxValL, 1, nT);
+    
     
     // advancing t, mixing (Cpdf), source terms, advancing nT and Lpdf
     int j;
     for(j=0; j<itTot; j++ )
     {
-        
+        //printParticles(allParticles, it);
         
         vector<vector<double> > lAndNpL;
-        lAndNpL = liNpliNvli(allParticles, lVector, deltaL, nT);  // col0: li; col1: npli; col2: nvli. calculated BEFORE ADVANCING nT to nT(t+deltat) ! doesn't "see" particles out of bounds (lp0 and maxValL)
         
+        //lAndNpL = liNpliNvli(allParticles, lVector, deltaL, nT);      // col0: li; col1: npli; col2: nvli. calculated BEFORE ADVANCING nT to nT(t+deltat) ! doesn't "see" particles out of bounds (lp0 and maxValL)
+        lAndNpL = geolNplNv(allParticles, lVector, deltaL, nT, lp0, maxValL);
         
-        //printParticles(allParticles, t);
+
         
         writePdft(pathProject, "/outputs/Cpdf_t/Cpdf", it, allParticles, pdfGrid, minValC, maxValC, 0, lAndNpL);
         writePdft(pathProject, "/outputs/Lpdf_t/Lpdf", it, allParticles, LpdfGrid, lp0, maxValL, 1, lAndNpL);
-        writeNvt(pathProject, "/outputs/Nv_t/Nv", it, allParticles, LpdfGrid, lp0, maxValL, 1, nT,lAndNpL);
+        writeGeoNvt(pathProject, "/outputs/Nv_t/Nv", it, allParticles, LpdfGrid, lp0, maxValL, 1, nT,lAndNpL);
         
         it = it + 1;                                         // advancing t
         time = it*timePerIt;
@@ -128,7 +161,8 @@ int main()
         //surfGrowthAging(allParticles, linearG, lp0, maxValL, deltaL, ageFactor);
         
         
-        double dotH = nuclSourceCustomized(it, deltaL);          // calculation of nucleation source term
+        //double dotH = nuclSourceCustomized(it, deltaL);          // calculation of nucleation source term
+        double dotH = nuclSource(allParticles, h);         // calculation of nucleation source term
         double dotAt = aggloTotSource(allParticles, lAndNpL, a);  // calculation of total agglomeration source term
         double dotG = outOfBoundSource(allParticles, nT, maxValL, lp0, deltaL);
         
@@ -156,14 +190,12 @@ int main()
     
     // count of particles one more time for the final step
     vector<vector<double> > lAndNpL;
-    lAndNpL = liNpliNvli(allParticles, lVector, deltaL, nT);  // col0: li; col1: npli; col2: nvli. calculated BEFORE ADVANCING nT to nT(t+deltat) ! doesn't "see" particles out of bounds (lp0 and maxValL)
-    
-    
-    //printParticles(allParticles, t);
+    //lAndNpL = liNpliNvli(allParticles, lVector, deltaL, nT);
+    lAndNpL = geolNplNv(allParticles, lVector, deltaL, nT, lp0, maxValL);
     
     writePdft(pathProject, "/outputs/Cpdf_t/Cpdf", it, allParticles, pdfGrid, minValC, maxValC, 0, lAndNpL);
     writePdft(pathProject, "/outputs/Lpdf_t/Lpdf", it, allParticles, LpdfGrid, lp0, maxValL, 1, lAndNpL);
-    writeNvt(pathProject, "/outputs/Nv_t/Nv", it, allParticles, LpdfGrid, lp0, maxValL, 1, nT, lAndNpL);
+    writeGeoNvt(pathProject, "/outputs/Nv_t/Nv", it, allParticles, LpdfGrid, lp0, maxValL, 1, nT, lAndNpL);
     
     
     return 0;
