@@ -1,15 +1,17 @@
 //
-//  agglomeration.cpp
+//  aggloGeo.cpp
 //  soot_stochastic
 //
-//  Created by Alexandre Bouaniche on 26/06/2017.
+//  Created by Alexandre Bouaniche on 24/07/2017.
 //  Copyright © 2017 Alexandre Bouaniche. All rights reserved.
 //
 
-#include "agglomeration.hpp"
+#include "aggloGeo.hpp"
 #include "tools.hpp"
 #include "nucleation.hpp"
 #include "growth.hpp"
+#include "geometric.hpp"
+#include "agglomeration.hpp"
 
 #include <iostream>
 #include <string>
@@ -18,150 +20,51 @@
 
 using namespace std;
 
-vector<double> liVector(double lp0, double deltaL, double maxValL)
-{
-    int i(0);
-    double steps = (maxValL - lp0) / deltaL;
-    int stepsInt = floor(steps) + 1;
-    vector<double> lVector;
-    double li(lp0);
-    for(i=0; i<stepsInt; i++)
-    {
-        lVector.push_back(li);
-        li = li+deltaL;
-    }
-    return lVector;
-}
-
-int npLstar(double lStar, vector<vector<double> > allParticles, double deltaL)
-{
-    double infBorn = lStar-deltaL/2;
-    double supBorn = lStar+deltaL/2;
-    int i(0);
-    int count(0);
-    for(i=0; i<allParticles.size(); i++)
-    {
-        if((allParticles[i][1]>=infBorn)&(allParticles[i][1]<supBorn))
-            count++;
-    }
-    return count;
-}
 
 
-// returns a vector<vector<doube> > with 3 columns, 0:li  1:np(li)  2:nv(li)
-vector<vector<double> > liNpliNvli(vector<vector<double> > allParticles, vector<double> liVector, double deltaL, double nT)
+
+double nvLstarGeo(double lStar, vector<vector<double> > lNplNvl, double maxvalL)
 {
-    vector<double> lVector = liVector;
-    vector<vector<double> > lAndNpl;
     
-    int j(0);
-    int Np(0);
-    for(j=0;j<allParticles.size();j++)
-    {
-        Np++;                    // count of tot Np for calculating nv from np
-    }
-    
-    int i(0);
-    for(i=0; i<lVector.size(); i++)
-    {
-        int npL(0);
-        double l(0);
-        double nvL(0);
-        l = lVector[i];
-        npL = npLstar(l, allParticles, deltaL);
-        nvL = double(npL)/double(Np)*nT;
-        lAndNpl.push_back(vector<double>(3,0));
-        lAndNpl[i][0] = l;
-        lAndNpl[i][1] = npL;
-        lAndNpl[i][2] = nvL;
-    }
-    return lAndNpl;
-}
-
-double nvLstar(double lStar, vector<vector<double> > allParticles, double nT, double deltaL)
-{
-    double infBorn = lStar-deltaL/2;
-    double supBorn = lStar+deltaL/2;
-    int i(0);
-    int count(0);
-    int Np(0);
+    // infborn and supborn calculation for each li
+    double infborn(0);
+    double supborn(0);
     double nLstar(0);
     
-    for(i=0; i<allParticles.size(); i++)
+    int i(0);
+    for(i=0; i<lNplNvl.size(); i++)
     {
-        Np++;
-        if((allParticles[i][1]>=infBorn)&(allParticles[i][1]<supBorn))
-            count++;
+        double li = lNplNvl[i][0];
+        
+        if(i==0)
+        {
+            infborn = li-(lNplNvl[i+1][0]-li)/2.0;
+            supborn = li+(lNplNvl[i+1][0]-li)/2.0;
+        }
+        else if (li == maxvalL)
+        {
+            infborn = li-(li-lNplNvl[i-1][0])/2.0;
+            supborn = li+(li-lNplNvl[i-1][0])/2.0;
+        }
+        else
+        {
+            infborn = li-(li-lNplNvl[i-1][0])/2.0;
+            supborn = li+(lNplNvl[i+1][0]-li)/2.0;
+        }
+        
+        
+        
+        if(lStar>=infborn & lStar < supborn)
+        {
+            nLstar = lNplNvl[i][2];
+        }
     }
-    nLstar = count*nT/Np;
     return nLstar;
 }
 
 
-double beta(double l1, double l2, double timePerIt)   // should depend on T and Knudsen not on c
-{
-    /*
-     For now we consider that l1 and l2 are homogeneous to a mass/volume. Let's say lp0 is the volume of a sphere of diameter realLp0 = 1 nm
-     
-     */
-    double K(1);
-    double pi(3.1415926);
-    double kB(1.38064852e-23);
-    double rhoSoot(1800);
-    K = 2.2*pow(((pi*kB*0.5*2000)/(2*rhoSoot)),0.5);  // to do: substitute 0.5 by avg c for particles of size l1 and l2. 2000 is an approximation of T if c = 1
-    
-    /*
-    double V1 = pi*pow(l1,3)/6;          // if we consider volume corresponding to diameter. for now we will consider that l is representative of a "size", eg a volume of mass and lc = l* - li
-    double V2 = pi*pow(l2,3)/6;
-    */
-    
-    double V1 = l1;
-    double V2 = l2;
-    double realL1 = pow((6*l1/pi),0.3333);   //realL1 is the diameter the particle would have, to have a volume of "l1"
-    double realL2 = pow((6*l2/pi),0.3333);
-    
-    double betaCalc(1);
-    betaCalc = K*pow((1/V1+1/V2),0.5)*pow((realL1+realL2),2);
-    //return betaCalc;
-    
-    // betaTest  betaIt
-    double betaTest =1.0;
-    double betaIt(1.0);
-    betaIt = betaTest*timePerIt;
-    
-    return betaIt;
-}
 
-
-
-double aggloTotSource(vector<vector< double> > const& allParticles, vector<vector< double> > const& lNplNvl, double a, double timePerIt)
-{
-    double l1(0);
-    double l2(0);
-    double nvl1(0);
-    double nvl2(0);
-    double dotAt(0);
-    int i(0);
-    int j(0);
-    for(i=0; i<lNplNvl.size(); i++)
-    {
-        l1 = lNplNvl[i][0];
-        nvl1 = lNplNvl[i][2];
-        for(j=0; j<lNplNvl.size(); j++)
-        {
-            l2 = lNplNvl[j][0];
-            nvl2 = lNplNvl[j][2];
-            dotAt = dotAt - a * 0.5*beta(l1,l2, timePerIt)*nvl1 * nvl2;
-            /*
-            cout << "l1 = " << l1 << ";   " << "l2 = " << l2 << ";   " << "nvl1 = " << nvl1 << ";   nvl2 = " << nvl2 << ";   " << "dotAtli = " << (- a * 0.5*beta(l1,l2, timePerIt)*nvl1 * nvl2) << ";  " << endl << endl;
-             */
-        }
-    }
-    return dotAt;
-}
-
-
-double dotAlStar(double lStar, vector<vector< double> > const& allParticles, vector<vector< double> > const& lNplNvl, double a, double deltaL, double nT, double timePerIt)
+double dotAlStarGeo(double lStar, vector<vector< double> > const& allParticles, vector<vector< double> > const& lNplNvl, double a, double deltaL, double nT, double timePerIt, double maxValL)
 {
     double AlStarNeg(0);
     int i(0);
@@ -169,14 +72,44 @@ double dotAlStar(double lStar, vector<vector< double> > const& allParticles, vec
     double li(0);
     int rankLstar(0);
     
+    double infborn(0);
+    double supborn(0);
+    
+    double infbornLstar(0);
+    double supBornLstar(0);
+    
     for(i=0; i<lNplNvl.size(); i++)          // looking for closest value (to lStar) of li of the lNplNvl vector.
     {
         li = lNplNvl[i][0];
-        if((ls>=(li-deltaL/2))&(ls<(li+deltaL/2)))
+        
+        if(i==0)
+        {
+            infborn = li-(lNplNvl[i+1][0]-li)/2.0;
+            supborn = li+(lNplNvl[i+1][0]-li)/2.0;
+        }
+        else if (li == maxValL)
+        {
+            infborn = li-(li-lNplNvl[i-1][0])/2.0;
+            supborn = li+(li-lNplNvl[i-1][0])/2.0;
+        }
+        else
+        {
+            infborn = li-(li-lNplNvl[i-1][0])/2.0;
+            supborn = li+(lNplNvl[i+1][0]-li)/2.0;
+        }
+        
+        //cout << "li = " << li << endl;
+        //cout << infborn << "   " << supborn << endl << endl;
+        
+        
+        if(lStar>=infborn & lStar < supborn)
         {
             ls = li;                // taking this closest value for source calculation
             rankLstar = i;          // corresponding rank in lNplNvl
+            supBornLstar = supborn;
+            infbornLstar = infborn;
         }
+
     }
     
     ls = lNplNvl[rankLstar][0];
@@ -189,24 +122,30 @@ double dotAlStar(double lStar, vector<vector< double> > const& allParticles, vec
     }
     
     double AlStarPos(0);
-    double lc = ls;
     i=0;
-    for(i=0; i<(rankLstar); i++)
+    for(i=0; i<=(rankLstar); i++)
     {
         li = lNplNvl[i][0];
-        lc = ls-li;
-        AlStarPos = AlStarPos + a * 0.5 * beta(lc,li, timePerIt) * nvLstar(lc, allParticles, nT, deltaL) * lNplNvl[i][2];
-        //positive term of Al*
         
+        int j(0);
+        for(j=0; j<=rankLstar; j++)
+        {
+            double lc = lNplNvl[j][0];
+            if ((li+lc)>=infbornLstar & (li+lc)<supBornLstar)
+            {
+                 AlStarPos = AlStarPos + a * 0.5 * beta(lc,li, timePerIt) * nvLstarGeo(lc, lNplNvl, maxValL) * lNplNvl[i][2];
+            }
+        }
+        //positive term of Al*
     }
-    
     double AlStarTot(0);
     AlStarTot = AlStarPos + AlStarNeg;   // Al* total
+    
     return AlStarTot;
 }
 
 
-vector<double> allAlphaCoef(vector<vector< double> > const& allParticles, double lp0, double a, double nT, double nTtminusOne, double h, double deltaL, vector<vector< double> > const& lNplNvl, double t, double timePerIt)
+vector<double> allAlphaCoefGeo(vector<vector< double> > const& allParticles, double lp0, double a, double nT, double nTtminusOne, double h, double deltaL, vector<vector< double> > const& lNplNvl, double t, double timePerIt, double maxValL)
 {
     // source terms dotH, dotAl, must be calculated in function of n(l,t+growth) but before deltaT. Then for alpha coef divided by nT(t+deltaT) -> use of nTminusOne
     
@@ -214,7 +153,7 @@ vector<double> allAlphaCoef(vector<vector< double> > const& allParticles, double
     //double dotH = nuclSourceCustomized(t, deltaL);
     double alphaH = dotH / nT;
     
-    double dotAl0 = dotAlStar(lp0, allParticles, lNplNvl, a, deltaL, nTtminusOne, timePerIt);  //nT(t-deltat)
+    double dotAl0 = dotAlStarGeo(lp0, allParticles, lNplNvl, a, deltaL, nTtminusOne, timePerIt, maxValL);  //nT(t-deltat)
     double alphaAl0 = dotAl0 /nT;
     
     double alphaL0 = alphaAl0 + alphaH;
@@ -226,9 +165,11 @@ vector<double> allAlphaCoef(vector<vector< double> > const& allParticles, double
     for(i=1; i<lNplNvl.size(); i++)     // begins at i=1 because we already calculated the first term alphaL0 (corresponds to lp0 and i = 0)
     {
         double l1 = lNplNvl[i][0];
-        double dotALi = dotAlStar(l1, allParticles, lNplNvl, a, deltaL, nTtminusOne, timePerIt); //nT(t-deltat)
+        double dotALi = dotAlStarGeo(l1, allParticles, lNplNvl, a, deltaL, nTtminusOne, timePerIt, maxValL); //nT(t-deltat)
         double alphaLi = dotALi/nT;
         alphaVector.push_back(alphaLi);
+        //cout << "alphaL[" << i << "] =  " << alphaLi << endl;
+        //cout << i << "   "<< dotALi << endl;
     }
     i = 0;
     return alphaVector;
@@ -236,7 +177,7 @@ vector<double> allAlphaCoef(vector<vector< double> > const& allParticles, double
 
 
 
-void advancePdf(vector<double>const& alphaVector, vector<vector< double> >& allParticles, vector<vector< double> > & lNplNvl, double h, double nT, double a, double deltaL, double it, double maxValL, double lp0, double nTtminusOne, double timePerIt)
+void advancePdfGeo(vector<double>const& alphaVector, vector<vector< double> >& allParticles, vector<vector< double> > & lNplNvl, double h, double nT, double a, double deltaL, double it, double maxValL, double lp0, double nTtminusOne, double timePerIt)
 {
     //count of Np
     int Np(0);
@@ -286,13 +227,12 @@ void advancePdf(vector<double>const& alphaVector, vector<vector< double> >& allP
         int roundednp1 = rounding(lNplNvl[i][1]);         // rounding function
         int deltaNpl = roundednp2 - roundednp1;
         
-        cout << "deltaNpl["<< lNplNvl[i][0] << "] = " << deltaNpl << endl;
+        //cout << "deltaNpl["<< lNplNvl[i][0] << "] = " << deltaNpl << endl;
         
         deltaNpInt.push_back(deltaNpl);                    //filling vector deltaNpInt with DeltaNp(l*) integer
         
         deltaNplSum = deltaNplSum + deltaNpl;              // In theory should be zero. with rounding errors not zero
         
-        //cout << "deltaNp["<< i << "] = " << deltaNpl << "   ;";
         
     }
     cout << endl << "deltaNplSum = " << deltaNplSum << endl;
@@ -308,9 +248,31 @@ void advancePdf(vector<double>const& alphaVector, vector<vector< double> >& allP
     
     i=0;
     double li(0);
+    
+    double infborn(0);
+    double supborn(0);
+    
     for(i=0; i<lNplNvl.size(); i++)
     {
         li = lNplNvl[i][0];
+        
+        if(i==0)
+        {
+            infborn = li-(lNplNvl[i+1][0]-li)/2.0;
+            supborn = li+(lNplNvl[i+1][0]-li)/2.0;
+        }
+        else if (li == maxValL)
+        {
+            infborn = li-(li-lNplNvl[i-1][0])/2.0;
+            supborn = li+(li-lNplNvl[i-1][0])/2.0;
+        }
+        else
+        {
+            infborn = li-(li-lNplNvl[i-1][0])/2.0;
+            supborn = li+(lNplNvl[i+1][0]-li)/2.0;
+        }
+        
+        
         int deltaNpli = deltaNpInt[i];
         if(deltaNpli<0)             // here only for li with deltaNpli < 0 (particles "consumed")
         {
@@ -319,7 +281,8 @@ void advancePdf(vector<double>const& alphaVector, vector<vector< double> >& allP
             int j(0);
             for(j=0; j<allParticles.size(); j++)
             {
-                if(allParticles[j][1]>=(li-deltaL/2) & allParticles[j][1]<(li+deltaL/2))
+                
+                if(allParticles[j][1]>=infborn & allParticles[j][1]<supborn)
                 {
                     allPartLiRanks.push_back(j);
                     countAllPartLi++;
@@ -334,7 +297,7 @@ void advancePdf(vector<double>const& alphaVector, vector<vector< double> >& allP
                 minPart = countAllPartLi;
             }
             
-
+            
             if(countAllPartLi>1)
             {
                 vector<int> randomL = randomListWithoutDuplicate(it, minPart, (countAllPartLi-1));
@@ -401,14 +364,46 @@ void advancePdf(vector<double>const& alphaVector, vector<vector< double> >& allP
     
     for(i=0; i<min; i++)
     {
+        
+        // additional lines to determine infborn and supborn of valuesToRealoc[i] for the random reallocation within the right intervals - beginning
+        double infborni(0);
+        double supborni(0);
+        int rankInLvector(0);
+        li = valuesToRealoc[i];
+        
+        int j(0);
+        while(li<lNplNvl[j][0])
+        {
+            j++;
+        }
+        rankInLvector = j;
+        
+        
+        if(rankInLvector==0)
+        {
+            infborni = lNplNvl[j][0]-(lNplNvl[j+1][0]-li)/2.0;
+            supborni = lNplNvl[j][0]+(lNplNvl[j+1][0]-li)/2.0;
+        }
+        else if (li == maxValL)
+        {
+            infborni = li-(li-lNplNvl[j-1][0])/2.0;
+            supborni = li+(li-lNplNvl[j-1][0])/2.0;
+        }
+        else
+        {
+            infborni = li-(li-lNplNvl[j-1][0])/2.0;
+            supborni = li+(lNplNvl[j+1][0]-li)/2.0;
+        }
+        
+         // additional lines to determine infborn and supborn for the random reallocation within the right intervals - end
+        
         int rankParticle(0);
         rankParticle = ranksToReallocate[i];
         double newVal(0);
-        newVal = frand_a_b(valuesToRealoc[i]-deltaL/2.0, valuesToRealoc[i]+deltaL/2.0); // a random value in the interval of valuesToRealoc[i] is chosen to reset the particle
+        newVal = frand_a_b(valuesToRealoc[i]-infborni, valuesToRealoc[i]+supborni); // a random value in the interval of valuesToRealoc[i] is chosen to reset the particle
         allParticles[rankParticle][1] = newVal;
         
     }
     cout << "number of ranks to reset = " << countRanksToRealoc << endl << endl;  //test
     
 }
-

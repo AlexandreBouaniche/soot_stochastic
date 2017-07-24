@@ -10,6 +10,7 @@
 		EC7036871EFBA6B00043132D /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EC7036861EFBA6B00043132D /* main.cpp */; };
 		EC70368F1EFBA90B0043132D /* mixing.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EC70368D1EFBA90B0043132D /* mixing.cpp */; };
 		EC7036921EFBEC3F0043132D /* tools.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EC7036901EFBEC3F0043132D /* tools.cpp */; };
+		ECB9FFD51F26079000BEC507 /* aggloGeo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ECB9FFD31F26079000BEC507 /* aggloGeo.cpp */; };
 		ECE501D81EFC13DB006964B7 /* streams.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ECE501D61EFC13DB006964B7 /* streams.cpp */; };
 		ECE501DB1EFD607B006964B7 /* nucleation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ECE501D91EFD607B006964B7 /* nucleation.cpp */; };
 		ECE501DE1F01484E006964B7 /* agglomeration.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ECE501DC1F01484E006964B7 /* agglomeration.cpp */; };
@@ -37,6 +38,8 @@
 		EC70368E1EFBA90B0043132D /* mixing.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = mixing.hpp; sourceTree = "<group>"; };
 		EC7036901EFBEC3F0043132D /* tools.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tools.cpp; sourceTree = "<group>"; };
 		EC7036911EFBEC3F0043132D /* tools.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = tools.hpp; sourceTree = "<group>"; };
+		ECB9FFD31F26079000BEC507 /* aggloGeo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = aggloGeo.cpp; sourceTree = "<group>"; };
+		ECB9FFD41F26079000BEC507 /* aggloGeo.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = aggloGeo.hpp; sourceTree = "<group>"; };
 		ECE501D61EFC13DB006964B7 /* streams.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = streams.cpp; sourceTree = "<group>"; };
 		ECE501D71EFC13DB006964B7 /* streams.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = streams.hpp; sourceTree = "<group>"; };
 		ECE501D91EFD607B006964B7 /* nucleation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nucleation.cpp; sourceTree = "<group>"; };
@@ -86,6 +89,8 @@
 				ECE502021F0A8AD9006964B7 /* growth.hpp */,
 				ECE501DC1F01484E006964B7 /* agglomeration.cpp */,
 				ECE501DD1F01484E006964B7 /* agglomeration.hpp */,
+				ECB9FFD31F26079000BEC507 /* aggloGeo.cpp */,
+				ECB9FFD41F26079000BEC507 /* aggloGeo.hpp */,
 				ECE501D91EFD607B006964B7 /* nucleation.cpp */,
 				ECE501DA1EFD607B006964B7 /* nucleation.hpp */,
 				ECE501D61EFC13DB006964B7 /* streams.cpp */,
@@ -167,6 +172,7 @@
 				ECE502061F21E94A006964B7 /* init.cpp in Sources */,
 				ECE502091F222F04006964B7 /* geometric.cpp in Sources */,
 				EC7036921EFBEC3F0043132D /* tools.cpp in Sources */,
+				ECB9FFD51F26079000BEC507 /* aggloGeo.cpp in Sources */,
 				ECE501D81EFC13DB006964B7 /* streams.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

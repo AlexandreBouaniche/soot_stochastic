@@ -19,6 +19,7 @@
 #include "growth.hpp"
 #include "init.hpp"
 #include "geometric.hpp"
+#include "aggloGeo.hpp"
 
 using namespace std;
 
@@ -29,28 +30,28 @@ int main()
     //user inputs
     string pathProject("/Users/bouaniche/Xcode_projects/soot_stochastic");
     
-    double lp0 = 1;             // nascent particles size
-    int itTot = 100;                 // number of iteration
+    double lp0 = 0.1;             // nascent particles size
+    int itTot = 50;                 // number of iteration
     double pdfGrid(0.1);    // distance between two c bins for graphic representation of P(c)
     double LpdfGrid(0.02);      // distance between two l bins for graphic representation of P(l)
     double maxValC(1);       // maximum value of c considered for graphic representation of P(c)
-    double maxValL(1e6);     // maximum value of l considered for graphic representation of P(l)
+    double maxValL(1e4);     // maximum value of l considered for graphic representation of P(l)
     double minValC(0);      // minimum value of c for graphic representation of P(c)
     double deltaL(0.02);        // spacing between two intervals Il*
     
     
     // model parameters
     double h = 0.0;              // constant used for source term of nucleation
-    double a = 0.0;                 // constant used for source term of agglomeration
-    double nT0 = 1900;             // initial total soot number density
-    double uniformG = 0.05;
+    double a = 1.0;                 // constant used for source term of agglomeration
+    double nT0 = 13.68;             // initial total soot number density
+    double uniformG = 0.0;
     //double linearG = 0.02;
     //double linearOxi = -0.0005;
     //double ageFactor = 20;
     
     // time and mixing parameters
     double time(0);                 // time
-    double timePerIt = 0.05;        // time per iteration
+    double timePerIt = 0.1;        // time per iteration
     //double tau(2);                // characteristic mixing time as a function of iterations.
     
     
@@ -71,7 +72,7 @@ int main()
         cout << "l["<<i<<"] = "<<lVector[i] << "   ";
     }
     cout << endl;
-    
+    i=0;
     
     // initiate particles
     vector<vector<double> > allParticles;  // col0: ci; col1: li
@@ -132,19 +133,20 @@ int main()
     double nTtminusOne = nT;
     
     // write analytical Ref customized
-    writeCustomNv(pathProject, "/outputs/Nv_t/NvRef_0.0025_", 0, allParticles, 0.0025, 0.02, maxValL, 1, nT);
+    //writeCustomNv(pathProject, "/outputs/Nv_t/NvRef_0.0025_", 0, allParticles, 0.0025, 0.02, maxValL, 1, nT);
+    writeCustomAggloCase(pathProject, "/outputs/Nv_t/Ref_t", lVector, 5.0);
     
     
     // advancing t, mixing (Cpdf), source terms, advancing nT and Lpdf
+    vector<vector<double> > lAndNpL;
     int j;
     for(j=0; j<itTot; j++ )
     {
         //printParticles(allParticles, it);
         
-        vector<vector<double> > lAndNpL;
         
         //lAndNpL = liNpliNvli(allParticles, lVector, deltaL, nT);      // col0: li; col1: npli; col2: nvli. calculated BEFORE ADVANCING nT to nT(t+deltat) ! doesn't "see" particles out of bounds (lp0 and maxValL)
-        lAndNpL = geolNplNv(allParticles, lVector, deltaL, nT, lp0, maxValL);
+        lAndNpL = geolNplNv(allParticles, lVector, nT, lp0, maxValL);
         
 
         
@@ -163,13 +165,13 @@ int main()
         
         //double dotH = nuclSourceCustomized(it, deltaL);          // calculation of nucleation source term
         double dotH = nuclSource(allParticles, h);         // calculation of nucleation source term
-        double dotAt = aggloTotSource(allParticles, lAndNpL, a);  // calculation of total agglomeration source term
+        double dotAt = aggloTotSource(allParticles, lAndNpL, a, timePerIt);  // calculation of total agglomeration source term
         double dotG = outOfBoundSource(allParticles, nT, maxValL, lp0, deltaL);
         
-        vector<vector<double> > lAndNpLg;            // updated vector lAndNpLg after growth before nT = nT(t+dt) and advancing pdf
-        lAndNpLg = liNpliNvli(allParticles, lVector, deltaL, nT);
+        //vector<vector<double> > lAndNpLg;            // updated vector lAndNpLg after growth before nT = nT(t+dt) and advancing pdf
+        //lAndNpLg = liNpliNvli(allParticles, lVector, deltaL, nT);
         
-        advanceGrowthPdf(allParticles, nT, maxValL, lp0, deltaL, lAndNpLg);
+        //advanceGrowthPdf(allParticles, nT, maxValL, lp0, deltaL, lAndNpLg);
         writeNvt(pathProject, "/outputs/Nv_tg/NvG", it, allParticles, LpdfGrid, lp0, maxValL, 1, nT, lAndNpL);
         
         nTtminusOne = nT;                                    // storing nT(t-deltat)
@@ -181,17 +183,16 @@ int main()
         cout << "dotG = " << dotG << endl;
         
         
-        vector<double> alphaVector = allAlphaCoef(allParticles, lp0, a, nT,nTtminusOne, h, deltaL, lAndNpL, it);  // coefs used for advancePdf
+        vector<double> alphaVector = allAlphaCoefGeo(allParticles, lp0, a, nT,nTtminusOne, h, deltaL, lAndNpL, it, timePerIt, maxValL);  // coefs used for advancePdf
         
-         
-        advancePdf(alphaVector, allParticles, lAndNpLg, h, nT, a, deltaL, it, maxValL, lp0, nTtminusOne);
-        
+        advancePdfGeo(alphaVector, allParticles, lAndNpL, h, nT, a, deltaL, it, maxValL, lp0, nTtminusOne, timePerIt);
     }
     
     // count of particles one more time for the final step
-    vector<vector<double> > lAndNpL;
     //lAndNpL = liNpliNvli(allParticles, lVector, deltaL, nT);
-    lAndNpL = geolNplNv(allParticles, lVector, deltaL, nT, lp0, maxValL);
+    lAndNpL = geolNplNv(allParticles, lVector, nT, lp0, maxValL);
+    
+    //printParticles(allParticles, it);
     
     writePdft(pathProject, "/outputs/Cpdf_t/Cpdf", it, allParticles, pdfGrid, minValC, maxValC, 0, lAndNpL);
     writePdft(pathProject, "/outputs/Lpdf_t/Lpdf", it, allParticles, LpdfGrid, lp0, maxValL, 1, lAndNpL);

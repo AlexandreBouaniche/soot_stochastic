@@ -212,3 +212,39 @@ void writeGeoNvt(string pathProject, string pathTarget, int it, vector<vector<do
     }
 }
 
+
+void writeCustomAggloCase(string pathProject, string pathTarget, vector<double> lVector, double time)
+{
+    string finalPath = pathProject.append(pathTarget);
+    stringstream ss;
+    ss << time;
+    string strIt = ss.str();
+    
+    finalPath = finalPath.append(strIt);
+    string dat = ".dat";
+    finalPath = finalPath.append(dat);
+    
+    ofstream stream1(finalPath.c_str());
+    if(stream1) // error test
+    {
+        //cout << "stream OK" << endl;
+        
+        stream1 << "#time = " << time << " pdf bins vertically in column 1"<<endl;
+        int j;
+        
+        for(j=0; j<lVector.size(); j++)
+        {
+            double li = lVector[j];
+            stream1 << li << "   ";
+            
+            double solutioni(0);
+            solutioni = 4 / pow((time+2),2.0) * exp(-2*li/(time+2));
+            stream1 << solutioni << endl;
+        }
+        stream1 << endl;
+    }
+    else
+    {
+        cout << "ERROR: Impossible to open the file." << endl;
+    }
+}

@@ -226,11 +226,11 @@ vector<vector<double> > initCustomAgglo(vector<double> liVector, double maxValL)
     vector<vector<double> > allParticles;
     int i(0);
     double li = liVector[0];
-    for(i=0; i<6; i++)
+    for(i=0; i<liVector.size(); i++)
     {
         li = liVector[i];
         double ci = 0.5;
-        double fli = 10;             // to determine initial pdf/ PSD
+        double fli = exp(-li);             // to determine initial pdf/ PSD
         double deltaLi(1);
         
         if(i==0)
@@ -246,7 +246,7 @@ vector<vector<double> > initCustomAgglo(vector<double> liVector, double maxValL)
             deltaLi = li+(liVector[i+1]-li)/2.0 -(li-(li-liVector[i-1])/2.0);
         }
         
-        int npi = rounding(10*fli);   // to determine number of particles indirectly
+        int npi = rounding(1000*fli);   // to determine number of particles indirectly
         
         vector<double> initPdfi;
         initPdfi.push_back(ci);

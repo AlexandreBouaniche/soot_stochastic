@@ -11,7 +11,7 @@
 
 #include <vector>
 
-std::vector<std::vector<double> > geolNplNv(std::vector<std::vector<double> > allParticles, std::vector<double> liVector, double deltaL, double nT, double lp0, double maxvalL);
+std::vector<std::vector<double> > geolNplNv(std::vector<std::vector<double> > allParticles, std::vector<double> liVector, double nT, double lp0, double maxvalL);
 
 #include <stdio.h>
 

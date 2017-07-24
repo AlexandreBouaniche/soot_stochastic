@@ -16,7 +16,7 @@
 
 using namespace std;
 
-vector<vector<double> > geolNplNv(vector<vector<double> > allParticles, vector<double> liVector, double deltaL, double nT, double lp0, double maxvalL)
+vector<vector<double> > geolNplNv(vector<vector<double> > allParticles, vector<double> liVector, double nT, double lp0, double maxvalL)
 {
     vector<double> lVector = liVector;
     vector<vector<double> > lAndNpl;
@@ -73,12 +73,14 @@ vector<vector<double> > geolNplNv(vector<vector<double> > allParticles, vector<d
         lAndNpl[i][2] = nvL;
         
         /*
-        cout << "borninf = " << infborn << "   supborn = " << supborn << endl;
-        cout << "deltaL["<<i<<"] = " << (supborn - infborn) << endl;
+        //cout << "borninf = " << infborn << "   supborn = " << supborn << endl;
+        //cout << "deltaL["<<i<<"] = " << (supborn - infborn) << endl;
         cout << "lAndNpl["<<i<<"][1] = " << npL << endl;
         cout << "nv["<<i<<"] = " << nvL << endl;
-         */
-        
+        cout << "nT = " << nT << endl;
+        cout << "Np = " << Np << endl;
+        */
+         
     }
     return lAndNpl;
 }
