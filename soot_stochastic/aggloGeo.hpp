@@ -22,6 +22,8 @@ std::vector<double> allAlphaCoefGeo(std::vector<std::vector< double> > const& al
 
 void advancePdfGeo(std::vector<double>const& alphaVector, std::vector<std::vector< double> >& allParticles, std::vector<std::vector< double> > & lNplNvl, double h, double nT, double a, double deltaL, double t, double maxValL, double lp0, double nTtminusOne, double timePerIt);
 
+std::vector<std::vector<double> > geolNplNv(std::vector<std::vector<double> > allParticles, std::vector<double> liVector, double nT, double lp0, double maxvalL);
+
 #include <stdio.h>
 
 #endif /* aggloGeo_hpp */

@@ -10,6 +10,7 @@
 #include <string>
 #include <vector>
 #include <fstream>
+#include <cmath>
 
 #include "mixing.hpp"
 #include "tools.hpp"
@@ -18,8 +19,8 @@
 #include "agglomeration.hpp"
 #include "growth.hpp"
 #include "init.hpp"
-#include "geometric.hpp"
 #include "aggloGeo.hpp"
+#include "aggloGeo2.hpp"
 
 using namespace std;
 
@@ -35,7 +36,13 @@ int main()
     double pdfGrid(0.1);    // distance between two c bins for graphic representation of P(c)
     double LpdfGrid(0.02);      // distance between two l bins for graphic representation of P(l)
     double maxValC(1);       // maximum value of c considered for graphic representation of P(c)
-    double maxValL(1e4);     // maximum value of l considered for graphic representation of P(l)
+    
+    // Parameters for geometric grid construction
+    int nBins = 30;
+    double geoQ = 2.0;                     // must be >= 2 for geo2mesh
+    
+    double maxValL=lp0*pow(geoQ, double(nBins-1));     // maximum value of l considered for graphic representation of P(l).
+                             // BE CAREFUL: if geo2mesh is used, please write a compatible maxvalL e.g lp0*geoQ^(Nbins-1)
     double minValC(0);      // minimum value of c for graphic representation of P(c)
     double deltaL(0.02);        // spacing between two intervals Il*
     
@@ -55,15 +62,11 @@ int main()
     //double tau(2);                // characteristic mixing time as a function of iterations.
     
     
-    // Parameters for geometric grid construction
-    int nBins = 30;
-    double geoQ = 2.0;
-    
     
     // construction of the mesh for the bins. Regular or geometric
     //vector<double> lVector = liVector(lp0, deltaL, maxValL);  // vector with all the li from lp0 to maxValL.
-    vector<double> lVector = initGeoMesh(lp0, maxValL, nBins, geoQ);
-    //vector<double> lVector = initGeo2Mesh(lp0, nBins, geoQ);
+    //vector<double> lVector = initGeoMesh(lp0, maxValL, nBins, geoQ);
+    vector<double> lVector = initGeo2Mesh(lp0, nBins, geoQ);
     
     
     int i(0);
@@ -149,14 +152,14 @@ int main()
         
         
         //lAndNpL = liNpliNvli(allParticles, lVector, deltaL, nT);      // col0: li; col1: npli; col2: nvli. calculated BEFORE ADVANCING nT to nT(t+deltat) ! doesn't "see" particles out of bounds (lp0 and maxValL)
-        lAndNpL = geolNplNv(allParticles, lVector, nT, lp0, maxValL);
+        lAndNpL = geo2lNplNv(allParticles, lVector, nT, lp0, maxValL);
         double totalMass(0);
         double countNp(0);
         
         i=0;
         for(i=0; i<allParticles.size();i++)
         {
-            totalMass += allParticles[i][1];
+            totalMass += 1.125*allParticles[i][1];
             countNp++;
         }
         
@@ -181,7 +184,8 @@ int main()
         //double dotH = nuclSourceCustomized(it, deltaL);          // calculation of nucleation source term
         double dotH = nuclSource(allParticles, h);         // calculation of nucleation source term
         double dotAt = aggloTotSource(allParticles, lAndNpL, a, timePerIt);  // calculation of total agglomeration source term
-        double dotG = outOfBoundSource(allParticles, nT, maxValL, lp0, deltaL);
+        //double dotG = outOfBoundSource(allParticles, nT, maxValL, lp0, deltaL);
+        double dotG = 0;
         
         //vector<vector<double> > lAndNpLg;            // updated vector lAndNpLg after growth before nT = nT(t+dt) and advancing pdf
         //lAndNpLg = liNpliNvli(allParticles, lVector, deltaL, nT);
@@ -198,14 +202,14 @@ int main()
         cout << "dotG = " << dotG << endl;
         
         
-        vector<double> alphaVector = allAlphaCoefGeo(allParticles, lp0, a, nT,nTtminusOne, h, deltaL, lAndNpL, it, timePerIt, maxValL);  // coefs used for advancePdf
+        vector<double> alphaVector = allAlphaCoefGeo2(allParticles, lp0, a, nT,nTtminusOne, h, deltaL, lAndNpL, it, timePerIt, maxValL);  // coefs used for advancePdf
         
-        advancePdfGeo(alphaVector, allParticles, lAndNpL, h, nT, a, deltaL, it, maxValL, lp0, nTtminusOne, timePerIt);
+        advancePdfGeo2(alphaVector, allParticles, lAndNpL, h, nT, a, deltaL, it, maxValL, lp0, nTtminusOne, timePerIt);
     }
     
     // count of particles one more time for the final step
     //lAndNpL = liNpliNvli(allParticles, lVector, deltaL, nT);
-    lAndNpL = geolNplNv(allParticles, lVector, nT, lp0, maxValL);
+    lAndNpL = geo2lNplNv(allParticles, lVector, nT, lp0, maxValL);
     
     //printParticles(allParticles, it);
     

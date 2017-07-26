@@ -1,11 +1,12 @@
 //
-//  aggloGeo.cpp
+//  aggloGeo2.cpp
 //  soot_stochastic
 //
-//  Created by Alexandre Bouaniche on 24/07/2017.
+//  Created by Alexandre Bouaniche on 26/07/2017.
 //  Copyright © 2017 Alexandre Bouaniche. All rights reserved.
 //
 
+#include "aggloGeo2.hpp"
 #include "aggloGeo.hpp"
 #include "tools.hpp"
 #include "nucleation.hpp"
@@ -19,10 +20,23 @@
 
 using namespace std;
 
+double aCoef(double lk, double lj)     // the arguments must be values of lVector from geo2mesh
+{
+    double aCoefficient(1);
+    if(lk<lj)
+    {
+        aCoefficient = 1 - 1.125*lk/(1.5*lj-0.75*lj);
+    }
+    else
+    {
+        cout << "error aCoef";
+    }
+    
+    return aCoefficient;
+}
 
 
-
-double nvLstarGeo(double lStar, vector<vector<double> > lNplNvl, double maxvalL)
+double nvLstarGeo2(double lStar, vector<vector<double> > lNplNvl, double maxvalL)
 {
     
     // infborn and supborn calculation for each li
@@ -35,23 +49,8 @@ double nvLstarGeo(double lStar, vector<vector<double> > lNplNvl, double maxvalL)
     {
         double li = lNplNvl[i][0];
         
-        if(i==0)
-        {
-            infborn = li-(lNplNvl[i+1][0]-li)/2.0;
-            supborn = li+(lNplNvl[i+1][0]-li)/2.0;
-        }
-        else if (li == maxvalL)
-        {
-            infborn = li-(li-lNplNvl[i-1][0])/2.0;
-            supborn = li+(li-lNplNvl[i-1][0])/2.0;
-        }
-        else
-        {
-            infborn = li-(li-lNplNvl[i-1][0])/2.0;
-            supborn = li+(lNplNvl[i+1][0]-li)/2.0;
-        }
-        
-        
+        infborn = 0.75*li;
+        supborn = 1.5*li;
         
         if(lStar>=infborn & lStar < supborn)
         {
@@ -63,7 +62,7 @@ double nvLstarGeo(double lStar, vector<vector<double> > lNplNvl, double maxvalL)
 
 
 
-double dotAlStarGeo(double lStar, vector<vector< double> > const& allParticles, vector<vector< double> > const& lNplNvl, double a, double deltaL, double nT, double timePerIt, double maxValL)
+double dotAlStarGeo2(double lStar, vector<vector< double> > const& allParticles, vector<vector< double> > const& lNplNvl, double a, double deltaL, double nT, double timePerIt, double maxValL)
 {
     double AlStarNeg(0);
     int i(0);
@@ -80,25 +79,8 @@ double dotAlStarGeo(double lStar, vector<vector< double> > const& allParticles, 
     for(i=0; i<lNplNvl.size(); i++)          // looking for closest value (to lStar) of li of the lNplNvl vector.
     {
         li = lNplNvl[i][0];
-        
-        if(i==0)
-        {
-            infborn = li-(lNplNvl[i+1][0]-li)/2.0;
-            supborn = li+(lNplNvl[i+1][0]-li)/2.0;
-        }
-        else if (li == maxValL)
-        {
-            infborn = li-(li-lNplNvl[i-1][0])/2.0;
-            supborn = li+(li-lNplNvl[i-1][0])/2.0;
-        }
-        else
-        {
-            infborn = li-(li-lNplNvl[i-1][0])/2.0;
-            supborn = li+(lNplNvl[i+1][0]-li)/2.0;
-        }
-        
-        //cout << "li = " << li << endl;
-        //cout << infborn << "   " << supborn << endl << endl;
+        infborn = li*0.75;
+        supborn = li*1.5;
         
         
         if(lStar>=infborn & lStar < supborn)
@@ -108,36 +90,76 @@ double dotAlStarGeo(double lStar, vector<vector< double> > const& allParticles, 
             supBornLstar = supborn;
             infbornLstar = infborn;
         }
-
+        
     }
     
     ls = lNplNvl[rankLstar][0];
     
     i=0;
-    for(i=0; i<lNplNvl.size(); i++)
+    for(i=0; i<rankLstar; i++)    // "case by case". case k (here i) < j (here rankLstar)
     {
         li = lNplNvl[i][0];
-        AlStarNeg = AlStarNeg - a * beta(ls,li, timePerIt) * lNplNvl[rankLstar][2] * lNplNvl[i][2];  //negative term of Al*
+        double aCoeff = aCoef(li,ls);
+        AlStarNeg -= a * beta(ls,li, timePerIt) * lNplNvl[rankLstar][2] * lNplNvl[i][2]*(1-aCoeff);  //negative term of Al*
     }
     
-    double AlStarPos(0);
-    i=0;
-    for(i=0; i<=(rankLstar); i++)
+    AlStarNeg -= a * 2.0 * beta(ls, ls, timePerIt)*lNplNvl[rankLstar][2]*lNplNvl[rankLstar][2];  // case k=j
+    
+    i = rankLstar+1;
+    for(i=(rankLstar+1); i<lNplNvl.size(); i++)
     {
         li = lNplNvl[i][0];
-        
-        int j(0);
-        for(j=0; j<=rankLstar; j++)
-        {
-            double lc = lNplNvl[j][0];
-            if ((li+lc)>=infbornLstar & (li+lc)<supBornLstar)      //positive term of Al*. Consider distribution from infborn to supborn?
-                // next development: sum over all li and lc with stoichiometric coef
-            {
-                 AlStarPos = AlStarPos + a * 0.5 * beta(lc,li, timePerIt) * nvLstarGeo(lc, lNplNvl, maxValL) * lNplNvl[i][2];
-            }
-        }
-        //positive term of Al*
+        AlStarNeg -= beta(li, ls, timePerIt) * lNplNvl[i][2] * lNplNvl[rankLstar][2];
     }
+    
+    
+    double AlStarPos(0);        // Positive term of Al*.  as the mesh is geometric with geo2Q >= 2, for a positive source term fo BIN j and j+1, there has to be a collision between a particle of bin j and a particle of bin k with k<j.
+        //Or can be seen as: for the positive source term of BINj, consider collisions between 1 particle of BINj-1 and 1 particle of BINk (1-coefA) (with k<=j-1) and collisions between BINj and BINk (coefA) (with k<j).
+        //here j= rankLstar. ls = mBinj.
+        // !!!  in this case, coefA(BINj-1) is used for (1-coefA); and coefA(BINj) is used for coefA   !!!
+    
+    ls = lNplNvl[rankLstar][0];                  // mBINj
+    
+    int k(0);
+    double lk(1.0);
+    double ljMinusOne(1.0);
+    int rankMinusOne(0);
+    
+    if(rankLstar>0)
+    {
+        ljMinusOne = lNplNvl[rankLstar-1][0];     // mBINj-1
+        rankMinusOne = rankLstar - 1;
+    }
+    else
+    {
+        ljMinusOne = ls;
+        rankMinusOne = rankLstar;
+    }
+    
+    
+    for(k=0; k<rankMinusOne; k++)
+    {
+        lk = lNplNvl[k][0];
+        double aCoeff = aCoef(lk, ljMinusOne);            // coefA(BINj-1)   !!! different expression. without coef 0.5  !!! "case by case". Here case collision particle k< j-1 and particle j-1
+        AlStarPos += (1-aCoeff)* a * beta(lk,ljMinusOne, timePerIt) * nvLstarGeo2(lk, lNplNvl, maxValL) * lNplNvl[rankMinusOne][2];
+        /*
+        cout << "k = " << k << "  lk = " << lk << "   ljMinusOne = " << ljMinusOne << endl;
+        cout << "AlPosk["<<ls<<"] = " << AlStarPos << endl;
+        cout << "1-aCoeff = " << (1-aCoeff) << endl;
+         */
+    }
+    
+    if(rankLstar>0)
+    {
+        AlStarPos += a * beta(ljMinusOne, ljMinusOne, timePerIt) * lNplNvl[rankMinusOne][2] * lNplNvl[rankMinusOne][2];
+        // "case collision of 2 particles BINj-1
+    }
+    
+    
+    cout << "AlNeg["<<ls<<"] = " << AlStarNeg << endl;
+    cout << "AlPos["<<ls<<"] = " << AlStarPos << endl;
+    cout << endl;
+    
     double AlStarTot(0);
     AlStarTot = AlStarPos + AlStarNeg;   // Al* total
     
@@ -145,7 +167,8 @@ double dotAlStarGeo(double lStar, vector<vector< double> > const& allParticles, 
 }
 
 
-vector<double> allAlphaCoefGeo(vector<vector< double> > const& allParticles, double lp0, double a, double nT, double nTtminusOne, double h, double deltaL, vector<vector< double> > const& lNplNvl, double t, double timePerIt, double maxValL)
+
+vector<double> allAlphaCoefGeo2(vector<vector< double> > const& allParticles, double lp0, double a, double nT, double nTtminusOne, double h, double deltaL, vector<vector< double> > const& lNplNvl, double t, double timePerIt, double maxValL)
 {
     // source terms dotH, dotAl, must be calculated in function of n(l,t+growth) but before deltaT. Then for alpha coef divided by nT(t+deltaT) -> use of nTminusOne
     
@@ -153,7 +176,7 @@ vector<double> allAlphaCoefGeo(vector<vector< double> > const& allParticles, dou
     //double dotH = nuclSourceCustomized(t, deltaL);
     double alphaH = dotH / nT;
     
-    double dotAl0 = dotAlStarGeo(lp0, allParticles, lNplNvl, a, deltaL, nTtminusOne, timePerIt, maxValL);  //nT(t-deltat)
+    double dotAl0 = dotAlStarGeo2(lp0, allParticles, lNplNvl, a, deltaL, nTtminusOne, timePerIt, maxValL);  //nT(t-deltat)
     double alphaAl0 = dotAl0 /nT;
     
     double alphaL0 = alphaAl0 + alphaH;
@@ -165,7 +188,7 @@ vector<double> allAlphaCoefGeo(vector<vector< double> > const& allParticles, dou
     for(i=1; i<lNplNvl.size(); i++)     // begins at i=1 because we already calculated the first term alphaL0 (corresponds to lp0 and i = 0)
     {
         double l1 = lNplNvl[i][0];
-        double dotALi = dotAlStarGeo(l1, allParticles, lNplNvl, a, deltaL, nTtminusOne, timePerIt, maxValL); //nT(t-deltat)
+        double dotALi = dotAlStarGeo2(l1, allParticles, lNplNvl, a, deltaL, nTtminusOne, timePerIt, maxValL); //nT(t-deltat)
         double alphaLi = dotALi/nT;
         alphaVector.push_back(alphaLi);
         //cout << "alphaL[" << i << "] =  " << alphaLi << endl;
@@ -177,7 +200,7 @@ vector<double> allAlphaCoefGeo(vector<vector< double> > const& allParticles, dou
 
 
 
-void advancePdfGeo(vector<double>const& alphaVector, vector<vector< double> >& allParticles, vector<vector< double> > & lNplNvl, double h, double nT, double a, double deltaL, double it, double maxValL, double lp0, double nTtminusOne, double timePerIt)
+void advancePdfGeo2(vector<double>const& alphaVector, vector<vector< double> >& allParticles, vector<vector< double> > & lNplNvl, double h, double nT, double a, double deltaL, double it, double maxValL, double lp0, double nTtminusOne, double timePerIt)
 {
     //count of Np
     int Np(0);
@@ -255,23 +278,8 @@ void advancePdfGeo(vector<double>const& alphaVector, vector<vector< double> >& a
     for(i=0; i<lNplNvl.size(); i++)
     {
         li = lNplNvl[i][0];
-        
-        if(i==0)
-        {
-            infborn = li-(lNplNvl[i+1][0]-li)/2.0;
-            supborn = li+(lNplNvl[i+1][0]-li)/2.0;
-        }
-        else if (li == maxValL)
-        {
-            infborn = li-(li-lNplNvl[i-1][0])/2.0;
-            supborn = li+(li-lNplNvl[i-1][0])/2.0;
-        }
-        else
-        {
-            infborn = li-(li-lNplNvl[i-1][0])/2.0;
-            supborn = li+(lNplNvl[i+1][0]-li)/2.0;
-        }
-        
+        infborn = 0.75*li;
+        supborn = 1.5*li;
         
         int deltaNpli = deltaNpInt[i];
         if(deltaNpli<0)             // here only for li with deltaNpli < 0 (particles "consumed")
@@ -364,43 +372,17 @@ void advancePdfGeo(vector<double>const& alphaVector, vector<vector< double> >& a
     
     for(i=0; i<min; i++)
     {
-        
-        // additional lines to determine infborn and supborn of valuesToRealoc[i] for the random reallocation within the right intervals - beginning
         double infborni(0);
         double supborni(0);
-        int rankInLvector(0);
         li = valuesToRealoc[i];
+        infborni = 0.75*li;
+        supborni = 1.5*li;
         
-        int j(0);
-        while(li<lNplNvl[j][0])
-        {
-            j++;
-        }
-        rankInLvector = j;
-        
-        
-        if(rankInLvector==0)
-        {
-            infborni = lNplNvl[j][0]-(lNplNvl[j+1][0]-li)/2.0;
-            supborni = lNplNvl[j][0]+(lNplNvl[j+1][0]-li)/2.0;
-        }
-        else if (li == maxValL)
-        {
-            infborni = li-(li-lNplNvl[j-1][0])/2.0;
-            supborni = li+(li-lNplNvl[j-1][0])/2.0;
-        }
-        else
-        {
-            infborni = li-(li-lNplNvl[j-1][0])/2.0;
-            supborni = li+(lNplNvl[j+1][0]-li)/2.0;
-        }
-        
-         // additional lines to determine infborn and supborn for the random reallocation within the right intervals - end
         
         int rankParticle(0);
         rankParticle = ranksToReallocate[i];
         double newVal(0);
-        newVal = frand_a_b(infborni,supborni); // a random value in the interval of valuesToRealoc[i] is chosen to reset the particle
+        newVal = frand_a_b(infborni, supborni); // a random value in the interval of valuesToRealoc[i] is chosen to reset the particle
         allParticles[rankParticle][1] = newVal;
         
     }
@@ -410,7 +392,7 @@ void advancePdfGeo(vector<double>const& alphaVector, vector<vector< double> >& a
 
 
 
-vector<vector<double> > geolNplNv(vector<vector<double> > allParticles, vector<double> liVector, double nT, double lp0, double maxvalL)
+vector<vector<double> > geo2lNplNv(vector<vector<double> > allParticles, vector<double> liVector, double nT, double lp0, double maxvalL)
 {
     vector<double> lVector = liVector;
     vector<vector<double> > lAndNpl;
@@ -429,26 +411,8 @@ vector<vector<double> > geolNplNv(vector<vector<double> > allParticles, vector<d
         double li(0);
         double nvL(0);
         li = lVector[i];
-        double infborn(1);
-        double supborn(2);
-        
-        // infborn and supborn calculation for each li
-        if(i==0)
-        {
-            infborn = li-(liVector[i+1]-li)/2.0;
-            supborn = li+(liVector[i+1]-li)/2.0;
-        }
-        else if (li == maxvalL)
-        {
-            infborn = li-(li-liVector[i-1])/2.0;
-            supborn = li+(li-liVector[i-1])/2.0;
-        }
-        else
-        {
-            infborn = li-(li-liVector[i-1])/2.0;
-            supborn = li+(liVector[i+1]-li)/2.0;
-        }
-        
+        double infborn = li*0.75;
+        double supborn = li*1.5;
         
         // count of np(li)
         j=0;
@@ -465,15 +429,6 @@ vector<vector<double> > geolNplNv(vector<vector<double> > allParticles, vector<d
         lAndNpl[i][0] = li;
         lAndNpl[i][1] = npL;
         lAndNpl[i][2] = nvL;
-        
-        /*
-         //cout << "borninf = " << infborn << "   supborn = " << supborn << endl;
-         //cout << "deltaL["<<i<<"] = " << (supborn - infborn) << endl;
-         cout << "lAndNpl["<<i<<"][1] = " << npL << endl;
-         cout << "nv["<<i<<"] = " << nvL << endl;
-         cout << "nT = " << nT << endl;
-         cout << "Np = " << Np << endl;
-         */
         
     }
     return lAndNpl;
