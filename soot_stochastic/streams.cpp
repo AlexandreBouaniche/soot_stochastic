@@ -230,15 +230,16 @@ void writeCustomAggloCase(string pathProject, string pathTarget, vector<double> 
         //cout << "stream OK" << endl;
         
         stream1 << "#time = " << time << " pdf bins vertically in column 1"<<endl;
-        int j;
         
+        double beta0 = 1e-2;
+        int j;
         for(j=0; j<lVector.size(); j++)
         {
             double li = lVector[j];
             stream1 << li << "   ";
             
             double solutioni(0);
-            solutioni = 4 / pow((time+2),2.0) * exp(-2*li/(time+2));
+            solutioni = 4 / pow((beta0*time+2),2.0) * exp(-2*li/(beta0*time+2));
             stream1 << solutioni << endl;
         }
         stream1 << endl;

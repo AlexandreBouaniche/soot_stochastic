@@ -57,6 +57,22 @@ vector<double> initGeoMesh(double lp0, double maxValL, int nBins, double geoQ)
 }
 
 
+vector<double> initGeo2Mesh(double lp0, int nBins, double geo2Q)
+{
+    vector<double> liVector;
+    double li(lp0);
+    liVector.push_back(li);
+    
+    int i(0);
+    for(i=1; i<nBins; i++)
+    {
+        li = li*geo2Q;
+        liVector.push_back(li);
+    }
+    return liVector;
+}
+
+
 
 // case nucleation + growth
 vector<vector<double> > initCustomNuclGrowth()

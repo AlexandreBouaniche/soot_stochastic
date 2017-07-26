@@ -131,7 +131,8 @@ double dotAlStarGeo(double lStar, vector<vector< double> > const& allParticles, 
         for(j=0; j<=rankLstar; j++)
         {
             double lc = lNplNvl[j][0];
-            if ((li+lc)>=infbornLstar & (li+lc)<supBornLstar)
+            if ((li+lc)>=infbornLstar & (li+lc)<supBornLstar)      //positive term of Al*. Consider distribution from infborn to supborn?
+                // next development: sum over all li and lc with stoichiometric coef
             {
                  AlStarPos = AlStarPos + a * 0.5 * beta(lc,li, timePerIt) * nvLstarGeo(lc, lNplNvl, maxValL) * lNplNvl[i][2];
             }

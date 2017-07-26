@@ -15,6 +15,8 @@ std::vector<std::vector<double> > initAllParticles(std::vector<std::vector<doubl
 
 std::vector<double> initGeoMesh(double lp0, double maxValL, int nBins, double geoQ);
 
+std::vector<double> initGeo2Mesh(double lp0, int nBins, double geo2q);
+
 std::vector<std::vector<double> > initCustomNuclGrowth();
 
 std::vector<std::vector<double> > initCustomGrowth();

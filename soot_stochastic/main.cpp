@@ -31,7 +31,7 @@ int main()
     string pathProject("/Users/bouaniche/Xcode_projects/soot_stochastic");
     
     double lp0 = 0.1;             // nascent particles size
-    int itTot = 50;                 // number of iteration
+    int itTot = 100;                 // number of iteration
     double pdfGrid(0.1);    // distance between two c bins for graphic representation of P(c)
     double LpdfGrid(0.02);      // distance between two l bins for graphic representation of P(l)
     double maxValC(1);       // maximum value of c considered for graphic representation of P(c)
@@ -43,7 +43,7 @@ int main()
     // model parameters
     double h = 0.0;              // constant used for source term of nucleation
     double a = 1.0;                 // constant used for source term of agglomeration
-    double nT0 = 13.68;             // initial total soot number density
+    double nT0 = 33.5;             // initial total soot number density
     double uniformG = 0.0;
     //double linearG = 0.02;
     //double linearOxi = -0.0005;
@@ -51,18 +51,19 @@ int main()
     
     // time and mixing parameters
     double time(0);                 // time
-    double timePerIt = 0.1;        // time per iteration
+    double timePerIt = 1;        // time per iteration
     //double tau(2);                // characteristic mixing time as a function of iterations.
     
     
     // Parameters for geometric grid construction
     int nBins = 30;
-    double geoQ = 1.2;
+    double geoQ = 2.0;
     
     
     // construction of the mesh for the bins. Regular or geometric
     //vector<double> lVector = liVector(lp0, deltaL, maxValL);  // vector with all the li from lp0 to maxValL.
     vector<double> lVector = initGeoMesh(lp0, maxValL, nBins, geoQ);
+    //vector<double> lVector = initGeo2Mesh(lp0, nBins, geoQ);
     
     
     int i(0);
@@ -135,6 +136,8 @@ int main()
     // write analytical Ref customized
     //writeCustomNv(pathProject, "/outputs/Nv_t/NvRef_0.0025_", 0, allParticles, 0.0025, 0.02, maxValL, 1, nT);
     writeCustomAggloCase(pathProject, "/outputs/Nv_t/Ref_t", lVector, 5.0);
+    writeCustomAggloCase(pathProject, "/outputs/Nv_t/Ref_t", lVector, 20.0);
+    writeCustomAggloCase(pathProject, "/outputs/Nv_t/Ref_t", lVector, 100.0);
     
     
     // advancing t, mixing (Cpdf), source terms, advancing nT and Lpdf
@@ -147,7 +150,19 @@ int main()
         
         //lAndNpL = liNpliNvli(allParticles, lVector, deltaL, nT);      // col0: li; col1: npli; col2: nvli. calculated BEFORE ADVANCING nT to nT(t+deltat) ! doesn't "see" particles out of bounds (lp0 and maxValL)
         lAndNpL = geolNplNv(allParticles, lVector, nT, lp0, maxValL);
+        double totalMass(0);
+        double countNp(0);
         
+        i=0;
+        for(i=0; i<allParticles.size();i++)
+        {
+            totalMass += allParticles[i][1];
+            countNp++;
+        }
+        
+        totalMass = totalMass*nT/countNp;
+        
+        cout << "total mass = " << totalMass << endl;
 
         
         writePdft(pathProject, "/outputs/Cpdf_t/Cpdf", it, allParticles, pdfGrid, minValC, maxValC, 0, lAndNpL);
