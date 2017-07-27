@@ -23,6 +23,8 @@ std::vector<std::vector<double> > initCustomGrowth();
 
 std::vector<std::vector<double> > initCustomAgglo(std::vector<double> liVector, double maxValL);
 
+std::vector<std::vector<double> > initCustomAggloGeo2(std::vector<double> liVector, double maxValL);
+
 
 #include <stdio.h>
 

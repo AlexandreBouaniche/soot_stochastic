@@ -303,3 +303,36 @@ vector<vector<double> > initCustomAgglo(vector<double> liVector, double maxValL)
     }
     return allParticles;
 }
+
+
+
+// case pure agglomeration geo2
+
+vector<vector<double> > initCustomAggloGeo2(vector<double> liVector, double maxValL)
+{
+    vector<vector<double> > allParticles;
+    int i(0);
+    double li = liVector[0];
+    //for(i=0; i<liVector.size(); i++)
+    for(i=0; i<3; i++)
+    {
+        li = liVector[i];
+        double ci = 0.5;
+        //double fli = exp(-li);             // to determine initial pdf/ PSD
+        double fli = 1.0;
+        
+        int npi = rounding(1000*fli);   // to determine number of particles indirectly
+        
+        vector<double> initPdfi;
+        initPdfi.push_back(ci);
+        initPdfi.push_back(li);
+        
+        int j(0);
+        for(j=0; j<npi; j++)
+        {
+            initPdfi[1] = frand_a_b(li*0.75, li*1.5);
+            allParticles.push_back(initPdfi);
+        }
+    }
+    return allParticles;
+}

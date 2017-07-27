@@ -103,7 +103,7 @@ double dotAlStarGeo2(double lStar, vector<vector< double> > const& allParticles,
         AlStarNeg -= a * beta(ls,li, timePerIt) * lNplNvl[rankLstar][2] * lNplNvl[i][2]*(1-aCoeff);  //negative term of Al*
     }
     
-    AlStarNeg -= a * 2.0 * beta(ls, ls, timePerIt)*lNplNvl[rankLstar][2]*lNplNvl[rankLstar][2];  // case k=j
+    AlStarNeg -= a * 2.0/2.0 * beta(ls, ls, timePerIt)*lNplNvl[rankLstar][2]*lNplNvl[rankLstar][2];  // case k=j
     
     i = rankLstar+1;
     for(i=(rankLstar+1); i<lNplNvl.size(); i++)
@@ -151,7 +151,7 @@ double dotAlStarGeo2(double lStar, vector<vector< double> > const& allParticles,
     
     if(rankLstar>0)
     {
-        AlStarPos += a * beta(ljMinusOne, ljMinusOne, timePerIt) * lNplNvl[rankMinusOne][2] * lNplNvl[rankMinusOne][2];
+        AlStarPos += a *0.5* beta(ljMinusOne, ljMinusOne, timePerIt) * lNplNvl[rankMinusOne][2] * lNplNvl[rankMinusOne][2];
         // "case collision of 2 particles BINj-1
     }
     

@@ -50,7 +50,7 @@ int main()
     // model parameters
     double h = 0.0;              // constant used for source term of nucleation
     double a = 1.0;                 // constant used for source term of agglomeration
-    double nT0 = 33.5;             // initial total soot number density
+    double nT0 = 3.42;             // initial total soot number density
     double uniformG = 0.0;
     //double linearG = 0.02;
     //double linearOxi = -0.0005;
@@ -125,7 +125,7 @@ int main()
     //Customized Init
     
     //allParticles = initAllParticles(initVector);
-    allParticles = initCustomAgglo(lVector, maxValL);
+    allParticles = initCustomAggloGeo2(lVector, maxValL);
     
     
     
