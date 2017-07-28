@@ -167,6 +167,51 @@ double dotAlStarGeo2(double lStar, vector<vector< double> > const& allParticles,
 }
 
 
+double dotAlStarGeo2m(double lStar, vector<vector< double> > const& lNplNvl, vector<double> const& lVector, double a, double nT, double timePerIt)
+{
+    
+    // looking for closest value (to lStar) of li of the lNplNvl vector.
+    double AlStarTot(0);
+    int i(0);
+    double ls(lStar);
+    double li(0);
+    int rankLstar(0);
+    
+    double infborn(0);
+    double supborn(0);
+    
+    double infbornLstar(0);
+    double supBornLstar(0);
+    
+    for(i=0; i<lNplNvl.size(); i++)          // looking for closest value (to lStar) of li of the lNplNvl vector.
+    {
+        li = lNplNvl[i][0];
+        infborn = li*0.75;
+        supborn = li*1.5;
+        
+        
+        if(lStar>=infborn & lStar < supborn)
+        {
+            ls = li;                // taking this closest value for source calculation
+            rankLstar = i;          // corresponding rank in lNplNvl
+            supBornLstar = supborn;
+            infbornLstar = infborn;
+        }
+        
+    }
+    
+    ls = lNplNvl[rankLstar][0];
+    
+    
+    
+    // now that we have rankLstar we can calculate wmTotj  and AlStarTot
+    AlStarTot = wmTotj(rankLstar, lNplNvl, timePerIt, lVector, a) / ls;
+    
+    return AlStarTot;
+}
+
+
+
 
 vector<double> allAlphaCoefGeo2(vector<vector< double> > const& allParticles, double lp0, double a, double nT, double nTtminusOne, double h, double deltaL, vector<vector< double> > const& lNplNvl, double t, double timePerIt, double maxValL)
 {
@@ -435,4 +480,133 @@ vector<vector<double> > geo2lNplNv(vector<vector<double> > allParticles, vector<
 }
 
 
+
+// "reaction rate" collision BINk + BINj -> nu_j*BINj + nu_(j+1)*BINj+1
+double w_kj(int k, int j, vector<vector<double> > const& lAndNpl, double timePerIt, double a)
+{
+    double wkj(0);
+    double lj = lAndNpl[j][0];
+    double lk = lAndNpl[k][0];
+    double betakj = beta(lj, lk,timePerIt);
+    
+    wkj = a * betakj * lAndNpl[j][2] * lAndNpl[k][2];
+    return wkj;
+}
+
+
+double avgMbinjTojPlusOne(int k, int j, vector<double> const& lVector)
+{
+    double lj = lVector[j];
+    double Mjmax = 1.5*lj;
+    double avgM_j_jTojpluOne = Mjmax -0.5 * avgMbinkTojPlusOne(k, j, lVector);
+    
+    return avgM_j_jTojpluOne;
+}
+
+
+double avgMbinkTojPlusOne(int k, int j, vector<double> const& lVector)
+{
+    double lk = lVector[k];
+    double Mkmin = lk*0.75;
+    double Mkmax = 1.5*lk;
+    double avgM_k_jTojplusOne = 2.0/3.0*(pow(Mkmax, 3.0)-pow(Mkmin, 3.0))/(pow(Mkmax, 2.0)-pow(Mkmin, 2.0));
+    
+    return avgM_k_jTojplusOne;
+}
+
+
+double avgMbinkToj(int k, int j, vector<double> const& lVector)
+{
+    double lk = lVector[k];
+    double lj = lVector[j];
+    double Mkmin = 0.75*lk;
+    double Mkmax = 1.5*lk;
+    double Mjmin = 0.75*lj;
+    double Mjmax = 1.5*lj;
+    double avgM_k_jToj = ((Mjmax-Mjmin)*(pow(Mkmax, 2.0)/2.0-pow(Mkmin, 2.0)/2.0)-(pow(Mkmax, 3.0)/3.0-pow(Mkmin, 3.0)/3.0))/((Mjmax-Mjmin)*(Mkmax-Mkmin)-(pow(Mkmax, 2.0)/2.0-pow(Mkmin, 2.0)/2.0));
+    
+    return avgM_k_jToj;
+}
+
+
+double nuj(int k, int j, vector<double> const& lVector)
+{
+    double lk = lVector[k];
+    double lj = lVector[j];
+    double nu_j = (aCoef(lk, lj)*avgMbinkToj(k, j, lVector) - (1-aCoef(lk, lj))*avgMbinjTojPlusOne(k, j, lVector))/lj + 1;
+    
+    return nu_j;
+}
+
+
+double nujPlusOne(int k, int j, vector<double> const& lVector)
+{
+    double lk = lVector[k];
+    double lj = lVector[j];
+    double ljPlusOne = lVector[j+1];
+    double nu_jPlusOne = (1-aCoef(lk, lj)) * ( avgMbinkTojPlusOne(k, j, lVector) + avgMbinjTojPlusOne(k, j, lVector) ) / ljPlusOne;
+    
+    return nu_jPlusOne;
+}
+
+
+double wmNeg(int k, vector<vector<double> > const& lAndNpl, double timePerIt, double a)
+{
+    double lk = lAndNpl[k][0];
+    double wmNeg_k(0);
+    int j(0);
+    for(j=0;j<lAndNpl.size();j++)
+    {
+        wmNeg_k += -1*lk*w_kj(k, j, lAndNpl, timePerIt, a);  // for k=j -2 but factor 1/2 for w_kj. compensate
+    }
+    return wmNeg_k;
+}
+
+
+double wmPosj(int j, vector<vector<double> > const& lAndNpl, double timePerIt, vector<double> const& lVector, double a)
+{
+    double lj = lVector[j];
+    int k(0);
+    double wmPos_j(0);
+    for(k=0;k<j;k++)
+    {
+        wmPos_j += nuj(k, j, lVector)* lj * w_kj(k, j, lAndNpl, timePerIt, a);
+    }
+    return wmPos_j;
+}
+
+
+
+double wmPosjPlusOne(int jPlusOne, vector<vector<double> > const& lAndNpl, double timePerIt, vector<double> const& lVector, double a)
+{
+    double wmPos_jPlusOne(0);
+    
+    if(jPlusOne>0)
+    {
+        int j = jPlusOne -1;
+        double ljPlusOne = lVector[jPlusOne];
+        int k(0);
+        for(k=0;k<j;k++)
+        {
+            wmPos_jPlusOne += nujPlusOne(k, j, lVector) * ljPlusOne * w_kj(k, j, lAndNpl, timePerIt, a);   // case k < j
+        }
+        
+        k=j;
+        wmPos_jPlusOne += 1 * ljPlusOne * w_kj(k, j, lAndNpl, timePerIt, a);  // case k = j
+    }
+    else
+    {
+        wmPos_jPlusOne = 0;
+    }
+    
+    return wmPos_jPlusOne;
+}
+
+
+double wmTotj( int j, vector<vector<double> > const& lAndNpl, double timePerIt, vector<double> const& lVector, double a)
+{
+    double wmTot = wmPosj(j, lAndNpl, timePerIt, lVector, a) + wmPosjPlusOne(j, lAndNpl, timePerIt, lVector, a) + wmNeg(j, lAndNpl, timePerIt, a);
+    
+    return wmTot;
+}
 

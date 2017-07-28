@@ -15,13 +15,33 @@ double aCoef(double lk, double lj);
 
 double nvLstarGeo2(double lStar, std::vector<std::vector<double> > lNplNvl, double maxvalL);
 
-double dotAlStarGeo2(double lStar, std::vector<std::vector< double> > const& allParticles, std::vector<std::vector< double> > const& lNplNvl, double a, double deltaL, double nT, double timePerIt, double maxValL);
+double dotAlStarGeo2m(double lStar, std::vector<std::vector< double> > const& lNplNvl, std::vector<double> const& lVector, double a, double nT, double timePerIt);
 
 std::vector<double> allAlphaCoefGeo2(std::vector<std::vector< double> > const& allParticles, double lp0, double a, double nT, double nTtminusOne, double h, double deltaL, std::vector<std::vector< double> > const& lNplNvl, double t, double timePerIt, double maxValL);
 
 void advancePdfGeo2(std::vector<double>const& alphaVector, std::vector<std::vector< double> >& allParticles, std::vector<std::vector< double> > & lNplNvl, double h, double nT, double a, double deltaL, double it, double maxValL, double lp0, double nTtminusOne, double timePerIt);
 
 std::vector<std::vector<double> > geo2lNplNv(std::vector<std::vector<double> > allParticles, std::vector<double> liVector, double nT, double lp0, double maxvalL);
+
+double w_kj(int k, int j, std::vector<std::vector<double> > const& lAndNpl, double timePerIt, double a);
+
+double avgMbinjTojPlusOne(int k, int j, std::vector<double> const& lVector);
+
+double avgMbinkTojPlusOne(int k, int j, std::vector<double> const& lVector);
+
+double avgMbinkToj(int k, int j, std::vector<double> const& lVector);
+
+double nuj(int k, int j, std::vector<double> const& lVector);
+
+double nujPlusOne(int k, int j, std::vector<double> const& lVector);
+
+double wmNeg(int k, std::vector<std::vector<double> > const& lAndNpl, double timePerIt, double a);
+
+double wmPosj(int j, std::vector<std::vector<double> > const& lAndNpl, double timePerIt, std::vector<double> const& lVector, double a);
+
+double wmPosjPlusOne(int j, std::vector<std::vector<double> > const& lAndNpl, double timePerIt, std::vector<double> const& lVector, double a);
+
+double wmTotj(int j, std::vector<std::vector<double> > const& lAndNpl, double timePerIt, std::vector<double> const& lVector, double a);
 
 #include <stdio.h>
 
