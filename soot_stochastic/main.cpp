@@ -202,7 +202,7 @@ int main()
         cout << "dotG = " << dotG << endl;
         
         
-        vector<double> alphaVector = allAlphaCoefGeo2(allParticles, lp0, a, nT,nTtminusOne, h, deltaL, lAndNpL, it, timePerIt, maxValL);  // coefs used for advancePdf
+        vector<double> alphaVector = allAlphaCoefGeo2m(allParticles, lp0, a, nT, h, lAndNpL, timePerIt, lVector);  // coefs used for advancePdf
         
         advancePdfGeo2(alphaVector, allParticles, lAndNpL, h, nT, a, deltaL, it, maxValL, lp0, nTtminusOne, timePerIt);
     }
