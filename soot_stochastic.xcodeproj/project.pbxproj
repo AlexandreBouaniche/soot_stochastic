@@ -17,6 +17,7 @@
 		ECE501DE1F01484E006964B7 /* agglomeration.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ECE501DC1F01484E006964B7 /* agglomeration.cpp */; };
 		ECE502031F0A8AD9006964B7 /* growth.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ECE502011F0A8AD9006964B7 /* growth.cpp */; };
 		ECE502061F21E94A006964B7 /* init.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ECE502041F21E94A006964B7 /* init.cpp */; };
+		ECE8D18E1F30B591003B68BC /* advanceMass.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ECE8D18C1F30B591003B68BC /* advanceMass.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -52,6 +53,8 @@
 		ECE502021F0A8AD9006964B7 /* growth.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = growth.hpp; sourceTree = "<group>"; };
 		ECE502041F21E94A006964B7 /* init.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = init.cpp; sourceTree = "<group>"; };
 		ECE502051F21E94A006964B7 /* init.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = init.hpp; sourceTree = "<group>"; };
+		ECE8D18C1F30B591003B68BC /* advanceMass.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = advanceMass.cpp; sourceTree = "<group>"; };
+		ECE8D18D1F30B591003B68BC /* advanceMass.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = advanceMass.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -93,16 +96,18 @@
 				ECB9FFD41F26079000BEC507 /* aggloGeo.hpp */,
 				ECE501D91EFD607B006964B7 /* nucleation.cpp */,
 				ECE501DA1EFD607B006964B7 /* nucleation.hpp */,
+				ECE502041F21E94A006964B7 /* init.cpp */,
+				ECE502051F21E94A006964B7 /* init.hpp */,
 				ECE501D61EFC13DB006964B7 /* streams.cpp */,
 				ECE501D71EFC13DB006964B7 /* streams.hpp */,
 				EC7036901EFBEC3F0043132D /* tools.cpp */,
 				EC7036911EFBEC3F0043132D /* tools.hpp */,
 				EC70368D1EFBA90B0043132D /* mixing.cpp */,
 				EC70368E1EFBA90B0043132D /* mixing.hpp */,
-				ECE502041F21E94A006964B7 /* init.cpp */,
 				ECB9FFD61F289F5600BEC507 /* aggloGeo2.cpp */,
 				ECB9FFD71F289F5600BEC507 /* aggloGeo2.hpp */,
-				ECE502051F21E94A006964B7 /* init.hpp */,
+				ECE8D18C1F30B591003B68BC /* advanceMass.cpp */,
+				ECE8D18D1F30B591003B68BC /* advanceMass.hpp */,
 			);
 			path = soot_stochastic;
 			sourceTree = "<group>";
@@ -168,6 +173,7 @@
 				ECB9FFD81F289F5600BEC507 /* aggloGeo2.cpp in Sources */,
 				ECE501DB1EFD607B006964B7 /* nucleation.cpp in Sources */,
 				EC70368F1EFBA90B0043132D /* mixing.cpp in Sources */,
+				ECE8D18E1F30B591003B68BC /* advanceMass.cpp in Sources */,
 				ECE502031F0A8AD9006964B7 /* growth.cpp in Sources */,
 				ECE501DE1F01484E006964B7 /* agglomeration.cpp in Sources */,
 				ECE502061F21E94A006964B7 /* init.cpp in Sources */,

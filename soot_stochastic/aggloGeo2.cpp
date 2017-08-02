@@ -12,6 +12,7 @@
 #include "nucleation.hpp"
 #include "growth.hpp"
 #include "agglomeration.hpp"
+#include "advanceMass.hpp"
 
 #include <iostream>
 #include <string>
@@ -205,26 +206,12 @@ double dotAlStarGeo2m(double lStar, vector<vector< double> > const& lNplNvl, vec
     
     
     // now that we have rankLstar we can calculate wmTotj  and AlStarTot
-    // we calculate AlstarAll to "normalize" the sum of all AlStar to dotAt
-    
-    /*
-    double AlstarAll(0);
-    i=0;
-    for(i=0;i<lVector.size();i++)
-    {
-        li = lNplNvl[i][0];
-        AlstarAll += wmTotj(i, lNplNvl, timePerIt, lVector, a) / (li*1.125);
-    }
-    double dotAt = aggloTotSource(allParticles, lNplNvl, a, timePerIt);
-    */
     
     AlStarTot = wmTotj(rankLstar, lNplNvl, timePerIt, lVector, a) / (ls*1.125);
     
-    cout << "nv["<<ls<<"] = " << lNplNvl[rankLstar][2] << endl;
-    cout << "AlStar["<< ls << "] "  << AlStarTot << endl;
-    //cout << "dotAt norm = " <<dotAt << endl;
-    //cout << "AlstarAll = " << AlstarAll << endl;
-    cout << endl;
+    //cout << "nv["<<ls<<"] = " << lNplNvl[rankLstar][2] << endl;
+    //cout << "AlStar["<< ls << "] "  << AlStarTot << endl;
+    //cout << endl;
     
     return AlStarTot;
 }

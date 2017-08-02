@@ -25,6 +25,7 @@ std::vector<std::vector<double> > initCustomAgglo(std::vector<double> liVector, 
 
 std::vector<std::vector<double> > initCustomAggloGeo2(std::vector<double> liVector, double maxValL);
 
+std::vector<std::vector<double> > initCustomAggloMass(std::vector<double> liVector);
 
 #include <stdio.h>
 
