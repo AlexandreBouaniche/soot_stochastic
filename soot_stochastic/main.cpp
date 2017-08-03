@@ -33,7 +33,7 @@ int main()
     string pathProject("/Users/bouaniche/Xcode_projects/soot_stochastic");
     
     double lp0 = 0.1;             // nascent particles size
-    int itTot = 100;                 // number of iteration
+    int itTot = 500;                 // number of iteration
     double pdfGrid(0.1);    // distance between two c bins for graphic representation of P(c)
     double LpdfGrid(0.02);      // distance between two l bins for graphic representation of P(l)
     double maxValC(1);       // maximum value of c considered for graphic representation of P(c)
@@ -67,7 +67,7 @@ int main()
     
     // time and mixing parameters
     double time(0);                 // time
-    double timePerIt = 1;        // time per iteration
+    double timePerIt = 1e-2;        // time per iteration
     //double tau(2);                // characteristic mixing time as a function of iterations.
     
     
@@ -149,9 +149,12 @@ int main()
     // write analytical Ref customized
     //writeCustomNv(pathProject, "/outputs/Nv_t/NvRef_0.0025_", 0, allParticles, 0.0025, 0.02, maxValL, 1, nT);
     writeCustomAggloCase(pathProject, "/outputs/Nv_t/Ref_t", lVector, 0.0);
+    writeCustomAggloCase(pathProject, "/outputs/Nv_t/Ref_t", lVector, 0.05);
+    writeCustomAggloCase(pathProject, "/outputs/Nv_t/Ref_t", lVector, 0.2);
+    writeCustomAggloCase(pathProject, "/outputs/Nv_t/Ref_t", lVector, 1.0);
+    writeCustomAggloCase(pathProject, "/outputs/Nv_t/Ref_t", lVector, 2.0);
+    writeCustomAggloCase(pathProject, "/outputs/Nv_t/Ref_t", lVector, 3.0);
     writeCustomAggloCase(pathProject, "/outputs/Nv_t/Ref_t", lVector, 5.0);
-    writeCustomAggloCase(pathProject, "/outputs/Nv_t/Ref_t", lVector, 20.0);
-    writeCustomAggloCase(pathProject, "/outputs/Nv_t/Ref_t", lVector, 100.0);
     
     
     // advancing t, mixing (Cpdf), source terms, advancing nT and Lpdf

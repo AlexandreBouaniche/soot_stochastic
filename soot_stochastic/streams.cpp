@@ -232,7 +232,7 @@ void writeCustomAggloCase(string pathProject, string pathTarget, vector<double> 
         
         stream1 << "#time = " << time << " pdf bins vertically in column 1"<<endl;
         
-        double beta0 = 1e-2;
+        double beta0 = 1.0;
         int j;
         for(j=0; j<lVector.size(); j++)
         {
