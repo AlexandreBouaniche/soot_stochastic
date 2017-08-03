@@ -301,9 +301,12 @@ vector<vector<double> > lNplNvMass(vector<vector<double> > allParticles, vector<
         double li(0);
         double nvL(0);
         double mvL(0);
+        
         li = lVector[i];
+        double lavg = 1.125*li;
         double infborn = li*0.75;
         double supborn = li*1.5;
+        double deltaLinterval = supborn - infborn;
         
         // count of np(li)
         j=0;
@@ -316,7 +319,7 @@ vector<vector<double> > lNplNvMass(vector<vector<double> > allParticles, vector<
         }
         
         mvL = double(npL)/double(Np)*mT;      // mass stochastic particles different from number density stochastic particles. One stochastic particle represents a mass mT/Np. Before we had one stochastic particle represents nT/Np particles
-        nvL = mvL/(li*1.125);
+        nvL = mvL/(lavg*deltaLinterval);
         lAndNpl.push_back(vector<double>(4,0));
         lAndNpl[i][0] = li;
         lAndNpl[i][1] = npL;

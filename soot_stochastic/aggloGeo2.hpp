@@ -37,9 +37,9 @@ double nuj(int k, int j, std::vector<double> const& lVector);
 
 double nujPlusOne(int k, int j, std::vector<double> const& lVector);
 
-double wmNegRj(int k, int j, std::vector<std::vector<double> > const& lAndNpl, double timePerIt, double a);
+double wmNegRj(int k, int j, std::vector<std::vector<double> > const& lAndNpl, double timePerIt, double a, std::vector<double> const& lVector);
 
-double wmNegRk(int k, int j, std::vector<std::vector<double> > const& lAndNpl, double timePerIt, double a);
+double wmNegRk(int k, int j, std::vector<std::vector<double> > const& lAndNpl, double timePerIt, double a, std::vector<double> const& lVector);
 
 double wmPosRj(int k, int j, std::vector<std::vector<double> > const& lAndNpl, double timePerIt, std::vector<double> const& lVector, double a);
 

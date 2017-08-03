@@ -199,7 +199,8 @@ void writeGeoNvt(string pathProject, string pathTarget, int it, vector<vector<do
         for(j=0; j<lAndNpl.size(); j++)
         {
             li = lAndNpl[j][0];
-            stream1 << li << "   ";
+            double lavg = li*1.125;
+            stream1 << lavg << "   ";
             double nv;
             nv = lAndNpl[j][2];
             stream1 << nv << endl;
@@ -236,10 +237,11 @@ void writeCustomAggloCase(string pathProject, string pathTarget, vector<double> 
         for(j=0; j<lVector.size(); j++)
         {
             double li = lVector[j];
-            stream1 << li << "   ";
+            double lavg = li*1.125;
+            stream1 << lavg << "   ";
             
             double solutioni(0);
-            solutioni = 4 / pow((beta0*time+2),2.0) * exp(-2*li/(beta0*time+2));
+            solutioni = 4 / pow((beta0*time+2),2.0) * exp(-2*lavg/(beta0*time+2));
             stream1 << solutioni << endl;
         }
         stream1 << endl;

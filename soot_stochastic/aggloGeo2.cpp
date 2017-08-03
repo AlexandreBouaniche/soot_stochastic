@@ -528,13 +528,18 @@ double w_kj(int k, int j, vector<vector<double> > const& lAndNpl, double timePer
     double lk = lAndNpl[k][0];
     double betakj = beta(lj, lk,timePerIt);
     
+    double deltaLintj(0);
+    double deltaLintk(0);
+    deltaLintj = 1.5*lj - 0.75*lj;
+    deltaLintk = 1.5*lk - 0.75*lk;
+    
     if(k==j)
     {
-        wkj = 0.5 * a * betakj * lAndNpl[j][2] * lAndNpl[k][2];  // "factor 1/2"
+        wkj = 0.5 * a * betakj * lAndNpl[j][2] * deltaLintj * lAndNpl[k][2] * deltaLintk;  // "factor 1/2"
     }
     else
     {
-        wkj = a * betakj * lAndNpl[j][2] * lAndNpl[k][2];
+        wkj = a * betakj * lAndNpl[j][2] *deltaLintj * lAndNpl[k][2] * deltaLintk;
     }
     return wkj;
 }
@@ -588,24 +593,40 @@ double nuj(int k, int j, vector<double> const& lVector)
 
 double nujPlusOne(int k, int j, vector<double> const& lVector)
 {
-    double lk = lVector[k];
-    double lj = lVector[j];
-    double ljPlusOne = lVector[j+1];
-    double nu_jPlusOne = (1-aCoef(lk, lj)) * ( avgMbinkTojPlusOne(k, j, lVector) + avgMbinjTojPlusOne(k, j, lVector) ) / (ljPlusOne*1.125);
+    double nu_jPlusOne(0);
+    int jPlusOne = j+1;
+    if(jPlusOne<lVector.size())
+    {
+        double lk = lVector[k];
+        double lj = lVector[j];
+        double ljPlusOne = lVector[j+1];
+        nu_jPlusOne = (1-aCoef(lk, lj)) * ( avgMbinkTojPlusOne(k, j, lVector) + avgMbinjTojPlusOne(k, j, lVector) ) / (ljPlusOne*1.125);
+    }
+    else
+    {
+        nu_jPlusOne = 0;
+        cout << "error nujPlusOne j+1 > lVectorsize " << endl;
+    }
     
     //cout << "nuj+1("<<k<<";"<<j<<") = " << nu_jPlusOne << endl;
     return nu_jPlusOne;
 }
 
 
-double wmNegRj(int k, int j, vector<vector<double> > const& lAndNpl, double timePerIt, double a)
+double wmNegRj(int k, int j, vector<vector<double> > const& lAndNpl, double timePerIt, double a, vector<double> const& lVector)
 {
+    double correctionCoef(0);
+    
     double wmNeg_Rj(0);
     double lj = lAndNpl[j][0];
     
     if(k<j)
     {
         wmNeg_Rj = -lj*1.125*w_kj(k, j, lAndNpl, timePerIt, a);
+        
+        correctionCoef = 1+ (1-(nuj(k, j, lVector)+nujPlusOne(k, j, lVector)));
+        wmNeg_Rj = wmNeg_Rj/correctionCoef;
+        //cout << "correction coef = "<< correctionCoef << endl;
     }
     if(k==j)
     {
@@ -617,18 +638,24 @@ double wmNegRj(int k, int j, vector<vector<double> > const& lAndNpl, double time
         wmNeg_Rj = 0;
     }
     //cout << "wmNegRj("<<k<<";"<<j<<") = " << wmNeg_Rj << endl;
+    
     return wmNeg_Rj;
 }
 
 
-double wmNegRk(int k, int j, vector<vector<double> > const& lAndNpl, double timePerIt, double a)
+double wmNegRk(int k, int j, vector<vector<double> > const& lAndNpl, double timePerIt, double a, vector<double> const& lVector)
 {
+    double correctionCoef(0);
+    
     double wmNeg_Rk(0);
     double lk = lAndNpl[k][0];
     
     if(k<j)
     {
         wmNeg_Rk = -lk*1.125*w_kj(k, j, lAndNpl, timePerIt, a);
+        
+        correctionCoef = 1+ (1-(nuj(k, j, lVector)+nujPlusOne(k, j, lVector)));
+        wmNeg_Rk = wmNeg_Rk/correctionCoef;
     }
     if(k==j)
     {
@@ -640,17 +667,23 @@ double wmNegRk(int k, int j, vector<vector<double> > const& lAndNpl, double time
         wmNeg_Rk = 0;
     }
     //cout << "wmNegRk("<<k<<";"<<j<<") = " << wmNeg_Rk << endl;
+
     return wmNeg_Rk;
 }
 
 
 double wmPosRj(int k, int j, vector<vector<double> > const& lAndNpl, double timePerIt, vector<double> const& lVector, double a)
 {
+    double correctionCoef(0);
+    
     double lj = lVector[j];
     double wmPosR_j(0);
     if(k<j)
     {
         wmPosR_j = nuj(k, j, lVector)* lj*1.125 * w_kj(k, j, lAndNpl, timePerIt, a);
+        
+        correctionCoef = 1+ (1-(nuj(k, j, lVector)+nujPlusOne(k, j, lVector)));
+        wmPosR_j = wmPosR_j / correctionCoef;
     }
     if(k==j)
     {
@@ -662,6 +695,7 @@ double wmPosRj(int k, int j, vector<vector<double> > const& lAndNpl, double time
         wmPosR_j = 0;
     }
     //cout << "wmPosR_j("<<k<<";"<<j<<") = " << wmPosR_j << endl;
+    
     return wmPosR_j;
 }
 
@@ -669,15 +703,24 @@ double wmPosRj(int k, int j, vector<vector<double> > const& lAndNpl, double time
 
 double wmPosPlusOneRj(int k, int jPlusOne, vector<vector<double> > const& lAndNpl, double timePerIt, vector<double> const& lVector, double a)
 {
+    int j = jPlusOne -1;
+    
+    double correctionCoef(0);
+    
+    
     double wmPosR_jPlusOne(0);
     
     if(jPlusOne>0)
     {
-        int j = jPlusOne -1;
         double ljPlusOne = lVector[jPlusOne];
         if(k<j)
         {
+            
             wmPosR_jPlusOne += nujPlusOne(k, j, lVector) * ljPlusOne *1.125 * w_kj(k, j, lAndNpl, timePerIt, a);   // case k < j
+            
+            correctionCoef = 1+ (1-(nuj(k, j, lVector)+nujPlusOne(k, j, lVector)));
+            wmPosR_jPlusOne = wmPosR_jPlusOne/correctionCoef;
+            
         }
         if(k==j)
         {
@@ -696,6 +739,7 @@ double wmPosPlusOneRj(int k, int jPlusOne, vector<vector<double> > const& lAndNp
     }
     
     //cout << "wmPosR_jplusOne("<<k<<";"<<jPlusOne<<") = " << wmPosR_jPlusOne<< endl;
+    
     return wmPosR_jPlusOne;
 }
 
@@ -704,16 +748,16 @@ double wmNegJ( int j, vector<vector<double> > const& lAndNpl, double timePerIt, 
 {
     double wmNegJ(0);
     int k=0;
-    for(k=0; k<j; k++)
+    for(k=0; k<j; k++)      // case collision of j with a smaller particle
     {
-        wmNegJ += wmNegRj(k, j, lAndNpl, timePerIt, a);
+        wmNegJ += wmNegRj(k, j, lAndNpl, timePerIt, a, lVector);
     }
     
-    wmNegJ += wmNegRj(k, j, lAndNpl, timePerIt, a) + wmNegRk(k, j, lAndNpl, timePerIt, a); //k=j
+    wmNegJ += wmNegRj(k, j, lAndNpl, timePerIt, a, lVector) + wmNegRk(k, j, lAndNpl, timePerIt, a, lVector); //k=j
     
-    for(k=(j+1);k<lVector.size(); k++)
+    for(k=(j+1);(k+1)<lVector.size(); k++) // case collision of j with a bigger particle. only possible if smaller than biggest size  -> for until (k+1)<lVector.size
     {
-        wmNegJ += wmNegRk(j, k, lAndNpl, timePerIt, a);
+        wmNegJ += wmNegRk(j, k, lAndNpl, timePerIt, a, lVector);
     }
     
     return wmNegJ;
@@ -762,7 +806,19 @@ double wmPosJPlusOne(int jPlusOne, vector<vector<double> > const& lAndNpl, doubl
 
 double wmTotj( int j, vector<vector<double> > const& lAndNpl, double timePerIt, vector<double> const& lVector, double a)
 {
-    double wmTotj = wmNegJ(j, lAndNpl, timePerIt, lVector, a) + wmPosJ(j, lAndNpl, timePerIt, lVector, a) + wmPosJPlusOne(j, lAndNpl, timePerIt, lVector, a);
+    double wmTotj(0);
+    
+    int jPlusOne = j+1;
+    if(jPlusOne<lVector.size())
+    {
+        wmTotj = wmNegJ(j, lAndNpl, timePerIt, lVector, a) + wmPosJ(j, lAndNpl, timePerIt, lVector, a) + wmPosJPlusOne(j, lAndNpl, timePerIt, lVector, a);
+    }
+    else
+    {
+        wmTotj = wmPosJPlusOne(j, lAndNpl, timePerIt, lVector, a);
+        
+    }
+    
     
     //cout << "wmPosj = " << wmPosJ(j, lAndNpl, timePerIt, lVector, a) << endl;
     //cout << "wmPosjPlusOne = " << wmPosJPlusOne(j, lAndNpl, timePerIt, lVector, a) << endl;

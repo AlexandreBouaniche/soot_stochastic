@@ -54,10 +54,11 @@ int main()
     double nT0 = 3.42;             // initial total soot number density
     
     //mass parameters
-    double mT0 = 0.8978;
-    //double mT0 = 1.68;
+    //double mT0 = 0.8978;
+    double mT0 = 0.9606;
     double mT = mT0;
     double mTminusOne = mT;
+    double dotAtm(0);
     
     double uniformG = 0.0;
     //double linearG = 0.02;
@@ -167,12 +168,14 @@ int main()
         nTtminusOne = nT;
         // values it0 and then itMinus1
         lAndNpL = lNplNvMass(allParticles, lVector, mT);
+        cout << "mv(l0;t0) = " << lAndNpL[0][3] << endl;
+        cout << "Nv(l0;t0) = " << lAndNpL[0][2] << endl;
         nT = nTfromMass(lAndNpL);
                         // storing nT(t-deltat)
         mTminusOne = mT;
         
         double totalMassbins(0);
-        double dotAtm(0);
+        
         
         // printing for it-1
         cout << endl << endl;
