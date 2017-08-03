@@ -52,7 +52,7 @@ int main()
     // model parameters
     double h = 0.0;              // constant used for source term of nucleation
     double a = 1.0;                 // constant used for source term of agglomeration
-    double nT0 = 2.9297;             // initial total soot number density
+    double nT0 = 0.8895;             // initial total soot number density
     
     double dotAt(0);
     
