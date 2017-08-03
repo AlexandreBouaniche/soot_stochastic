@@ -22,6 +22,7 @@
 #include "aggloGeo.hpp"
 #include "aggloGeo2.hpp"
 #include "advanceMass.hpp"
+#include "advanceNdf.hpp"
 
 using namespace std;
 
@@ -33,7 +34,7 @@ int main()
     string pathProject("/Users/bouaniche/Xcode_projects/soot_stochastic");
     
     double lp0 = 0.1;             // nascent particles size
-    int itTot = 500;                 // number of iteration
+    int itTot = 10000;                 // number of iteration
     double pdfGrid(0.1);    // distance between two c bins for graphic representation of P(c)
     double LpdfGrid(0.02);      // distance between two l bins for graphic representation of P(l)
     double maxValC(1);       // maximum value of c considered for graphic representation of P(c)
@@ -51,14 +52,18 @@ int main()
     // model parameters
     double h = 0.0;              // constant used for source term of nucleation
     double a = 1.0;                 // constant used for source term of agglomeration
-    double nT0 = 3.42;             // initial total soot number density
+    double nT0 = 2.9297;             // initial total soot number density
     
+    double dotAt(0);
+    
+    /*
     //mass parameters
     //double mT0 = 0.8978;
     double mT0 = 0.9606;
     double mT = mT0;
     double mTminusOne = mT;
     double dotAtm(0);
+     */
     
     double uniformG = 0.0;
     //double linearG = 0.02;
@@ -91,46 +96,6 @@ int main()
     vector<vector<double> > allParticles;  // col0: ci; col1: li
     
     
-    // Standard initVector
-    /*
-    int Np0 = 500;                // initial stochastic particles at inlet0
-    int Np1 = 500;                // initial stochastic particles at inlet1
-    int Np2 = 500;
-    int Np3 = 500;
-    
-    double c0 = 0.0;              // initial progress variable at inlet0
-    double c1 = 1.0;              // initial progress variable at inlet1
-    
-    double l0 = 0.01;              // initial soot size at inlet0
-    double l1 = 0.01;             // initial soot size at inlet1
-    double l2 = 0.01;
-    double l3 = 0.01
-     */
-
-    
-    /*
-    vector<vector<double> > initVector;    // col0: ci; col1: li; col2: Npi
-    initVector.push_back(vector<double>(3,0));
-    initVector[0][0] = c0;
-    initVector[0][1] = l0;
-    initVector[0][2] = Np0;
-    
-    initVector.push_back(vector<double>(3,0));
-    initVector[1][0] = c1;
-    initVector[1][1] = l1;
-    initVector[1][2] = Np1;
-    
-    initVector.push_back(vector<double>(3,0));
-    initVector[2][0] = c0;
-    initVector[2][1] = l2;
-    initVector[2][2] = Np2;
-    
-    initVector.push_back(vector<double>(3,0));
-    initVector[3][0] = c1;
-    initVector[3][1] = l3;
-    initVector[3][2] = Np3;
-    */
-    
     //Customized Init
     
     //allParticles = initAllParticles(initVector);
@@ -148,17 +113,18 @@ int main()
     
     // write analytical Ref customized
     //writeCustomNv(pathProject, "/outputs/Nv_t/NvRef_0.0025_", 0, allParticles, 0.0025, 0.02, maxValL, 1, nT);
-    writeCustomAggloCase(pathProject, "/outputs/Nv_t/Ref_t", lVector, 0.0);
-    writeCustomAggloCase(pathProject, "/outputs/Nv_t/Ref_t", lVector, 0.05);
-    writeCustomAggloCase(pathProject, "/outputs/Nv_t/Ref_t", lVector, 0.2);
-    writeCustomAggloCase(pathProject, "/outputs/Nv_t/Ref_t", lVector, 1.0);
-    writeCustomAggloCase(pathProject, "/outputs/Nv_t/Ref_t", lVector, 2.0);
-    writeCustomAggloCase(pathProject, "/outputs/Nv_t/Ref_t", lVector, 3.0);
-    writeCustomAggloCase(pathProject, "/outputs/Nv_t/Ref_t", lVector, 5.0);
-    
+    writeCustomAggloCase(pathProject, "/outputs/Nd_t/Ref_t", lVector, 0.0);
+    writeCustomAggloCase(pathProject, "/outputs/Nd_t/Ref_t", lVector, 0.05);
+    writeCustomAggloCase(pathProject, "/outputs/Nd_t/Ref_t", lVector, 0.2);
+    writeCustomAggloCase(pathProject, "/outputs/Nd_t/Ref_t", lVector, 1.0);
+    writeCustomAggloCase(pathProject, "/outputs/Nd_t/Ref_t", lVector, 2.0);
+    writeCustomAggloCase(pathProject, "/outputs/Nd_t/Ref_t", lVector, 3.0);
+    writeCustomAggloCase(pathProject, "/outputs/Nd_t/Ref_t", lVector, 5.0);
+    writeCustomAggloCase(pathProject, "/outputs/Nd_t/Ref_t", lVector, 20.0);
+    writeCustomAggloCase(pathProject, "/outputs/Nd_t/Ref_t", lVector, 100.0);
     
     // advancing t, mixing (Cpdf), source terms, advancing nT and Lpdf
-    vector<vector<double> > lAndNpL;
+    vector<vector<double> > ndft;
     int j;
     for(j=0; j<itTot; j++ )
     {
@@ -168,36 +134,34 @@ int main()
         //lAndNpL = liNpliNvli(allParticles, lVector, deltaL, nT);      // col0: li; col1: npli; col2: nvli. calculated BEFORE ADVANCING nT to nT(t+deltat) ! doesn't "see" particles out of bounds (lp0 and maxValL)
         //lAndNpL = geo2lNplNv(allParticles, lVector, nT, lp0, maxValL);
         
-        nTtminusOne = nT;
-        // values it0 and then itMinus1
-        lAndNpL = lNplNvMass(allParticles, lVector, mT);
-        cout << "mv(l0;t0) = " << lAndNpL[0][3] << endl;
-        cout << "Nv(l0;t0) = " << lAndNpL[0][2] << endl;
-        nT = nTfromMass(lAndNpL);
-                        // storing nT(t-deltat)
-        mTminusOne = mT;
         
-        double totalMassbins(0);
+        // storing nT(t-deltat)
+        nTtminusOne = nT;
+        
+        // values it0 and then itMinus1
+        ndft = ndf(allParticles, lVector, nT);
+        
+        
+        double totalMassBins(0);
         
         
         // printing for it-1
         cout << endl << endl;
         cout << "it = " << it << "   time = " << time << endl;
-        cout << "mT = " << mT << endl;
-        totalMassbins = totalMassBins(lAndNpL);
-        cout << "total mass bins = " << totalMassbins << endl;
-        cout << "dotAtm = " << dotAtm << endl;
+        totalMassBins = totalMassNdf(ndft);
+        
         cout << "nT = " << nT << endl;
-        cout << "nT - nT(it-1) = " << nT - nTtminusOne << endl;
+        cout << "dotAt = " << dotAt << endl;
+        cout << "total mass bins = " << totalMassBins << endl;
         
         //cout << "dotH = " << dotH << "   dotAt = " << dotAt << endl;
         //cout << "dotG = " << dotG << endl;
 
         
         //writing for it-1
-        writePdft(pathProject, "/outputs/Cpdf_t/Cpdf", it, allParticles, pdfGrid, minValC, maxValC, 0, lAndNpL);
-        writePdft(pathProject, "/outputs/Lpdf_t/Lpdf", it, allParticles, LpdfGrid, lp0, maxValL, 1, lAndNpL);
-        writeGeoNvt(pathProject, "/outputs/Nv_t/Nv", it, allParticles, LpdfGrid, lp0, maxValL, 1, nT,lAndNpL);
+        writePdft(pathProject, "/outputs/Cpdf_t/Cpdf", it, allParticles, pdfGrid, minValC, maxValC, 0, ndft);
+        writePdft(pathProject, "/outputs/Lpdf_t/Lpdf", it, allParticles, LpdfGrid, lp0, maxValL, 1, ndft);
+        writeGeoNdt(pathProject, "/outputs/Nd_t/Nd", it, allParticles, LpdfGrid, lp0, maxValL, 1, nT,ndft);
         
         
         
@@ -212,45 +176,40 @@ int main()
         
         //double dotH = nuclSourceCustomized(it, deltaL);          // calculation of nucleation source term
         //double dotH = nuclSource(allParticles, h);         // calculation of nucleation source term
-        //double dotAt = aggloTotSource(allParticles, lAndNpL, a, timePerIt);   // calculation of total agglomeration source term
+        double dotH =0;
+        dotAt = aggloTotSource(allParticles, ndft, a, timePerIt);   // calculation of total agglomeration source term
         
         
         
         //double dotG = outOfBoundSource(allParticles, nT, maxValL, lp0, deltaL);
-        //double dotG = 0;
+        double dotG = 0;
         
         //vector<vector<double> > lAndNpLg;            // updated vector lAndNpLg after growth before nT = nT(t+dt) and advancing pdf
         //lAndNpLg = liNpliNvli(allParticles, lVector, deltaL, nT);
         
         //advanceGrowthPdf(allParticles, nT, maxValL, lp0, deltaL, lAndNpLg);
-        writeNvt(pathProject, "/outputs/Nv_tg/NvG", it, allParticles, LpdfGrid, lp0, maxValL, 1, nT, lAndNpL);
+        writeNvt(pathProject, "/outputs/Nv_tg/NvG", it, allParticles, LpdfGrid, lp0, maxValL, 1, nT, ndft);
         
         
-        //nT = nT + dotH +dotAt + dotG;                                 // advancing nT
+        nT = nT + dotH +dotAt + dotG;                                 // advancing nT
         
         
+        vector<double> alphaVector = allAlphaCoefNdf(allParticles, a, nT, h, ndft, timePerIt, lVector);  // coefs used for advancePdf
         
-        // mass advancing case with constant mT
-        
-        dotAtm = aggloTotMassSource(lAndNpL, timePerIt, lVector, a);
-        mT = mT + dotAtm;
-        
-        vector<double> alphaVector = allAlphaCoefMass(allParticles, a, mT, h, lAndNpL, timePerIt, lVector);  // coefs used for advancePdf
-        
-        advancePdfMass(alphaVector, allParticles, lAndNpL, h, mT, a, it, mTminusOne, timePerIt, lVector);
+        advanceNdf(alphaVector, allParticles, ndft, h, nT, a, it, timePerIt, lVector);
         
     }
     
     // count of particles one more time for the final step
     //lAndNpL = liNpliNvli(allParticles, lVector, deltaL, nT);
     //lAndNpL = geo2lNplNv(allParticles, lVector, nT, lp0, maxValL);
-    lAndNpL = lNplNvMass(allParticles, lVector, mT);
+    ndft = ndf(allParticles, lVector, nT);
     
     //printParticles(allParticles, it);
     
-    writePdft(pathProject, "/outputs/Cpdf_t/Cpdf", it, allParticles, pdfGrid, minValC, maxValC, 0, lAndNpL);
-    writePdft(pathProject, "/outputs/Lpdf_t/Lpdf", it, allParticles, LpdfGrid, lp0, maxValL, 1, lAndNpL);
-    writeGeoNvt(pathProject, "/outputs/Nv_t/Nv", it, allParticles, LpdfGrid, lp0, maxValL, 1, nT, lAndNpL);
+    writePdft(pathProject, "/outputs/Cpdf_t/Cpdf", it, allParticles, pdfGrid, minValC, maxValC, 0, ndft);
+    writePdft(pathProject, "/outputs/Lpdf_t/Lpdf", it, allParticles, LpdfGrid, lp0, maxValL, 1, ndft);
+    writeGeoNdt(pathProject, "/outputs/Nd_t/Nd", it, allParticles, LpdfGrid, lp0, maxValL, 1, nT, ndft);
     
     
     return 0;

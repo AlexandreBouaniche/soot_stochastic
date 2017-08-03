@@ -528,18 +528,15 @@ double w_kj(int k, int j, vector<vector<double> > const& lAndNpl, double timePer
     double lk = lAndNpl[k][0];
     double betakj = beta(lj, lk,timePerIt);
     
-    double deltaLintj(0);
-    double deltaLintk(0);
-    deltaLintj = 1.5*lj - 0.75*lj;
-    deltaLintk = 1.5*lk - 0.75*lk;
     
+    // !!! Nv not Nd is used for collision rates [part/volume]  !!!
     if(k==j)
     {
-        wkj = 0.5 * a * betakj * lAndNpl[j][2] * deltaLintj * lAndNpl[k][2] * deltaLintk;  // "factor 1/2"
+        wkj = 0.5 * a * betakj * lAndNpl[j][2] * lAndNpl[k][2];  // "factor 1/2"
     }
     else
     {
-        wkj = a * betakj * lAndNpl[j][2] *deltaLintj * lAndNpl[k][2] * deltaLintk;
+        wkj = a * betakj * lAndNpl[j][2] * lAndNpl[k][2];
     }
     return wkj;
 }

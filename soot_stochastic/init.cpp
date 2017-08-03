@@ -350,14 +350,13 @@ vector<vector<double> > initCustomAggloMass(vector<double> liVector)
         li = liVector[i];
         double lavg = li*1.125;
         double ci = 0.5;
-        double fli = exp(-(lavg));             // to determine initial pdf/ PSD
+        double ndi = exp(-(lavg));             // to determine initial pdf/ PSD
         double deltaLint = 0.75*li;
         //double fli = 1.0;
         
-        double mli = fli *deltaLint * lavg;
-        cout << "ml["<< i << "] = " << mli << endl;
+        double nvi = ndi *deltaLint;
         
-        int npi = rounding(100000*mli);   // to determine number of particles indirectly
+        int npi = rounding(100000*nvi);   // to determine number of particles indirectly
         
         vector<double> initPdfi;
         initPdfi.push_back(ci);

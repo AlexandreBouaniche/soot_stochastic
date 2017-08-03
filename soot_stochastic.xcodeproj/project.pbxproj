@@ -18,6 +18,7 @@
 		ECE502031F0A8AD9006964B7 /* growth.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ECE502011F0A8AD9006964B7 /* growth.cpp */; };
 		ECE502061F21E94A006964B7 /* init.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ECE502041F21E94A006964B7 /* init.cpp */; };
 		ECE8D18E1F30B591003B68BC /* advanceMass.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ECE8D18C1F30B591003B68BC /* advanceMass.cpp */; };
+		ECE8D1911F33519D003B68BC /* advanceNdf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ECE8D18F1F33519D003B68BC /* advanceNdf.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -55,6 +56,8 @@
 		ECE502051F21E94A006964B7 /* init.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = init.hpp; sourceTree = "<group>"; };
 		ECE8D18C1F30B591003B68BC /* advanceMass.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = advanceMass.cpp; sourceTree = "<group>"; };
 		ECE8D18D1F30B591003B68BC /* advanceMass.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = advanceMass.hpp; sourceTree = "<group>"; };
+		ECE8D18F1F33519D003B68BC /* advanceNdf.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = advanceNdf.cpp; sourceTree = "<group>"; };
+		ECE8D1901F33519D003B68BC /* advanceNdf.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = advanceNdf.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -108,6 +111,8 @@
 				ECB9FFD71F289F5600BEC507 /* aggloGeo2.hpp */,
 				ECE8D18C1F30B591003B68BC /* advanceMass.cpp */,
 				ECE8D18D1F30B591003B68BC /* advanceMass.hpp */,
+				ECE8D18F1F33519D003B68BC /* advanceNdf.cpp */,
+				ECE8D1901F33519D003B68BC /* advanceNdf.hpp */,
 			);
 			path = soot_stochastic;
 			sourceTree = "<group>";
@@ -178,6 +183,7 @@
 				ECE501DE1F01484E006964B7 /* agglomeration.cpp in Sources */,
 				ECE502061F21E94A006964B7 /* init.cpp in Sources */,
 				EC7036921EFBEC3F0043132D /* tools.cpp in Sources */,
+				ECE8D1911F33519D003B68BC /* advanceNdf.cpp in Sources */,
 				ECB9FFD51F26079000BEC507 /* aggloGeo.cpp in Sources */,
 				ECE501D81EFC13DB006964B7 /* streams.cpp in Sources */,
 			);

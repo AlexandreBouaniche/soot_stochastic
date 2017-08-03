@@ -175,7 +175,7 @@ void writeCustomNv(string pathProject, string pathTarget, int it, vector<vector<
 
 
 
-void writeGeoNvt(string pathProject, string pathTarget, int it, vector<vector<double> > allParticles, double pdfGrid,double minVal, double maxVal, int column, double nT, vector<vector<double> > lAndNpl)
+void writeGeoNdt(string pathProject, string pathTarget, int it, vector<vector<double> > allParticles, double pdfGrid,double minVal, double maxVal, int column, double nT, vector<vector<double> > lAndNpl)
 {
     string finalPath = pathProject.append(pathTarget);
     
@@ -200,10 +200,13 @@ void writeGeoNvt(string pathProject, string pathTarget, int it, vector<vector<do
         {
             li = lAndNpl[j][0];
             double lavg = li*1.125;
+            double deltaLinti = 1.5*li - 0.75*li;
             stream1 << lavg << "   ";
             double nv;
-            nv = lAndNpl[j][2];
-            stream1 << nv << endl;
+            double nd;
+            nv = lAndNpl[j][2];    // [part/volume]
+            nd = nv / deltaLinti;  // [part/volume/deltaLint]
+            stream1 << nd << endl;
         }
         stream1 << endl;
     }

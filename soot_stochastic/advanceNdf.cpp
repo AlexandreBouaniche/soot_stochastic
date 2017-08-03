@@ -1,11 +1,12 @@
 //
-//  advanceMass.cpp
+//  advanceNdf.cpp
 //  soot_stochastic
 //
-//  Created by Alexandre Bouaniche on 01/08/2017.
+//  Created by Alexandre Bouaniche on 03/08/2017.
 //  Copyright © 2017 Alexandre Bouaniche. All rights reserved.
 //
 
+#include "advanceNdf.hpp"
 #include "advanceMass.hpp"
 #include "aggloGeo2.hpp"
 #include "aggloGeo.hpp"
@@ -21,35 +22,95 @@
 
 using namespace std;
 
+vector<vector<double> > ndf(vector<vector<double> > allParticles, vector<double> liVector, double nT)   // 0: size li  != lavg;    [mass (or volume)]
+          // 1: Npl: Number of stochastic particles in the bin;  []
+          // 2: Nvl = Ndl * deltaLintervali  [part/volume]
+          // could have but not necessary Ndl [part/volume/xcoordinate in size space]
+          // could have but not necessary 4:ml = Nvl * lavg = Ndl * deltaLintervali * lavg [mass/volume]
+          // [part/volume]   nT = sum of the Nvli = sum of the Ndi * deltaLinti   -> relation used to get Nd from nT and Npl. nT evolved with global source terms dotAt, dotH ...
 
-vector<double> allAlphaCoefMass(vector<vector< double> > const& allParticles, double a, double mT, double h, vector<vector< double> > const& lNplNvl, double timePerIt, vector<double> lVector)
 {
-    // source terms dotHm, dotAlm must be calculated as a function of m(l, t+growth) but before deltaT. Then for alpha coef we divide by mT(t+deltaT) -> use of mTminusOne
+    vector<double> lVector = liVector;
+    vector<vector<double> > ndft;
     
-    //double dotHm = nuclSourceMass(allParticles, h);
-    double dotHm =0;
-    
-    double alphaHm = dotHm / mT;
-    
-    double dotAlm0 = wmTotj(0, lNplNvl, timePerIt, lVector, a);  //mT(t-deltat)
-    double alphaAlm0 = dotAlm0 /mT;
-    
-    double alphaLm0 = alphaAlm0 + alphaHm;
-    
-    vector<double> alphaVector;
-    alphaVector.push_back(alphaLm0);
-    
-    //cout << "alphaLm[0] =  " << alphaLm0 << endl;
-    //cout << "dotAlm[0] = "<< dotAlm0 << endl;
+    int j(0);
+    int Np(0);
+    for(j=0;j<allParticles.size();j++)
+    {
+        Np++;                    // count of tot Np for calculating nv from np
+    }
     
     int i(0);
-    for(i=1; i<lNplNvl.size(); i++)     // begins at i=1 because we already calculated the first term alphaLm0 (corresponds to lp0 and i = 0)
+    for(i=0; i<lVector.size(); i++)
     {
-        double dotALmi = wmTotj(i, lNplNvl, timePerIt, lVector, a); //nT(t-deltat)
-        double alphaLmi = dotALmi/mT;
-        alphaVector.push_back(alphaLmi);
-        //cout << "alphaLm[" << i << "] =  " << alphaLmi << endl;
-        //cout << "dotAlm["<<i << "] = "<< dotALmi << endl;
+        int npL(0);
+        double li(0);
+        double nvl(0);
+        
+        li = lVector[i];
+        double infborn = li*0.75;
+        double supborn = li*1.5;
+        
+        // count of np(li)
+        j=0;
+        for(j=0;j<allParticles.size();j++)
+        {
+            if((allParticles[j][1]>=infborn)&(allParticles[j][1]<supborn))
+            {
+                npL++;
+            }
+        }
+        
+        nvl = double(npL)/double(Np)*nT;    // [part/volume]
+        
+        ndft.push_back(vector<double>(3,0));
+        ndft[i][0] = li;
+        ndft[i][1] = npL;
+        ndft[i][2] = nvl;
+        
+    }
+    return ndft;
+}
+
+
+
+
+vector<double> allAlphaCoefNdf(vector<vector< double> > const& allParticles, double a, double nT, double h, vector<vector< double> > const& ndft, double timePerIt, vector<double> lVector)
+{
+    // The stochastic particles repartition is weighted by nvl not ml but the source terms are calculated in mass then "traduced" in particles.
+    // in advanceMass the stochastic particles repartition the ndf was weighted by mass. -> pb for small particles
+    // source terms dotH, dotAl must be calculated as a function of n(l, t+growth) but before deltaT. Then for alpha coef we divide by nT(t+deltaT) -> use of nTminusOne
+    
+    //double dotH = nuclSourceMass(allParticles, h);
+    double dotH =0;
+    
+    double alphaH = dotH / nT;     //  [ /time ]
+    
+    double lp0 = lVector[0];
+    double lavg0 = lp0*1.125;
+    
+    double dotAl0 = wmTotj(0, ndft, timePerIt, lVector, a) / lavg0;  // [part/volume/time]
+    // based on nT(t-deltat)
+    
+    
+    double alphaAl0 = dotAl0 /nT;   //  [ /time ]
+    
+    double alphaL0 = alphaAl0 + alphaH;
+    
+    vector<double> alphaVector;
+    alphaVector.push_back(alphaL0);
+    
+    
+    int i(0);
+    for(i=1; i<ndft.size(); i++)     // begins at i=1 because we already calculated the first term alphaL0 (corresponds to lp0 and i = 0)
+    {
+        double li = lVector[i];
+        double lavgi = li * 1.125;
+        
+        double dotALi = wmTotj(i, ndft, timePerIt, lVector, a) / lavgi; //nT(t-deltat)
+        
+        double alphaLi = dotALi/nT;
+        alphaVector.push_back(alphaLi);
     }
     i = 0;
     return alphaVector;
@@ -57,7 +118,8 @@ vector<double> allAlphaCoefMass(vector<vector< double> > const& allParticles, do
 
 
 
-void advancePdfMass(vector<double>const& alphaVector, vector<vector< double> >& allParticles, vector<vector< double> > & lNplNvl, double h, double mT, double a,double it, double mTminusOne, double timePerIt, vector<double> lVector)
+
+void advanceNdf(vector<double>const& alphaVector, vector<vector< double> >& allParticles, vector<vector< double> > & ndft, double h, double nT, double a,double it, double timePerIt, vector<double> lVector)
 {
     //count of Np
     int Np(0);
@@ -78,24 +140,26 @@ void advancePdfMass(vector<double>const& alphaVector, vector<vector< double> >& 
     
     
     // calculation of alphaH and alphaAt which are not in alphaVector. All the alphaL* are in alphaVector
-    double dotHm(0);
-    double dotAtm(0);
+    double dotH(0);
+    double dotAt(0);
     
-    //dotHm = nuclSourceMass(allParticles, h);
-    dotHm = 0.0;
+    //dotH = nuclSourceMass(allParticles, h);
+    dotH = 0.0;
     
     
-    // calculation of sum of the wm to get dotAtm. calculated with lNplNvl. info t-deltaT
+    // calculation of sum of the wm to get dotAt. calculated with ndft. info t-deltaT
     i=0;
-    for (i=0; i<lNplNvl.size(); i++)
+    for (i=0; i<ndft.size(); i++)
     {
-        dotAtm += wmTotj(i, lNplNvl, timePerIt, lVector, a);
+        double li = lVector[i];
+        double lavgi = li*1.125;
+        dotAt += wmTotj(i, ndft, timePerIt, lVector, a) / lavgi;  // [part/volume/time]
     }
+    cout << "dotAt = " << dotAt << endl;
+    double alphaH = dotH/nT;
+    double alphaAt = dotAt/nT;
     
-    double alphaHm = dotHm/mT;
-    double alphaAtm = dotAtm/mT;
-    
-    double alphaHmplusAtm = alphaHm + alphaAtm;
+    double alphaHplusAt = alphaH + alphaAt;
     
     
     // calculation of np(l*, t+dt)   (called nplDt here) and storing of the corresponding  Delta np = np(l*,t+dt) - np(l*,t) in a new vector: deltaNpInt. New vector because before we were storing integers in a vector of doubles (lNplNvl)
@@ -105,13 +169,13 @@ void advancePdfMass(vector<double>const& alphaVector, vector<vector< double> >& 
     
     i = 0;
     int deltaNplSum(0);
-    for(i=0; i<lNplNvl.size(); i++)
+    for(i=0; i<ndft.size(); i++)
     {
         double nplDt(0);
-        nplDt = lNplNvl[i][1] * (1 - alphaHmplusAtm) + alphaVector[i] * Np;  //calculation of np(l*,t+dt)
+        nplDt = ndft[i][1] * (1 - alphaHplusAt) + alphaVector[i] * Np;  //calculation of np(l*,t+dt)
         
         int roundednp2 = rounding(nplDt);                 // rounding function
-        int roundednp1 = rounding(lNplNvl[i][1]);         // rounding function
+        int roundednp1 = rounding(ndft[i][1]);         // rounding function
         int deltaNpl = roundednp2 - roundednp1;
         
         //cout << "deltaNpl["<< lNplNvl[i][0] << "] = " << deltaNpl << endl;
@@ -139,9 +203,9 @@ void advancePdfMass(vector<double>const& alphaVector, vector<vector< double> >& 
     double infborn(0);
     double supborn(0);
     
-    for(i=0; i<lNplNvl.size(); i++)
+    for(i=0; i<ndft.size(); i++)
     {
-        li = lNplNvl[i][0];
+        li = ndft[i][0];
         infborn = 0.75*li;
         supborn = 1.5*li;
         
@@ -255,90 +319,17 @@ void advancePdfMass(vector<double>const& alphaVector, vector<vector< double> >& 
 }
 
 
-double aggloTotMassSource(vector<vector<double> > const& lNplNvl, double timePerIt, vector <double> const& lVector, double a)
+
+double totalMassNdf(vector<vector<double> > ndft)
 {
+    double mtot(0);
     int i(0);
-    double dotAtm(0);
-    for(i=0; i<lVector.size(); i++)
+    for(i=0; i< ndft.size(); i++)
     {
-        dotAtm += wmTotj(i, lNplNvl, timePerIt, lVector, a);
+        double li = ndft[i][0];
+        double lavgi = li*1.125;
+        double mli = ndft[i][2] * lavgi;
+        mtot += mli;
     }
-    return dotAtm;
-}
-
-
-
-
-double totalMassBins(vector<vector<double> > const& lNpNv)
-{
-    int i(0);
-    double totMass(0);
-    for (i=0; i<lNpNv.size(); i++)
-    {
-        totMass += lNpNv[i][3];    
-    }
-    return totMass;
-}
-
-
-
-vector<vector<double> > lNplNvMass(vector<vector<double> > allParticles, vector<double> liVector, double mT)   // 0:size;  1:Npl;  2:Ndl  3:ml = Npl / Nptot * mTot
-{
-    vector<double> lVector = liVector;
-    vector<vector<double> > lAndNpl;
-    
-    int j(0);
-    int Np(0);
-    for(j=0;j<allParticles.size();j++)
-    {
-        Np++;                    // count of tot Np for calculating nv from np
-    }
-    
-    int i(0);
-    for(i=0; i<lVector.size(); i++)
-    {
-        int npL(0);
-        double li(0);
-        double nvL(0);
-        double mvL(0);
-        
-        li = lVector[i];
-        double lavg = 1.125*li;
-        double infborn = li*0.75;
-        double supborn = li*1.5;
-        double deltaLinterval = supborn - infborn;
-        
-        // count of np(li)
-        j=0;
-        for(j=0;j<allParticles.size();j++)
-        {
-            if((allParticles[j][1]>=infborn)&(allParticles[j][1]<supborn))
-            {
-                npL++;
-            }
-        }
-        
-        mvL = double(npL)/double(Np)*mT;      // mass stochastic particles different from number density stochastic particles. One stochastic particle represents a mass mT/Np. Before we had one stochastic particle represents nT/Np particles
-        nvL = mvL/(lavg*deltaLinterval);
-        lAndNpl.push_back(vector<double>(4,0));
-        lAndNpl[i][0] = li;
-        lAndNpl[i][1] = npL;
-        lAndNpl[i][2] = nvL;
-        lAndNpl[i][3] = mvL;
-        
-    }
-    return lAndNpl;
-}
-
-
-
-double nTfromMass(vector<vector<double> > lNpNvMass)
-{
-    double nT(0);
-    int i(0);
-    for (i=0; i<lNpNvMass.size(); i++)
-    {
-        nT += lNpNvMass[i][2];
-    }
-    return nT;
+    return mtot;
 }
