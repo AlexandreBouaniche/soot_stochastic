@@ -356,7 +356,7 @@ vector<vector<double> > initCustomAggloMass(vector<double> liVector)
         
         double nvi = ndi *deltaLint;
         
-        int npi = rounding(100000*nvi);   // to determine number of particles indirectly
+        int npi = rounding(10000*nvi);   // to determine number of particles indirectly
         
         vector<double> initPdfi;
         initPdfi.push_back(ci);
