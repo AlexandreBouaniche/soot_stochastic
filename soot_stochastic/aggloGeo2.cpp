@@ -612,7 +612,6 @@ double nujPlusOne(int k, int j, vector<double> const& lVector)
 
 double wmNegRj(int k, int j, vector<vector<double> > const& lAndNpl, double timePerIt, double a, vector<double> const& lVector)
 {
-    double correctionCoef(0);
     
     double wmNeg_Rj(0);
     double lj = lAndNpl[j][0];
@@ -621,9 +620,6 @@ double wmNegRj(int k, int j, vector<vector<double> > const& lAndNpl, double time
     {
         wmNeg_Rj = -lj*1.125*w_kj(k, j, lAndNpl, timePerIt, a);
         
-        correctionCoef = 1+ (1-(nuj(k, j, lVector)+nujPlusOne(k, j, lVector)));
-        wmNeg_Rj = wmNeg_Rj/correctionCoef;
-        //cout << "correction coef = "<< correctionCoef << endl;
     }
     if(k==j)
     {
@@ -642,7 +638,6 @@ double wmNegRj(int k, int j, vector<vector<double> > const& lAndNpl, double time
 
 double wmNegRk(int k, int j, vector<vector<double> > const& lAndNpl, double timePerIt, double a, vector<double> const& lVector)
 {
-    double correctionCoef(0);
     
     double wmNeg_Rk(0);
     double lk = lAndNpl[k][0];
@@ -651,8 +646,6 @@ double wmNegRk(int k, int j, vector<vector<double> > const& lAndNpl, double time
     {
         wmNeg_Rk = -lk*1.125*w_kj(k, j, lAndNpl, timePerIt, a);
         
-        correctionCoef = 1+ (1-(nuj(k, j, lVector)+nujPlusOne(k, j, lVector)));
-        wmNeg_Rk = wmNeg_Rk/correctionCoef;
     }
     if(k==j)
     {
@@ -671,7 +664,6 @@ double wmNegRk(int k, int j, vector<vector<double> > const& lAndNpl, double time
 
 double wmPosRj(int k, int j, vector<vector<double> > const& lAndNpl, double timePerIt, vector<double> const& lVector, double a)
 {
-    double correctionCoef(0);
     
     double lj = lVector[j];
     double wmPosR_j(0);
@@ -679,8 +671,6 @@ double wmPosRj(int k, int j, vector<vector<double> > const& lAndNpl, double time
     {
         wmPosR_j = nuj(k, j, lVector)* lj*1.125 * w_kj(k, j, lAndNpl, timePerIt, a);
         
-        correctionCoef = 1+ (1-(nuj(k, j, lVector)+nujPlusOne(k, j, lVector)));
-        wmPosR_j = wmPosR_j / correctionCoef;
     }
     if(k==j)
     {
@@ -702,7 +692,6 @@ double wmPosPlusOneRj(int k, int jPlusOne, vector<vector<double> > const& lAndNp
 {
     int j = jPlusOne -1;
     
-    double correctionCoef(0);
     
     
     double wmPosR_jPlusOne(0);
@@ -715,8 +704,6 @@ double wmPosPlusOneRj(int k, int jPlusOne, vector<vector<double> > const& lAndNp
             
             wmPosR_jPlusOne += nujPlusOne(k, j, lVector) * ljPlusOne *1.125 * w_kj(k, j, lAndNpl, timePerIt, a);   // case k < j
             
-            correctionCoef = 1+ (1-(nuj(k, j, lVector)+nujPlusOne(k, j, lVector)));
-            wmPosR_jPlusOne = wmPosR_jPlusOne/correctionCoef;
             
         }
         if(k==j)

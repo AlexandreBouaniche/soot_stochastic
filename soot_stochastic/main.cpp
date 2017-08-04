@@ -125,6 +125,9 @@ int main()
     
     // advancing t, mixing (Cpdf), source terms, advancing nT and Lpdf
     vector<vector<double> > ndft;
+    
+    double totalMassBins(0);
+    
     int j;
     for(j=0; j<itTot; j++ )
     {
@@ -142,7 +145,7 @@ int main()
         ndft = ndf(allParticles, lVector, nT);
         
         
-        double totalMassBins(0);
+        
         
         
         // printing for it-1
@@ -207,10 +210,22 @@ int main()
     
     //printParticles(allParticles, it);
     
+    // printing for it-1
+    cout << endl << endl;
+    cout << "it = " << it << "   time = " << time << endl;
+    totalMassBins = totalMassNdf(ndft);
+    
+    cout << "nT = " << nT << endl;
+    cout << "dotAt = " << dotAt << endl;
+    cout << "total mass bins = " << totalMassBins << endl;
+    
+    //cout << "dotH = " << dotH << "   dotAt = " << dotAt << endl;
+    //cout << "dotG = " << dotG << endl;
+    
+    
     writePdft(pathProject, "/outputs/Cpdf_t/Cpdf", it, allParticles, pdfGrid, minValC, maxValC, 0, ndft);
     writePdft(pathProject, "/outputs/Lpdf_t/Lpdf", it, allParticles, LpdfGrid, lp0, maxValL, 1, ndft);
-    writeGeoNdt(pathProject, "/outputs/Nd_t/Nd", it, allParticles, LpdfGrid, lp0, maxValL, 1, nT, ndft);
-    
+    writeGeoNdt(pathProject, "/outputs/Nd_t/Nd", it, allParticles, LpdfGrid, lp0, maxValL, 1, nT,ndft);
     
     return 0;
 }

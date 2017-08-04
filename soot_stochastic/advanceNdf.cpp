@@ -82,6 +82,8 @@ vector<double> allAlphaCoefNdf(vector<vector< double> > const& allParticles, dou
     // source terms dotH, dotAl must be calculated as a function of n(l, t+growth) but before deltaT. Then for alpha coef we divide by nT(t+deltaT) -> use of nTminusOne
     
     //double dotH = nuclSourceMass(allParticles, h);
+    
+    double wmTotAll(0);
     double dotH =0;
     
     double alphaH = dotH / nT;     //  [ /time ]
@@ -91,6 +93,8 @@ vector<double> allAlphaCoefNdf(vector<vector< double> > const& allParticles, dou
     
     double dotAl0 = wmTotj(0, ndft, timePerIt, lVector, a) / lavg0;  // [part/volume/time]
     // based on nT(t-deltat)
+    
+    wmTotAll += wmTotj(0, ndft, timePerIt, lVector, a);
     
     
     double alphaAl0 = dotAl0 /nT;   //  [ /time ]
@@ -109,10 +113,13 @@ vector<double> allAlphaCoefNdf(vector<vector< double> > const& allParticles, dou
         
         double dotALi = wmTotj(i, ndft, timePerIt, lVector, a) / lavgi; //nT(t-deltat)
         
+        wmTotAll += wmTotj(i, ndft, timePerIt, lVector, a);
+        
         double alphaLi = dotALi/nT;
         alphaVector.push_back(alphaLi);
     }
-    i = 0;
+    
+    cout << "wmTotAll = " << wmTotAll << endl;
     return alphaVector;
 }
 
