@@ -23,6 +23,9 @@ void writeGeoNdt(std::string pathProject, std::string pathTarget, int it, std::v
 
 void writeCustomAggloCase(std::string pathProject, std::string pathTarget, std::vector<double> lVector, double time);
 
+void writeCustomAggloGrowthCase(std::string pathProject, std::string pathTarget, std::vector<double> lVector, double time);
+
+
 #include <stdio.h>
 
 #endif /* streams_hpp */

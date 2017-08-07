@@ -209,3 +209,15 @@ void advanceGrowthPdf(vector<vector<double> >& allParticles, double nT, double m
     }
     
 }
+
+
+
+void linearGrowth(vector<vector<double> > &allParticles, double timePerIt)
+{
+    int i(0);
+    for(i=0; i<allParticles.size(); i++)
+    {
+        allParticles[i][1] += allParticles[i][1] * timePerIt;  // test case agglo+growth. G = x (size coordinate)
+    }
+}
+

@@ -23,6 +23,8 @@ double outOfBoundSource(std::vector<std::vector<double> >const& allParticles, do
 
 void advanceGrowthPdf(std::vector<std::vector<double> >& allParticles, double nT, double maxValL, double lp0, double deltaL, std::vector<std::vector<double> >const& lAndNpL);
 
+void linearGrowth(std::vector<std::vector<double> > &allParticles, double timePerIt);
+
 
 #include <stdio.h>
 

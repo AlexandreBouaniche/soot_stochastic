@@ -34,7 +34,7 @@ int main()
     string pathProject("/Users/bouaniche/Xcode_projects/soot_stochastic");
     
     double lp0 = 0.1;             // nascent particles size
-    int itTot = 10000;                 // number of iteration
+    int itTot = 1000;                 // number of iteration
     double pdfGrid(0.1);    // distance between two c bins for graphic representation of P(c)
     double LpdfGrid(0.02);      // distance between two l bins for graphic representation of P(l)
     double maxValC(1);       // maximum value of c considered for graphic representation of P(c)
@@ -56,23 +56,14 @@ int main()
     
     double dotAt(0);
     
-    /*
-    //mass parameters
-    //double mT0 = 0.8978;
-    double mT0 = 0.9606;
-    double mT = mT0;
-    double mTminusOne = mT;
-    double dotAtm(0);
-     */
-    
-    double uniformG = 0.0;
+    //double uniformG = 0.1;
     //double linearG = 0.02;
     //double linearOxi = -0.0005;
     //double ageFactor = 20;
     
     // time and mixing parameters
     double time(0);                 // time
-    double timePerIt = 1e-2;        // time per iteration
+    double timePerIt = 1.0e-2;        // time per iteration
     //double tau(2);                // characteristic mixing time as a function of iterations.
     
     
@@ -113,15 +104,12 @@ int main()
     
     // write analytical Ref customized
     //writeCustomNv(pathProject, "/outputs/Nv_t/NvRef_0.0025_", 0, allParticles, 0.0025, 0.02, maxValL, 1, nT);
-    writeCustomAggloCase(pathProject, "/outputs/Nd_t/Ref_t", lVector, 0.0);
-    writeCustomAggloCase(pathProject, "/outputs/Nd_t/Ref_t", lVector, 0.05);
-    writeCustomAggloCase(pathProject, "/outputs/Nd_t/Ref_t", lVector, 0.2);
-    writeCustomAggloCase(pathProject, "/outputs/Nd_t/Ref_t", lVector, 1.0);
-    writeCustomAggloCase(pathProject, "/outputs/Nd_t/Ref_t", lVector, 2.0);
-    writeCustomAggloCase(pathProject, "/outputs/Nd_t/Ref_t", lVector, 3.0);
-    writeCustomAggloCase(pathProject, "/outputs/Nd_t/Ref_t", lVector, 5.0);
-    writeCustomAggloCase(pathProject, "/outputs/Nd_t/Ref_t", lVector, 20.0);
-    writeCustomAggloCase(pathProject, "/outputs/Nd_t/Ref_t", lVector, 100.0);
+    
+    writeCustomAggloGrowthCase(pathProject, "/outputs/Nd_t/Ref_t", lVector, 0.0);
+    writeCustomAggloGrowthCase(pathProject, "/outputs/Nd_t/Ref_t", lVector, 1.0);
+    writeCustomAggloGrowthCase(pathProject, "/outputs/Nd_t/Ref_t", lVector, 5.0);
+    writeCustomAggloGrowthCase(pathProject, "/outputs/Nd_t/Ref_t", lVector, 10.0);
+    
     
     // advancing t, mixing (Cpdf), source terms, advancing nT and Lpdf
     vector<vector<double> > ndft;
@@ -171,7 +159,10 @@ int main()
         it = it + 1;                                         // advancing t
         time = it*timePerIt;
         //mix(allParticles, deltaT, tau, t);                    // advancing Cpdf = mixing
-        uniformGrowth(allParticles, uniformG);
+        //uniformGrowth(allParticles, uniformG);
+        linearGrowth(allParticles, timePerIt);
+        
+        
         //linerarSurfGrowth(allParticles, linearG, lp0, maxValL, deltaL);          // growth proportional to the surface
         //linerarSurfOxi(allParticles, linearOxi, lp0, deltaL);          // oxidation proportional to the surface
         //surfGrowthAging(allParticles, linearG, lp0, maxValL, deltaL, ageFactor);
@@ -190,7 +181,7 @@ int main()
         //vector<vector<double> > lAndNpLg;            // updated vector lAndNpLg after growth before nT = nT(t+dt) and advancing pdf
         //lAndNpLg = liNpliNvli(allParticles, lVector, deltaL, nT);
         
-        //advanceGrowthPdf(allParticles, nT, maxValL, lp0, deltaL, lAndNpLg);
+        //advanceGrowthPdf(allParticles, nT, maxValL, lp0, deltaL, ndft);
         writeNvt(pathProject, "/outputs/Nv_tg/NvG", it, allParticles, LpdfGrid, lp0, maxValL, 1, nT, ndft);
         
         
