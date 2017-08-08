@@ -17,6 +17,8 @@ void LpdfAlphaH(std::vector<std::vector< double> >& allParticles, double nT, dou
 
 double nuclSourceCustomized(double it, double deltaL);
 
+std::vector<double> nuclSourceCustomFinalCase(double timePerIt, std::vector<double> lVector, double h);
+
 #include <stdio.h>
 
 #endif /* nucleation_hpp */

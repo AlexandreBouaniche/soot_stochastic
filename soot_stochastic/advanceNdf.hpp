@@ -19,6 +19,11 @@ void advanceNdf(std::vector<double>const& alphaVector, std::vector<std::vector< 
 
 double totalMassNdf(std::vector<std::vector<double> > ndft);
 
+std::vector<double> alphaCustomNuclAllSizes(std::vector<double> const& dotHvector, std::vector<std::vector< double> > const& allParticles, double a, double nT, double h, std::vector<std::vector< double> > const& ndft, double timePerIt, std::vector<double> lVector);
+
+void advanceNdfNuclAllSizes(std::vector<double> const& dotHvector, std::vector<double>const& alphaVector, std::vector<std::vector< double> >& allParticles, std::vector<std::vector< double> > & ndft, double h, double nT, double a,double it, double timePerIt, std::vector<double> lVector);
+
+
 
 #include <stdio.h>
 

@@ -11,7 +11,7 @@
 
 #include <vector>
 
-void uniformGrowth(std::vector<std::vector<double> > &allParticles, double deltaG);
+void uniformGrowth(std::vector<std::vector<double> > &allParticles, double deltaG, double timePerIt);
 
 void linerarSurfGrowth(std::vector<std::vector<double> > &allParticles, double deltaM0, double lp0, double maxValL, double deltaL);
 

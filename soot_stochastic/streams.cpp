@@ -195,18 +195,21 @@ void writeGeoNdt(string pathProject, string pathTarget, int it, vector<vector<do
         
         stream1 << "#iteration number = " << it << " pdf bins vertically in column 1"<<endl;
         int j;
-        double li=lAndNpl[0][0];
+        double lj=lAndNpl[0][0];
         for(j=0; j<lAndNpl.size(); j++)
         {
-            li = lAndNpl[j][0];
-            double lavg = li*1.125;
-            double deltaLinti = 1.5*li - 0.75*li;
+            lj = lAndNpl[j][0];
+            double lavg = lj*1.125;
+            double deltaLinti = 1.5*lj - 0.75*lj;
             stream1 << lavg << "   ";
             double nv;
             double nd;
             nv = lAndNpl[j][2];    // [part/volume]
             nd = nv / deltaLinti;  // [part/volume/deltaLint]
             stream1 << nd << endl;
+            
+            //cout << "nv["<< j <<"] = " << nv << endl;
+            //cout << "nd["<< j <<"] = " << nd << endl;
         }
         stream1 << endl;
     }

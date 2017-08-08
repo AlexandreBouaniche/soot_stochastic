@@ -16,12 +16,12 @@
 
 using namespace std;
 
-void uniformGrowth(vector<vector<double> > &allParticles, double deltaG)
+void uniformGrowth(vector<vector<double> > &allParticles, double deltaG, double timePerIt)
 {
     int i(0);
     for(i=0; i<allParticles.size(); i++)
     {
-        allParticles[i][1] += deltaG;
+        allParticles[i][1] += deltaG*timePerIt;
     }
 }
 

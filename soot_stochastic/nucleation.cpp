@@ -96,3 +96,39 @@ double nuclSourceCustomized(double it, double deltaL)
     return dotH*dt/deltaL;
     
 }
+
+
+
+// source term homegeneous with Nv [part/volume]. dotH initially is in [part/volume/s]. then, multiplied by timePerIt we get a source term in [part/volume] at each iteration.
+// In this test case the nucleation term does not depend on t but depends on x size coordinate.
+
+vector<double> nuclSourceCustomFinalCase(double timePerIt, vector<double> lVector, double h)
+{
+    vector<double> dotHvector;
+    double dotHiDt(0);
+    double dotHi(0);
+    double dotHiv(0);
+    int i(0);
+    double li(0);
+    double lavg(0);
+    double deltaLint(0);
+    
+    double B0(1.0e5);
+    double x0n = 1.0e-3;
+    
+    for(i=0; i<lVector.size(); i++)
+    {
+        li = lVector[i];
+        lavg = li*1.125;
+        deltaLint = 0.75*li;
+        
+        dotHi = h * B0 / x0n * exp(-lavg/x0n);
+        
+        dotHiv =  dotHi * deltaLint;
+        
+        dotHiDt = dotHiv * timePerIt;
+        dotHvector.push_back(dotHiDt);
+        //cout << "dotHiDt["<<lavg<<"] = " << dotHiDt << endl;
+    }
+    return dotHvector;   // [part/volume/time*dT] = [part/volume]
+}

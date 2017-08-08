@@ -375,3 +375,48 @@ vector<vector<double> > initCustomAggloMass(vector<double> liVector)
     return allParticles;
 }
 
+
+
+
+
+vector<vector<double> > initCustom(vector<double> liVector)
+{
+    vector<vector<double> > allParticles;
+    int i(0);
+    double li = liVector[0];
+    double N0 = 10.0;
+    double x0 = 0.01;
+    
+    for(i=0; i<liVector.size(); i++)
+        //for(i=0; i<3; i++)
+    {
+        li = liVector[i];
+        double lavg = li*1.125;
+        double ci = 0.5;
+        
+        double ndi = N0 / x0 * exp(-(lavg/x0));             // to determine initial pdf/ PSD
+        //double ndi = 1.0;
+        
+        double deltaLint = 0.75*li;
+        
+        
+        double nvi = ndi *deltaLint;
+        
+        int npi = rounding(10000*nvi);   // to determine number of particles indirectly
+        
+        vector<double> initPdfi;
+        initPdfi.push_back(ci);
+        initPdfi.push_back(li);
+        
+        //cout << "lavg = " << lavg << ";   npi = " << npi << ";   ndi = " << ndi << endl;
+        
+        int j(0);
+        for(j=0; j<npi; j++)
+        {
+            initPdfi[1] = frand_a_b(li*0.75, li*1.5);
+            allParticles.push_back(initPdfi);
+        }
+    }
+    return allParticles;
+}
+

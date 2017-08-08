@@ -27,6 +27,8 @@ std::vector<std::vector<double> > initCustomAggloGeo2(std::vector<double> liVect
 
 std::vector<std::vector<double> > initCustomAggloMass(std::vector<double> liVector);
 
+std::vector<std::vector<double> > initCustom(std::vector<double> liVector);
+
 #include <stdio.h>
 
 #endif /* init_hpp */

@@ -125,7 +125,7 @@ double beta(double l1, double l2, double timePerIt)   // should depend on T and 
     //return betaCalc;
     
     // betaTest  betaIt
-    double betaTest =10.0;
+    double betaTest =100.0;
     double betaIt(1.0);
     betaIt = betaTest*timePerIt;
     
