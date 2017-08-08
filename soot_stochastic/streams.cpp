@@ -305,3 +305,60 @@ void writeCustomAggloGrowthCase(string pathProject, string pathTarget, vector<do
         cout << "ERROR: Impossible to open the file." << endl;
     }
 }
+
+
+
+
+void writeCustomNuclGrowthCase(string pathProject, string pathTarget, vector<double> lVector, double time)
+{
+    string finalPath = pathProject.append(pathTarget);
+    stringstream ss;
+    ss << time;
+    string strIt = ss.str();
+    
+    finalPath = finalPath.append(strIt);
+    string dat = ".dat";
+    finalPath = finalPath.append(dat);
+    
+    ofstream stream1(finalPath.c_str());
+    if(stream1) // error test
+    {
+        //cout << "stream OK" << endl;
+        
+        stream1 << "#time = " << time << " pdf bins vertically in column 1"<<endl;
+        
+        double N0 = 10;
+        double G0 = 1;
+        double x0 = 1e-2;
+        double x0n = 1e-3;
+        double B0 = 1e5;
+        
+        int i;
+        for(i=0; i<lVector.size(); i++)
+        {
+            double li = lVector[i];
+            double lavg = li*1.125;
+            
+            double x1 = lVector[0]*1.125;
+            
+            double xlow(x1);
+            if((lavg - G0*time) > x1)
+            {
+                xlow = lavg - G0*time;
+            }
+            
+            double solutioni(0);
+            solutioni = N0 / x0 * exp(-(lavg-G0*time)/x0) + B0 / G0 * ( exp(-xlow/x0n) - exp(-lavg/x0n) );
+            
+            
+            stream1 << lavg << "   ";
+    
+            stream1 << solutioni << endl;
+        }
+        stream1 << endl;
+    }
+    else
+    {
+        cout << "ERROR: Impossible to open the file." << endl;
+    }
+}

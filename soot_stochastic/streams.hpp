@@ -25,6 +25,9 @@ void writeCustomAggloCase(std::string pathProject, std::string pathTarget, std::
 
 void writeCustomAggloGrowthCase(std::string pathProject, std::string pathTarget, std::vector<double> lVector, double time);
 
+void writeCustomNuclGrowthCase(std::string pathProject, std::string pathTarget, std::vector<double> lVector, double time);
+
+
 
 #include <stdio.h>
 
