@@ -113,7 +113,7 @@ vector<double> nuclSourceCustomFinalCase(double timePerIt, vector<double> lVecto
     double lavg(0);
     double deltaLint(0);
     
-    double B0(1.0e5);
+    double B0(1.0);
     double x0n = 1.0e-3;
     
     for(i=0; i<lVector.size(); i++)

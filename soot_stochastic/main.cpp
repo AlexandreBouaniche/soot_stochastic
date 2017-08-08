@@ -51,7 +51,7 @@ int main()
     
     // model parameters
     double h = 1.0;              // constant used for source term of nucleation
-    double a = 0.0;                 // constant used for source term of agglomeration
+    double a = 1.0;                 // constant used for source term of agglomeration
     double nT0 = 9.61041;             // initial total soot number density
     
     double dotAt(0);
@@ -104,11 +104,12 @@ int main()
     // write analytical Ref customized
     //writeCustomNv(pathProject, "/outputs/Nv_t/NvRef_0.0025_", 0, allParticles, 0.0025, 0.02, maxValL, 1, nT);
     
-    
+    /*
     writeCustomNuclGrowthCase(pathProject, "/outputs/Nd_t/Ref_t", lVector, 0.0);
     writeCustomNuclGrowthCase(pathProject, "/outputs/Nd_t/Ref_t", lVector, 1.0e-4);
     writeCustomNuclGrowthCase(pathProject, "/outputs/Nd_t/Ref_t", lVector, 1.0e-3);
     writeCustomNuclGrowthCase(pathProject, "/outputs/Nd_t/Ref_t", lVector, 1.0e-2);
+    */
     
     
     // advancing t, mixing (Cpdf), source terms, advancing nT and Lpdf
