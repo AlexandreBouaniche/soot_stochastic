@@ -84,7 +84,7 @@ vector<double> allAlphaCoefNdf(vector<vector< double> > const& allParticles, dou
     //double dotH = nuclSourceMass(allParticles, h);
     
     double wmTotAll(0);
-    double dotH =0;
+    double dotH =h;
     
     double alphaH = dotH / nT;     //  [ /time ]
     
@@ -151,7 +151,7 @@ void advanceNdf(vector<double>const& alphaVector, vector<vector< double> >& allP
     double dotAt(0);
     
     //dotH = nuclSourceMass(allParticles, h);
-    dotH = 0.0;
+    dotH = h;
     
     
     // calculation of sum of the wm to get dotAt. calculated with ndft. info t-deltaT
@@ -329,15 +329,19 @@ void advanceNdf(vector<double>const& alphaVector, vector<vector< double> >& allP
 
 double totalMassNdf(vector<vector<double> > ndft)
 {
+    double sootVoltot(0);
+    double rhoSoot = 1800;     // 1800 [kg/m3soot]   if volume in nm3  then multiply by 1e-(9*3)
     double mtot(0);
     int i(0);
     for(i=0; i< ndft.size(); i++)
     {
         double li = ndft[i][0];
         double lavgi = li*1.125;
-        double mli = ndft[i][2] * lavgi;
-        mtot += mli;
+        double volumeli = ndft[i][2] * lavgi * 1e-27;     //  [part / m3gas] * [m3soot/part].  lavgi is in [nm3soot] so multiply by 1e-(9*3) to get in [m3soot]
+        sootVoltot += volumeli;                   //  [m3soot / m3gas]
     }
+    mtot = rhoSoot*sootVoltot;              //  [kg/m3soot] * [m3soot/m3gas] = [kgsoot/m3gas] 
+    
     return mtot;
 }
 

@@ -33,7 +33,7 @@ int main()
     //user inputs
     string pathProject("/Users/bouaniche/Xcode_projects/soot_stochastic");
     
-    double lp0 = 1.0e-5;             // nascent particles size
+    double lp0 = 0.523;             // nascent particles size
     int itTot = 1000;                 // number of iteration
     double pdfGrid(0.1);    // distance between two c bins for graphic representation of P(c)
     double LpdfGrid(0.02);      // distance between two l bins for graphic representation of P(l)
@@ -50,23 +50,32 @@ int main()
     
     
     // model parameters
-    double h = 1.0;              // constant used for source term of nucleation
+    double h = 1.0e11;              // constant used for source term of nucleation
     double a = 1.0;                 // constant used for source term of agglomeration
     //double nT0 = 9.61041;             // initial total soot number density
-    double nT0 = 0.0961041;
+    //double nT0 = 0.0961041;
+    double nT0 = 3e12;
     
     double dotAt(0);
-    double dotHtot(0);
+    double dotH(0);
     
-    double uniformG = 1.0;
+    //double uniformG = 1.2e4;
+    //double g0 = -3.0e2;      with surfgrowth
+    
+    
+    
+    double uniformG = 5.0e3;
+    double g0surf = 1.5e3;
+    double g0vol = -2.0e3;
+    
     
     //double linearG = 0.02;
     //double linearOxi = -0.0005;
     //double ageFactor = 20;
     
     // time and mixing parameters
-    double time(0);                 // time
-    double timePerIt = 1.0e-5;        // time per iteration
+    double time(0);                   // time
+    double timePerIt = 1.0e-4;        // time per iteration [s]
     //double tau(2);                // characteristic mixing time as a function of iterations.
     
     
@@ -145,7 +154,7 @@ int main()
         
         cout << "nT = " << nT << endl;
         cout << "dotAt = " << dotAt << endl;
-        cout << "dotHtot = " << dotHtot << endl;
+        cout << "dotH = " << dotH << endl;
         cout << "total mass bins = " << totalMassBins << endl;
         
         //cout << "dotH = " << dotH << "   dotAt = " << dotAt << endl;
@@ -156,6 +165,7 @@ int main()
         writePdft(pathProject, "/outputs/Cpdf_t/Cpdf", it, allParticles, pdfGrid, minValC, maxValC, 0, ndft);
         writePdft(pathProject, "/outputs/Lpdf_t/Lpdf", it, allParticles, LpdfGrid, lp0, maxValL, 1, ndft);
         writeGeoNdt(pathProject, "/outputs/Nd_t/Nd", it, allParticles, LpdfGrid, lp0, maxValL, 1, nT,ndft);
+        writeGeoNdtDi(pathProject, "/outputs/di_Nd_t/diNd", it, ndft);
         
         
         
@@ -165,27 +175,15 @@ int main()
         
         
         uniformGrowth(allParticles, uniformG, timePerIt);
-        //linearGrowth(allParticles, timePerIt);
+        linearGrowth(allParticles, timePerIt, g0vol);
+        surfGrowth(allParticles, timePerIt, g0surf);
         
         
-        //linerarSurfGrowth(allParticles, linearG, lp0, maxValL, deltaL);          // growth proportional to the surface
-        //linerarSurfOxi(allParticles, linearOxi, lp0, deltaL);          // oxidation proportional to the surface
-        //surfGrowthAging(allParticles, linearG, lp0, maxValL, deltaL, ageFactor);
         
         
         //double dotH = nuclSourceCustomized(it, deltaL);          // calculation of nucleation source term
         //double dotH = nuclSource(allParticles, h);         // calculation of nucleation source term
-        //double dotH =0;
-        vector<double> dotHvector = nuclSourceCustomFinalCase(timePerIt, lVector, h);
-        
-        dotHtot = 0;
-        i=0;
-        for(i=0; i< dotHvector.size(); i++)
-        {
-            dotHtot+= dotHvector[i];
-        }
-        
-        
+        dotH = h;
         
         dotAt = aggloTotSource(allParticles, ndft, a, timePerIt);   // calculation of total agglomeration source term
         
@@ -201,17 +199,13 @@ int main()
         writeNvt(pathProject, "/outputs/Nv_tg/NvG", it, allParticles, LpdfGrid, lp0, maxValL, 1, nT, ndft);
         
         
-        nT = nT + dotHtot +dotAt + dotG;            // advancing nT. Actually it should be called dotH*dt + dotAt*dt +dotG*dt.   for dotAt it is realized multiplying Beta0 by timePerIt  and for dotH it is done multiplying nucleation expression by timePerIt
+        nT = nT + dotH +dotAt + dotG;            // advancing nT. Actually it should be called dotH*dt + dotAt*dt +dotG*dt.   for dotAt it is realized multiplying Beta0 by timePerIt  and for dotH it is done multiplying nucleation expression by timePerIt
         
         
-        //vector<double> alphaVector = allAlphaCoefNdf(allParticles, a, nT, h, ndft, timePerIt, lVector);  // coefs used for advancePdf
-        
-        vector<double> alphaVector = alphaCustomNuclAllSizes(dotHvector, allParticles, a,nT, h, ndft, timePerIt, lVector);
+        vector<double> alphaVector = allAlphaCoefNdf(allParticles, a, nT, h, ndft, timePerIt, lVector);  // coefs used for advancePdf
         
         
-        advanceNdfNuclAllSizes(dotHvector, alphaVector, allParticles, ndft, h, nT, a, it, timePerIt, lVector);
-        
-        //advanceNdf(alphaVector, allParticles, ndft, h, nT, a, it, timePerIt, lVector);
+        advanceNdf(alphaVector, allParticles, ndft, h, nT, a, it, timePerIt, lVector);
         
     }
     
@@ -238,6 +232,7 @@ int main()
     writePdft(pathProject, "/outputs/Cpdf_t/Cpdf", it, allParticles, pdfGrid, minValC, maxValC, 0, ndft);
     writePdft(pathProject, "/outputs/Lpdf_t/Lpdf", it, allParticles, LpdfGrid, lp0, maxValL, 1, ndft);
     writeGeoNdt(pathProject, "/outputs/Nd_t/Nd", it, allParticles, LpdfGrid, lp0, maxValL, 1, nT,ndft);
+    writeGeoNdtDi(pathProject, "/outputs/di_Nd_t/diNd", it, ndft);
     
     return 0;
 }

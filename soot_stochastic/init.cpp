@@ -378,14 +378,14 @@ vector<vector<double> > initCustomAggloMass(vector<double> liVector)
 
 
 
-
+// for case nucl+growth+agglo
 vector<vector<double> > initCustom(vector<double> liVector)
 {
     vector<vector<double> > allParticles;
     int i(0);
     double li = liVector[0];
     double N0 = 10.0;
-    double x0 = 0.01;
+    double x0 = 8.0;
     
     for(i=0; i<liVector.size(); i++)
         //for(i=0; i<3; i++)

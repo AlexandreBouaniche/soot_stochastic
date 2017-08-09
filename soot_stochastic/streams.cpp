@@ -193,7 +193,7 @@ void writeGeoNdt(string pathProject, string pathTarget, int it, vector<vector<do
     {
         //cout << "stream OK" << endl;
         
-        stream1 << "#iteration number = " << it << " pdf bins vertically in column 1"<<endl;
+        stream1 << "#iteration number = " << it << " bins vertically in column 1"<<endl;
         int j;
         double lj=lAndNpl[0][0];
         for(j=0; j<lAndNpl.size(); j++)
@@ -218,6 +218,57 @@ void writeGeoNdt(string pathProject, string pathTarget, int it, vector<vector<do
         cout << "ERROR: Impossible to open the file." << endl;
     }
 }
+
+
+void writeGeoNdtDi(string pathProject, string pathTarget, int it, vector<vector<double> > lAndNpl)
+{
+    // convention: di in [nm]  li (volume) in [nm3] = 1e-27 [m3]    rhoSoot = 1800 [kg/m3]
+    string finalPath = pathProject.append(pathTarget);
+    
+    int tInt = it;
+    stringstream ss;
+    ss << tInt;
+    string strIt = ss.str();
+    
+    finalPath = finalPath.append(strIt);
+    string dat = ".dat";
+    finalPath = finalPath.append(dat);
+    
+    ofstream stream1(finalPath.c_str());
+    if(stream1) // error test
+    {
+        //cout << "stream OK" << endl;
+        
+        stream1 << "#iteration number = " << it << " bins vertically in column 1"<<endl;
+        int j;
+        double lj=lAndNpl[0][0];
+        for(j=0; j<lAndNpl.size(); j++)
+        {
+            lj = lAndNpl[j][0];
+            double lavg = lj*1.125;
+            
+            double davg = pow((6.0*lavg/3.1415926),0.3333);
+            
+            double deltaLinti = 1.5*lj - 0.75*lj;
+            stream1 << davg << "   ";
+            double nv;
+            double nd;
+            nv = lAndNpl[j][2];    // [part/volume]
+            nd = nv / deltaLinti;  // [part/volume/deltaLint]
+            stream1 << nd << endl;
+            
+            //cout << "nv["<< j <<"] = " << nv << endl;
+            //cout << "nd["<< j <<"] = " << nd << endl;
+        }
+        stream1 << endl;
+    }
+    else
+    {
+        cout << "ERROR: Impossible to open the file." << endl;
+    }
+}
+
+
 
 
 void writeCustomAggloCase(string pathProject, string pathTarget, vector<double> lVector, double time)

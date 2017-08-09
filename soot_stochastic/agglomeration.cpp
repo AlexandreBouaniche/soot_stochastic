@@ -104,11 +104,11 @@ double beta(double l1, double l2, double timePerIt)   // should depend on T and 
      For now we consider that l1 and l2 are homogeneous to a mass/volume. Let's say lp0 is the volume of a sphere of diameter realLp0 = 1 nm
      
      */
-    double K(1);
+    double K(1.0);
     double pi(3.1415926);
     double kB(1.38064852e-23);
-    double rhoSoot(1800);
-    K = 2.2*pow(((pi*kB*0.5*2000)/(2*rhoSoot)),0.5);  // to do: substitute 0.5 by avg c for particles of size l1 and l2. 2000 is an approximation of T if c = 1
+    double rhoSoot(1800.0);
+    K = 2.2*pow(((pi*kB*0.5*2000.0)/(2.0*rhoSoot)),0.5);  // to do: substitute 0.5 by avg c for particles of size l1 and l2. 2000 is an approximation of T if c = 1
     
     /*
     double V1 = pi*pow(l1,3)/6;          // if we consider volume corresponding to diameter. for now we will consider that l is representative of a "size", eg a volume of mass and lc = l* - li
@@ -117,19 +117,19 @@ double beta(double l1, double l2, double timePerIt)   // should depend on T and 
     
     double V1 = l1;
     double V2 = l2;
-    double realL1 = pow((6*l1/pi),0.3333);   //realL1 is the diameter the particle would have, to have a volume of "l1"
-    double realL2 = pow((6*l2/pi),0.3333);
+    double realL1 = pow((6.0*l1/pi),0.3333);   //realL1 is the diameter the particle would have, to have a volume of "l1"
+    double realL2 = pow((6.0*l2/pi),0.3333);
     
     double betaCalc(1);
-    betaCalc = K*pow((1/V1+1/V2),0.5)*pow((realL1+realL2),2);
-    //return betaCalc;
+    betaCalc = K*pow((1.0/V1+1.0/V2),0.5)*pow((realL1+realL2),2.0) * timePerIt;
+    return betaCalc;
     
-    // betaTest  betaIt
-    double betaTest =100.0;
-    double betaIt(1.0);
-    betaIt = betaTest*timePerIt;
+    // betaTest
+    //double betaTest =100.0;
+    //double betaIt(1.0);
+    //betaIt = betaTest*timePerIt;
     
-    return betaIt;
+    //return betaIt;
 }
 
 

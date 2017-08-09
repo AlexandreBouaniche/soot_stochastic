@@ -212,12 +212,25 @@ void advanceGrowthPdf(vector<vector<double> >& allParticles, double nT, double m
 
 
 
-void linearGrowth(vector<vector<double> > &allParticles, double timePerIt)
+void linearGrowth(vector<vector<double> > &allParticles, double timePerIt, double g0)
 {
     int i(0);
     for(i=0; i<allParticles.size(); i++)
     {
-        allParticles[i][1] += allParticles[i][1] * timePerIt;  // test case agglo+growth. G = x (size coordinate)
+        allParticles[i][1] += allParticles[i][1] * timePerIt *g0;  // test case agglo+growth. G = x (size coordinate)
     }
 }
 
+
+
+void surfGrowth(vector<vector<double> > &allParticles, double timePerIt, double g0)
+{
+    double pi = 3.14159265;
+    int i(0);
+    for(i=0; i<allParticles.size(); i++)
+    {
+        double vi = allParticles[i][1];      // li is actually homogeneous to a volume
+        double surfi = pi*pow(vi*6/pi,0.6666);
+        allParticles[i][1] += g0 * surfi * timePerIt;  // test case agglo+growth. G = x (size coordinate)
+    }
+}

@@ -21,6 +21,8 @@ void writeCustomNv(std::string pathProject, std::string pathTarget, int it, std:
 
 void writeGeoNdt(std::string pathProject, std::string pathTarget, int it, std::vector<std::vector<double> > allParticles, double pdfGrid,double minVal, double maxVal, int column, double nT, std::vector<std::vector<double> > lAndNpl);
 
+void writeGeoNdtDi(std::string pathProject, std::string pathTarget, int it, std::vector<std::vector<double> > lAndNpl);
+
 void writeCustomAggloCase(std::string pathProject, std::string pathTarget, std::vector<double> lVector, double time);
 
 void writeCustomAggloGrowthCase(std::string pathProject, std::string pathTarget, std::vector<double> lVector, double time);
