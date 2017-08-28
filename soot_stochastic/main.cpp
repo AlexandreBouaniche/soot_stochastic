@@ -23,6 +23,7 @@
 #include "aggloGeo2.hpp"
 #include "advanceMass.hpp"
 #include "advanceNdf.hpp"
+#include "GridCell.hpp"
 
 using namespace std;
 
@@ -34,7 +35,7 @@ int main()
     string pathProject("/Users/bouaniche/Xcode_projects/soot_stochastic");
     
     double lp0 = 0.523;             // nascent particles size
-    int itTot = 1000;                 // number of iteration
+    int itTot = 1;                 // number of iteration
     double pdfGrid(0.1);    // distance between two c bins for graphic representation of P(c)
     double LpdfGrid(0.02);      // distance between two l bins for graphic representation of P(l)
     double maxValC(1);       // maximum value of c considered for graphic representation of P(c)
@@ -126,6 +127,17 @@ int main()
     vector<vector<double> > ndft;
     
     double totalMassBins(0);
+    
+    
+    
+    
+    GridCell cell1 = GridCell(1.0, 1.125, 0.5, 2.0);
+    cout << "mConst = " << cell1.getmConst() << endl;
+    cout << "mAvg = " << cell1.getmAvg() << endl;
+    cout << "mInf  = " << cell1.getmInf() << endl;
+    cout << "mSup = " << cell1.getmSup() << endl;
+    
+    
     
     int j;
     for(j=0; j<itTot; j++ )
