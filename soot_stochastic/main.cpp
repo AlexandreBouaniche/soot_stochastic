@@ -24,6 +24,7 @@
 #include "advanceMass.hpp"
 #include "advanceNdf.hpp"
 #include "GridCell.hpp"
+#include "Grid.hpp"
 
 using namespace std;
 
@@ -127,15 +128,6 @@ int main()
     vector<vector<double> > ndft;
     
     double totalMassBins(0);
-    
-    
-    
-    
-    GridCell cell1 = GridCell(1.0, 1.125, 0.5, 2.0);
-    cout << "mConst = " << cell1.getmConst() << endl;
-    cout << "mAvg = " << cell1.getmAvg() << endl;
-    cout << "mInf  = " << cell1.getmInf() << endl;
-    cout << "mSup = " << cell1.getmSup() << endl;
     
     
     
