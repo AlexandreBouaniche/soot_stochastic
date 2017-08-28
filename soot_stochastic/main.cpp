@@ -25,6 +25,7 @@
 #include "advanceNdf.hpp"
 #include "GridCell.hpp"
 #include "Grid.hpp"
+#include "Bin.hpp"
 
 using namespace std;
 
@@ -128,7 +129,6 @@ int main()
     vector<vector<double> > ndft;
     
     double totalMassBins(0);
-    
     
     
     int j;

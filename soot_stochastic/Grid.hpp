@@ -34,6 +34,8 @@ public:
     void showGrid();
     //void refineGrid         Idea
     
+    GridCell getGridCell(int i);
+    
 protected:
     std::vector<GridCell> m_gridCellVector;
     std::string m_gridType;     // available options: "regular"; "geometric2"; "geometricStandard"; "custom".

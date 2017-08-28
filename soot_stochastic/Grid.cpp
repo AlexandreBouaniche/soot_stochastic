@@ -196,3 +196,9 @@ void Grid::showGrid()
         cout << gridCell.getmConst() << "   " << gridCell.getmAvg() << "   " << gridCell.getmInf() << "   " << gridCell.getmSup() << endl;
     }
 }
+
+
+GridCell Grid::getGridCell(int i)
+{
+    return m_gridCellVector[i];
+}

@@ -12,6 +12,7 @@
 		EC7036921EFBEC3F0043132D /* tools.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EC7036901EFBEC3F0043132D /* tools.cpp */; };
 		EC73F3051F540747006F4CCF /* GridCell.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EC73F3031F540747006F4CCF /* GridCell.cpp */; };
 		EC73F3081F5420B9006F4CCF /* Grid.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EC73F3061F5420B9006F4CCF /* Grid.cpp */; };
+		EC73F30B1F546D6D006F4CCF /* Bin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EC73F3091F546D6D006F4CCF /* Bin.cpp */; };
 		ECB9FFD51F26079000BEC507 /* aggloGeo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ECB9FFD31F26079000BEC507 /* aggloGeo.cpp */; };
 		ECB9FFD81F289F5600BEC507 /* aggloGeo2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ECB9FFD61F289F5600BEC507 /* aggloGeo2.cpp */; };
 		ECE501D81EFC13DB006964B7 /* streams.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ECE501D61EFC13DB006964B7 /* streams.cpp */; };
@@ -46,6 +47,8 @@
 		EC73F3041F540747006F4CCF /* GridCell.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = GridCell.hpp; sourceTree = "<group>"; };
 		EC73F3061F5420B9006F4CCF /* Grid.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Grid.cpp; sourceTree = "<group>"; };
 		EC73F3071F5420B9006F4CCF /* Grid.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Grid.hpp; sourceTree = "<group>"; };
+		EC73F3091F546D6D006F4CCF /* Bin.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Bin.cpp; sourceTree = "<group>"; };
+		EC73F30A1F546D6D006F4CCF /* Bin.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Bin.hpp; sourceTree = "<group>"; };
 		ECB9FFD31F26079000BEC507 /* aggloGeo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = aggloGeo.cpp; sourceTree = "<group>"; };
 		ECB9FFD41F26079000BEC507 /* aggloGeo.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = aggloGeo.hpp; sourceTree = "<group>"; };
 		ECB9FFD61F289F5600BEC507 /* aggloGeo2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = aggloGeo2.cpp; sourceTree = "<group>"; };
@@ -97,6 +100,8 @@
 			isa = PBXGroup;
 			children = (
 				EC7036861EFBA6B00043132D /* main.cpp */,
+				EC73F3091F546D6D006F4CCF /* Bin.cpp */,
+				EC73F30A1F546D6D006F4CCF /* Bin.hpp */,
 				EC73F3031F540747006F4CCF /* GridCell.cpp */,
 				EC73F3041F540747006F4CCF /* GridCell.hpp */,
 				EC73F3061F5420B9006F4CCF /* Grid.cpp */,
@@ -190,6 +195,7 @@
 				EC70368F1EFBA90B0043132D /* mixing.cpp in Sources */,
 				ECE8D18E1F30B591003B68BC /* advanceMass.cpp in Sources */,
 				EC73F3081F5420B9006F4CCF /* Grid.cpp in Sources */,
+				EC73F30B1F546D6D006F4CCF /* Bin.cpp in Sources */,
 				EC73F3051F540747006F4CCF /* GridCell.cpp in Sources */,
 				ECE502031F0A8AD9006964B7 /* growth.cpp in Sources */,
 				ECE501DE1F01484E006964B7 /* agglomeration.cpp in Sources */,
