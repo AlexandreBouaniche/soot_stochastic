@@ -30,7 +30,6 @@ public:
     double getmAvg();
     double getmInf();
     double getmSup();
-    
     void setmConst(double mConst);
     void setmAvg(double mAvg);
     void setmInf(double mInf);
