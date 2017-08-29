@@ -32,8 +32,6 @@ public:
     
     void showBin();
     
-    //TO IMPLEMENT  void countAndSetNp. // counts stochastic particles of AerosolPhase which are within the Bin interval. Then setNp
-    
 protected:
     
     int m_np;  // [stochastic particles]

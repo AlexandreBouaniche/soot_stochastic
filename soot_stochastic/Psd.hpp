@@ -15,13 +15,14 @@
 #include "Bin.hpp"
 #include "Grid.hpp"
 #include "GridCell.hpp"
+#include "AerosolPhase.hpp"
 
 class Psd
 {
 public:
-    Psd(Grid initialGrid);
-    Psd(Grid initialGrid, double initNvT);
-    Psd(Grid initialGrid, double initNvT, std::vector<int> initNpVector);  // should not be needed if np is based on counting in AerosolPhase.
+    Psd(Grid initialGrid, AerosolPhase* aeroSolPtr);
+    Psd(Grid initialGrid, AerosolPhase* aeroSolPtr, double initNvT);
+    Psd(Grid initialGrid, AerosolPhase* aeroSolPtr, double initNvT, std::vector<int> initNpVector);  // should not be needed if np is based on counting in AerosolPhase.
     
     int getSize();
     
@@ -46,7 +47,7 @@ public:
     // for advancing the PSD in time with s2solver
     void setNvt(double nvT);         // will be set by S2solver at each time step
     
-    // TO IMMPLEMENT!! void binsCountNp();           // trigger countAndSetNp method in all Bins. (S2solver will reallocate particles directly modifying the AerosolPhase object)
+    void countAndSetAllNp();           // counts Np in AerosolPhase and sets it in all Bins. (S2solver will reallocate particles directly modifying the AerosolPhase object)
     
     void calcAndSetAllNv();          // will be calculated and set from the npi and nvT at each time step
     
@@ -55,6 +56,7 @@ public:
 private:
     std::vector<Bin> m_binVector;
     double m_nvT;                      //  [part/m3]  sum of Nv for all Bins
+    AerosolPhase* m_aeroSolPtr;
 };
 
 

@@ -15,7 +15,7 @@
 
 using namespace std;
 
-Psd::Psd(Grid initialGrid)
+Psd::Psd(Grid initialGrid, AerosolPhase* aeroSolPtr)
 {
     double initNvT(1.0e10);
     
@@ -33,10 +33,11 @@ Psd::Psd(Grid initialGrid)
     
     m_binVector = psd;
     m_nvT = initNvT;
+    m_aeroSolPtr = aeroSolPtr;
 }
 
 
-Psd::Psd(Grid initialGrid, double initNvT)
+Psd::Psd(Grid initialGrid, AerosolPhase* aeroSolPtr, double initNvT)
 {
     std::vector<Bin> psd;
     double npInit = 0.0;
@@ -52,11 +53,12 @@ Psd::Psd(Grid initialGrid, double initNvT)
     
     m_binVector = psd;
     m_nvT = initNvT;
+    m_aeroSolPtr = aeroSolPtr;
 }
 
 
 
-Psd::Psd(Grid initialGrid, double initNvT, std::vector<int> initNpVector)
+Psd::Psd(Grid initialGrid, AerosolPhase* aeroSolPtr, double initNvT, std::vector<int> initNpVector)
 {
     std::vector<Bin> psd;
     double nvInit = 0.0;
@@ -71,6 +73,7 @@ Psd::Psd(Grid initialGrid, double initNvT, std::vector<int> initNpVector)
     
     m_binVector = psd;
     m_nvT = initNvT;
+    m_aeroSolPtr = aeroSolPtr;
 }
 
 
@@ -205,6 +208,27 @@ void Psd::calcAndSetAllNv()
         ptr->setNv(nv);
     }
 }
+
+
+
+void Psd::countAndSetAllNp()
+{
+    double mInf(0);
+    double mSup(0);
+    double npl(0);
+    
+    
+    int i(0);
+    for(i=0; i<m_binVector.size();i++)
+    {
+        Bin* ptr = getBinPtr(i);
+        mInf = ptr->getmInf();
+        mSup = ptr->getmSup();
+        npl = m_aeroSolPtr->countNpl(mInf, mSup);
+        ptr->setNp(npl);
+    }
+}
+
 
 
 void Psd::showPsd()

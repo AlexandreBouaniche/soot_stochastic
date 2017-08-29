@@ -138,16 +138,24 @@ int main()
     Grid grid1 = Grid();
     double initNvT = 1e10;
     
-    vector<int> initNpVector;
-    int np(5);
+    
+    int npTot = 5000;
+    vector<double> initMassVector;
+    double m(5.0);
     
     i=0;
-    for(i=0; i<grid1.getSize();i++)
+    for(i=0; i<npTot;i++)
     {
-        initNpVector.push_back(np);
+        m+=1.0;
+        initMassVector.push_back(m);
     }
     
-    Psd psd1 = Psd(grid1, initNvT, initNpVector);
+    
+    AerosolPhase aerosolPhase1 = AerosolPhase(npTot,initMassVector);
+    AerosolPhase* aerosolPtr = &aerosolPhase1;
+    
+    Psd psd1 = Psd(grid1, aerosolPtr, initNvT);
+    psd1.countAndSetAllNp();
     psd1.calcAndSetAllNv();
     psd1.showPsd();
     
