@@ -202,3 +202,15 @@ GridCell Grid::getGridCell(int i)
 {
     return m_gridCellVector[i];
 }
+
+
+int Grid::getSize()
+{
+    int size(0);
+    int i(0);
+    for(i=0; i<m_gridCellVector.size();i++)
+    {
+        size++;
+    }
+    return size;
+}

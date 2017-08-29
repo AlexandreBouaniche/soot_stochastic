@@ -36,6 +36,8 @@ public:
     
     GridCell getGridCell(int i);
     
+    int getSize();
+    
 protected:
     std::vector<GridCell> m_gridCellVector;
     std::string m_gridType;     // available options: "regular"; "geometric2"; "geometricStandard"; "custom".

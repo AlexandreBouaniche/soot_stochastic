@@ -20,22 +20,24 @@ public:
     Bin(double mConst);
     Bin(double mConst, double mAvg, double mInf, double mSup);
     
-    Bin(GridCell gridCell, double np);
-    Bin(GridCell gridCell, double np, double nv);
+    Bin(GridCell gridCell, int np);
+    Bin(GridCell gridCell, int np, double nv);
     
     
-    double getNp();
+    int getNp();
     double getNv();
     
-    void setNp(double np);
+    void setNp(int np);
     void setNv(double nv);
     
     void showBin();
     
+    //TO IMPLEMENT  void countAndSetNp. // counts stochastic particles of AerosolPhase which are within the Bin interval. Then setNp
+    
 protected:
     
-    double m_np;
-    double m_nv;
+    int m_np;  // [stochastic particles]
+    double m_nv;  // [real particles / m3]
     
 };
 

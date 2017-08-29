@@ -26,6 +26,7 @@
 #include "GridCell.hpp"
 #include "Grid.hpp"
 #include "Bin.hpp"
+#include "Psd.hpp"
 
 using namespace std;
 
@@ -129,6 +130,28 @@ int main()
     vector<vector<double> > ndft;
     
     double totalMassBins(0);
+    
+    
+    
+    // test classes
+    
+    Grid grid1 = Grid();
+    double initNvT = 1e10;
+    
+    vector<int> initNpVector;
+    int np(5);
+    
+    i=0;
+    for(i=0; i<grid1.getSize();i++)
+    {
+        initNpVector.push_back(np);
+    }
+    
+    Psd psd1 = Psd(grid1, initNvT, initNpVector);
+    psd1.calcAndSetAllNv();
+    psd1.showPsd();
+    
+    
     
     
     int j;
