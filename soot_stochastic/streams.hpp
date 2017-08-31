@@ -31,6 +31,12 @@ void writeCustomNuclGrowthCase(std::string pathProject, std::string pathTarget, 
 
 
 
+std::vector<double> readDataVectors(std::string pathProject, std::string pathTarget, std::string dataFilename);
+
+std::vector<std::string> readLabels(std::string pathProject, std::string pathTarget ,std::string labelsFilename);
+
+std::vector<std::vector<double> > readDataArray(std::string pathProject, std::string pathTarget, std::string dataFilename,std::string labelsFilename);
+
 #include <stdio.h>
 
 #endif /* streams_hpp */

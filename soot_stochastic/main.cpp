@@ -134,6 +134,26 @@ int main()
     
     
     // test classes
+    vector<string> labels = readLabels(pathProject, "/inputs/test/", "labels.txt" );
+    
+    vector<vector<double> > dataArray = readDataArray(pathProject, "/inputs/test/", "data.txt", "labels.txt");
+    
+    for(i=0; i<labels.size();i++)
+    {
+        cout << labels[i] << "   ";
+    }
+    
+    cout << endl;
+    
+    for(i=0; i<dataArray.size();i++)
+    {
+        cout << "x = " << dataArray[i][0] << "   T = " << dataArray[i][1]<< endl;
+    }
+    
+    
+    
+    
+    
     
     Grid grid1 = Grid();
     double initNvT = 1e10;

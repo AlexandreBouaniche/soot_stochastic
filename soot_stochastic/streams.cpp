@@ -413,3 +413,109 @@ void writeCustomNuclGrowthCase(string pathProject, string pathTarget, vector<dou
         cout << "ERROR: Impossible to open the file." << endl;
     }
 }
+
+
+
+//convention: in the file, on the first line put a file title/description which will not be read.
+// on the second line put the vectors labels which will be read
+// from the third line on put the vectors values (double)
+
+vector<double> readDataVectors(string pathProject, string pathTarget, string dataFileName)
+{
+    
+    //load dataFile
+    string dataFilePath = pathProject.append(pathTarget);
+    dataFilePath = dataFilePath.append(dataFileName);
+    
+    vector<double> dataVector;
+    
+    ifstream stream1(dataFilePath.c_str());
+    if(stream1) // error test
+    {
+        string dataString;
+        double data;
+        
+        while (stream1 >> dataString)
+        {
+            data = atof(dataString.c_str());
+            dataVector.push_back(data);
+        }
+        
+    }
+    else
+    {
+        cout << "ERROR: Impossible to open the file." << endl;
+    }
+    return dataVector;
+}
+
+
+vector<string> readLabels(string pathProject, string pathTarget, string labelsFilename)
+{
+    
+    //load labelsFile
+    string labelsFilePath = pathProject.append(pathTarget);
+    labelsFilePath = labelsFilePath.append(labelsFilename);
+    
+    vector<string> labelsVector;
+    
+    ifstream streamLabels(labelsFilePath.c_str());
+    
+    if(streamLabels)
+    {
+         string labels;
+         while(streamLabels >> labels)
+         {
+         labelsVector.push_back(labels);
+         }
+     
+    }
+    else
+    {
+        cout << "ERROR: Impossible to open the file." << endl;
+    }
+    
+    return labelsVector;
+}
+
+
+vector<vector<double> > readDataArray(string pathProject, string pathTarget, string dataFilename,string labelsFilename)
+{
+    vector<double> dataVector = readDataVectors(pathProject, pathTarget, dataFilename);
+    vector<string> labelsVector = readLabels(pathProject, pathTarget, labelsFilename);
+    
+    vector<vector<double> > dataArray;
+    
+    int colNumber(0);
+    int dataVectorSize(0);
+    int i(0);
+    for(i=0;i<labelsVector.size();i++)
+    {
+        colNumber++;
+        //cout << labelsVector[i] << endl;
+    }
+    
+    for(i=0;i<dataVector.size();i++)
+    {
+        dataVectorSize++;
+        //cout << dataVector[i] << endl;
+    }
+    
+    int arrayLinesNumber = dataVectorSize / colNumber;
+    
+    for(i=0;i<arrayLinesNumber;i++)
+    {
+        vector<double> dataLine;
+        int j(0);
+        for(j=0; j<labelsVector.size();j++)
+        {
+            int index = i*colNumber + j;
+            dataLine.push_back(dataVector[index]);
+            //cout << "a[" << i<<"]["<<j<<"] = " << dataVector[index] << endl;
+            //cout << "index = " << index << endl;
+        }
+        
+        dataArray.push_back(dataLine);
+    }
+    return dataArray;
+}

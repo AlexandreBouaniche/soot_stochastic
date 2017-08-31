@@ -17,6 +17,7 @@
 		EC73F3111F55A62C006F4CCF /* SootStochasticParticle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EC73F30F1F55A62C006F4CCF /* SootStochasticParticle.cpp */; };
 		EC73F3171F55A875006F4CCF /* GasParticle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EC73F3151F55A875006F4CCF /* GasParticle.cpp */; };
 		EC73F31D1F55B5B6006F4CCF /* AerosolPhase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EC73F31B1F55B5B6006F4CCF /* AerosolPhase.cpp */; };
+		EC73F3201F56A784006F4CCF /* HomogeneousGasPhase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EC73F31E1F56A784006F4CCF /* HomogeneousGasPhase.cpp */; };
 		ECB9FFD51F26079000BEC507 /* aggloGeo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ECB9FFD31F26079000BEC507 /* aggloGeo.cpp */; };
 		ECB9FFD81F289F5600BEC507 /* aggloGeo2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ECB9FFD61F289F5600BEC507 /* aggloGeo2.cpp */; };
 		ECE501D81EFC13DB006964B7 /* streams.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ECE501D61EFC13DB006964B7 /* streams.cpp */; };
@@ -61,6 +62,8 @@
 		EC73F3161F55A875006F4CCF /* GasParticle.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = GasParticle.hpp; sourceTree = "<group>"; };
 		EC73F31B1F55B5B6006F4CCF /* AerosolPhase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AerosolPhase.cpp; sourceTree = "<group>"; };
 		EC73F31C1F55B5B6006F4CCF /* AerosolPhase.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = AerosolPhase.hpp; sourceTree = "<group>"; };
+		EC73F31E1F56A784006F4CCF /* HomogeneousGasPhase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HomogeneousGasPhase.cpp; sourceTree = "<group>"; };
+		EC73F31F1F56A784006F4CCF /* HomogeneousGasPhase.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = HomogeneousGasPhase.hpp; sourceTree = "<group>"; };
 		ECB9FFD31F26079000BEC507 /* aggloGeo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = aggloGeo.cpp; sourceTree = "<group>"; };
 		ECB9FFD41F26079000BEC507 /* aggloGeo.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = aggloGeo.hpp; sourceTree = "<group>"; };
 		ECB9FFD61F289F5600BEC507 /* aggloGeo2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = aggloGeo2.cpp; sourceTree = "<group>"; };
@@ -112,6 +115,8 @@
 			isa = PBXGroup;
 			children = (
 				EC7036861EFBA6B00043132D /* main.cpp */,
+				EC73F31E1F56A784006F4CCF /* HomogeneousGasPhase.cpp */,
+				EC73F31F1F56A784006F4CCF /* HomogeneousGasPhase.hpp */,
 				EC73F31B1F55B5B6006F4CCF /* AerosolPhase.cpp */,
 				EC73F31C1F55B5B6006F4CCF /* AerosolPhase.hpp */,
 				EC73F3151F55A875006F4CCF /* GasParticle.cpp */,
@@ -126,6 +131,8 @@
 				EC73F3041F540747006F4CCF /* GridCell.hpp */,
 				EC73F3061F5420B9006F4CCF /* Grid.cpp */,
 				EC73F3071F5420B9006F4CCF /* Grid.hpp */,
+				EC7036901EFBEC3F0043132D /* tools.cpp */,
+				EC7036911EFBEC3F0043132D /* tools.hpp */,
 				ECE502011F0A8AD9006964B7 /* growth.cpp */,
 				ECE502021F0A8AD9006964B7 /* growth.hpp */,
 				ECE501DC1F01484E006964B7 /* agglomeration.cpp */,
@@ -138,8 +145,6 @@
 				ECE502051F21E94A006964B7 /* init.hpp */,
 				ECE501D61EFC13DB006964B7 /* streams.cpp */,
 				ECE501D71EFC13DB006964B7 /* streams.hpp */,
-				EC7036901EFBEC3F0043132D /* tools.cpp */,
-				EC7036911EFBEC3F0043132D /* tools.hpp */,
 				EC70368D1EFBA90B0043132D /* mixing.cpp */,
 				EC70368E1EFBA90B0043132D /* mixing.hpp */,
 				ECB9FFD61F289F5600BEC507 /* aggloGeo2.cpp */,
@@ -210,6 +215,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				EC7036871EFBA6B00043132D /* main.cpp in Sources */,
+				EC73F3201F56A784006F4CCF /* HomogeneousGasPhase.cpp in Sources */,
 				ECB9FFD81F289F5600BEC507 /* aggloGeo2.cpp in Sources */,
 				ECE501DB1EFD607B006964B7 /* nucleation.cpp in Sources */,
 				EC70368F1EFBA90B0043132D /* mixing.cpp in Sources */,
