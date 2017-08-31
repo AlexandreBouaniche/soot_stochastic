@@ -479,6 +479,11 @@ vector<string> readLabels(string pathProject, string pathTarget, string labelsFi
 }
 
 
+
+//  placer un fichier txt avec les labels sur plusieurs colonnes en une ligne
+// placer un fichier  txt avec les data: différente colonne -> différente variable et différente ligne -> avance selon t ou x...
+// on peut sauver un fichier excel en txt tabulation et ces fichiers peuvent être lus par cette fonction
+
 vector<vector<double> > readDataArray(string pathProject, string pathTarget, string dataFilename,string labelsFilename)
 {
     vector<double> dataVector = readDataVectors(pathProject, pathTarget, dataFilename);
@@ -492,13 +497,11 @@ vector<vector<double> > readDataArray(string pathProject, string pathTarget, str
     for(i=0;i<labelsVector.size();i++)
     {
         colNumber++;
-        //cout << labelsVector[i] << endl;
     }
     
     for(i=0;i<dataVector.size();i++)
     {
         dataVectorSize++;
-        //cout << dataVector[i] << endl;
     }
     
     int arrayLinesNumber = dataVectorSize / colNumber;
@@ -511,8 +514,6 @@ vector<vector<double> > readDataArray(string pathProject, string pathTarget, str
         {
             int index = i*colNumber + j;
             dataLine.push_back(dataVector[index]);
-            //cout << "a[" << i<<"]["<<j<<"] = " << dataVector[index] << endl;
-            //cout << "index = " << index << endl;
         }
         
         dataArray.push_back(dataLine);
