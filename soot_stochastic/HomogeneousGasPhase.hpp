@@ -21,7 +21,7 @@ class HomogeneousGasPhase
 {
 public:
     HomogeneousGasPhase();
-    HomogeneousGasPhase(std::vector<double> t);
+    HomogeneousGasPhase(std::vector<std::string> labels, std::vector<std::vector<double> > dataArray);
     
     void setVector(std::vector<double>, std::string label);
     double getValuet(double t, std::string label);

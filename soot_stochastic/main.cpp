@@ -134,20 +134,21 @@ int main()
     
     
     // test classes
-    vector<string> labels = readLabels(pathProject, "/inputs/test/", "labels.txt" );
+    vector<string> labels = readLabels(pathProject, "/inputs/HomogeneousGasPhase/Kraft1/", "labels.txt" );
     
-    vector<vector<double> > dataArray = readDataArray(pathProject, "/inputs/test/", "data.txt", "labels.txt");
+    vector<vector<double> > dataArray = readDataArray(pathProject, "/inputs/HomogeneousGasPhase/Kraft1/", "data.txt", "labels.txt");
     
-    for(i=0; i<labels.size();i++)
-    {
-        cout << labels[i] << "   ";
-    }
+    //int indext(0);
+    int indexT = dataIndex(labels, "T");
+    int indexO2 = dataIndex(labels, "YO2");
+    int indext = dataIndex(labels, "t");
+    
     
     cout << endl;
     
-    for(i=0; i<dataArray.size();i++)
+    for(i=0; i<10;i++)
     {
-        cout << "x = " << dataArray[i][0] << "   T = " << dataArray[i][1]<< endl;
+        cout << "t = " << dataArray[i][indext] << "   T = " << dataArray[i][indexT] << "   O2 = " << dataArray[i][indexO2]<< endl;
     }
     
     

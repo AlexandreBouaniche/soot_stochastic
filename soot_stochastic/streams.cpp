@@ -520,3 +520,25 @@ vector<vector<double> > readDataArray(string pathProject, string pathTarget, str
     }
     return dataArray;
 }
+
+
+// it is important to put an inexistant label on the first rank of labelsVector in order to know that index =0 corresponds to a "label index not found" case
+
+int dataIndex(vector<string> labelsVector, string label)
+{
+    int index(0);
+    
+    int i(0);
+    for(i=0;i<labelsVector.size();i++)
+    {
+        if(label==labelsVector[i])
+        {
+            index = i;
+        }
+    }
+    if(index==0)
+    {
+        cout << "label index " << label << " not found" << endl;
+    }
+    return index;
+}

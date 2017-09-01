@@ -37,6 +37,8 @@ std::vector<std::string> readLabels(std::string pathProject, std::string pathTar
 
 std::vector<std::vector<double> > readDataArray(std::string pathProject, std::string pathTarget, std::string dataFilename,std::string labelsFilename);
 
+int dataIndex(std::vector<std::string> labelsVector, std::string label);
+
 #include <stdio.h>
 
 #endif /* streams_hpp */
