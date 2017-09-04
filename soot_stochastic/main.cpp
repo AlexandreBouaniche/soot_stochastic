@@ -27,6 +27,7 @@
 #include "Grid.hpp"
 #include "Bin.hpp"
 #include "Psd.hpp"
+#include "HomogeneousGasPhase.hpp"
 
 using namespace std;
 
@@ -134,23 +135,50 @@ int main()
     
     
     // test classes
-    vector<string> labels = readLabels(pathProject, "/inputs/HomogeneousGasPhase/Kraft1/", "labels.txt" );
     
-    vector<vector<double> > dataArray = readDataArray(pathProject, "/inputs/HomogeneousGasPhase/Kraft1/", "data.txt", "labels.txt");
+    HomogeneousGasPhase gasPhase = HomogeneousGasPhase(pathProject, "/inputs/HomogeneousGasPhase/Kraftrun3/", "data.txt", "labels.txt");
+    
+    double t1 = 1.0e-3;
+    int rankt = gasPhase.getRankt(t1);
+    cout << "rankt = " << rankt << endl;
+    
+    double T1 = gasPhase.getT(t1);
+    double YPAHnucl1 = gasPhase.getYPAHnucl(t1);
+    double YA1t1 = gasPhase.getYA1(t1);
+    double YA2t1 = gasPhase.getYA2(t1);
+    double YA3t1 = gasPhase.getYA3(t1);
+    double YA4t1 = gasPhase.getYA4(t1);
+    double YC2H2t1 = gasPhase.getYC2H2(t1);
+    double YO2t1 = gasPhase.getYO2(t1);
+    double YOHt1 = gasPhase.getYOH(t1);
+    
+    
+    
+    cout << "t = " << t1 << "   T = " << T1 << endl;
+    cout << "YPAHnucl = " << YPAHnucl1 << "   YA1 = " << YA1t1 << endl;
+    cout << "YA2 = " << YA2t1 << "   YA3 = " << YA3t1 << endl;
+    cout << "YA4 = " << YA4t1 << "   YC2H2 = " << YC2H2t1 << endl;
+    cout << "YO2 = " << YO2t1 << "   YOH = " << YOHt1 << endl;
+    
+    /*
+    vector<string> labels = readLabels(pathProject, "/inputs/HomogeneousGasPhase/Kraftrun3/", "labels.txt" );
+    
+    vector<vector<double> > dataArray = readDataArray(pathProject, "/inputs/HomogeneousGasPhase/Kraftrun3/", "data.txt", "labels.txt");
     
     //int indext(0);
     int indexT = dataIndex(labels, "T");
-    int indexO2 = dataIndex(labels, "YO2");
+    int indexYO2 = dataIndex(labels, "YO2");
     int indext = dataIndex(labels, "t");
+    int indexYC2H2 = dataIndex(labels, "YC2H2");
     
     
     cout << endl;
     
     for(i=0; i<10;i++)
     {
-        cout << "t = " << dataArray[i][indext] << "   T = " << dataArray[i][indexT] << "   O2 = " << dataArray[i][indexO2]<< endl;
+        cout << "t = " << dataArray[i][indext] << "   T = " << dataArray[i][indexT] << "   YO2 = " << dataArray[i][indexYO2]<< "   YC2H2 = " << dataArray[i][indexYC2H2] << endl;
     }
-    
+    */
     
     
     

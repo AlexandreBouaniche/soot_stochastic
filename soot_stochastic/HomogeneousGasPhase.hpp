@@ -13,6 +13,8 @@
 #include <vector>
 #include <string>
 
+#include "streams.hpp"
+
 // array with Y values of relevant species as a function of time. known in advance and homogeneous within the "reactor"
 
 // could be replaced by a cantera object like a reactor or flame
@@ -21,10 +23,21 @@ class HomogeneousGasPhase
 {
 public:
     HomogeneousGasPhase();
-    HomogeneousGasPhase(std::vector<std::string> labels, std::vector<std::vector<double> > dataArray);
+    HomogeneousGasPhase(std::string pathProject, std::string pathTarget, std::string dataFilename,std::string labelsFilename);
     
-    void setVector(std::vector<double>, std::string label);
-    double getValuet(double t, std::string label);
+    
+    // returns the rank in m_t of the closest (superior) value to argument t
+    int getRankt(double t);
+    
+    double getT(double t);
+    double getYPAHnucl(double t);
+    double getYA1(double t);
+    double getYA2(double t);
+    double getYA3(double t);
+    double getYA4(double t);
+    double getYC2H2(double t);
+    double getYO2(double t);
+    double getYOH(double t);
     
 protected:
     

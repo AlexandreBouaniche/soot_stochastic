@@ -156,7 +156,7 @@ int AerosolPhase::countNpl(double mInf, double mSup)
     for(i=0; i<m_partVector.size();i++)
     {
         double m = getMass(i);
-        if(m >= mInf  &  m < mSup)
+        if(m >= mInf  &&  m < mSup)
         {
             npl++;
         }
