@@ -53,7 +53,7 @@ double nvLstarGeo2(double lStar, vector<vector<double> > lNplNvl, double maxvalL
         infborn = 0.75*li;
         supborn = 1.5*li;
         
-        if(lStar>=infborn & lStar < supborn)
+        if(lStar>=infborn && lStar < supborn)
         {
             nLstar = lNplNvl[i][2];
         }
@@ -84,7 +84,7 @@ double dotAlStarGeo2(double lStar, vector<vector< double> > const& allParticles,
         supborn = li*1.5;
         
         
-        if(lStar>=infborn & lStar < supborn)
+        if(lStar>=infborn && lStar < supborn)
         {
             ls = li;                // taking this closest value for source calculation
             rankLstar = i;          // corresponding rank in lNplNvl
@@ -191,7 +191,7 @@ double dotAlStarGeo2m(double lStar, vector<vector< double> > const& lNplNvl, vec
         supborn = li*1.5;
         
         
-        if(lStar>=infborn & lStar < supborn)
+        if(lStar>=infborn && lStar < supborn)
         {
             ls = li;                // taking this closest value for source calculation
             rankLstar = i;          // corresponding rank in lNplNvl
@@ -374,7 +374,7 @@ void advancePdfGeo2(vector<double>const& alphaVector, vector<vector< double> >& 
             for(j=0; j<allParticles.size(); j++)
             {
                 
-                if(allParticles[j][1]>=infborn & allParticles[j][1]<supborn)
+                if(allParticles[j][1]>=infborn && allParticles[j][1]<supborn)
                 {
                     allPartLiRanks.push_back(j);
                     countAllPartLi++;
@@ -502,7 +502,7 @@ vector<vector<double> > geo2lNplNv(vector<vector<double> > allParticles, vector<
         j=0;
         for(j=0;j<allParticles.size();j++)
         {
-            if((allParticles[j][1]>=infborn)&(allParticles[j][1]<supborn))
+            if((allParticles[j][1]>=infborn)&&(allParticles[j][1]<supborn))
             {
                 npL++;
             }

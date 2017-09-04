@@ -53,7 +53,7 @@ double nvLstarGeo(double lStar, vector<vector<double> > lNplNvl, double maxvalL)
         
         
         
-        if(lStar>=infborn & lStar < supborn)
+        if(lStar>=infborn && lStar < supborn)
         {
             nLstar = lNplNvl[i][2];
         }
@@ -101,7 +101,7 @@ double dotAlStarGeo(double lStar, vector<vector< double> > const& allParticles, 
         //cout << infborn << "   " << supborn << endl << endl;
         
         
-        if(lStar>=infborn & lStar < supborn)
+        if(lStar>=infborn && lStar < supborn)
         {
             ls = li;                // taking this closest value for source calculation
             rankLstar = i;          // corresponding rank in lNplNvl
@@ -130,7 +130,7 @@ double dotAlStarGeo(double lStar, vector<vector< double> > const& allParticles, 
         for(j=0; j<=rankLstar; j++)
         {
             double lc = lNplNvl[j][0];
-            if ((li+lc)>=infbornLstar & (li+lc)<supBornLstar)      //positive term of Al*. Consider distribution from infborn to supborn?
+            if ((li+lc)>=infbornLstar && (li+lc)<supBornLstar)      //positive term of Al*. Consider distribution from infborn to supborn?
                 // next development: sum over all li and lc with stoichiometric coef
             {
                  AlStarPos = AlStarPos + a * 0.5 * beta(lc,li, timePerIt) * nvLstarGeo(lc, lNplNvl, maxValL) * lNplNvl[i][2];
@@ -282,7 +282,7 @@ void advancePdfGeo(vector<double>const& alphaVector, vector<vector< double> >& a
             for(j=0; j<allParticles.size(); j++)
             {
                 
-                if(allParticles[j][1]>=infborn & allParticles[j][1]<supborn)
+                if(allParticles[j][1]>=infborn && allParticles[j][1]<supborn)
                 {
                     allPartLiRanks.push_back(j);
                     countAllPartLi++;
@@ -454,7 +454,7 @@ vector<vector<double> > geolNplNv(vector<vector<double> > allParticles, vector<d
         j=0;
         for(j=0;j<allParticles.size();j++)
         {
-            if((allParticles[j][1]>=infborn)&(allParticles[j][1]<supborn))
+            if((allParticles[j][1]>=infborn)&&(allParticles[j][1]<supborn))
             {
                 npL++;
             }

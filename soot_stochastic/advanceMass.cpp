@@ -154,7 +154,7 @@ void advancePdfMass(vector<double>const& alphaVector, vector<vector< double> >& 
             for(j=0; j<allParticles.size(); j++)
             {
                 
-                if(allParticles[j][1]>=infborn & allParticles[j][1]<supborn)
+                if(allParticles[j][1]>=infborn && allParticles[j][1]<supborn)
                 {
                     allPartLiRanks.push_back(j);
                     countAllPartLi++;
@@ -312,7 +312,7 @@ vector<vector<double> > lNplNvMass(vector<vector<double> > allParticles, vector<
         j=0;
         for(j=0;j<allParticles.size();j++)
         {
-            if((allParticles[j][1]>=infborn)&(allParticles[j][1]<supborn))
+            if((allParticles[j][1]>=infborn)&&(allParticles[j][1]<supborn))
             {
                 npL++;
             }

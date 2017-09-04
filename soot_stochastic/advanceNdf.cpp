@@ -55,7 +55,7 @@ vector<vector<double> > ndf(vector<vector<double> > allParticles, vector<double>
         j=0;
         for(j=0;j<allParticles.size();j++)
         {
-            if((allParticles[j][1]>=infborn)&(allParticles[j][1]<supborn))
+            if((allParticles[j][1]>=infborn)&&(allParticles[j][1]<supborn))
             {
                 npL++;
             }
@@ -225,7 +225,7 @@ void advanceNdf(vector<double>const& alphaVector, vector<vector< double> >& allP
             for(j=0; j<allParticles.size(); j++)
             {
                 
-                if(allParticles[j][1]>=infborn & allParticles[j][1]<supborn)
+                if(allParticles[j][1]>=infborn && allParticles[j][1]<supborn)
                 {
                     allPartLiRanks.push_back(j);
                     countAllPartLi++;
@@ -498,7 +498,7 @@ void advanceNdfNuclAllSizes(vector<double> const& dotHvector, vector<double>cons
             for(j=0; j<allParticles.size(); j++)
             {
                 
-                if(allParticles[j][1]>=infborn & allParticles[j][1]<supborn)
+                if(allParticles[j][1]>=infborn && allParticles[j][1]<supborn)
                 {
                     allPartLiRanks.push_back(j);
                     countAllPartLi++;

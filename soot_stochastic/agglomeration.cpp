@@ -41,7 +41,7 @@ int npLstar(double lStar, vector<vector<double> > allParticles, double deltaL)
     int count(0);
     for(i=0; i<allParticles.size(); i++)
     {
-        if((allParticles[i][1]>=infBorn)&(allParticles[i][1]<supBorn))
+        if((allParticles[i][1]>=infBorn)&&(allParticles[i][1]<supBorn))
             count++;
     }
     return count;
@@ -90,7 +90,7 @@ double nvLstar(double lStar, vector<vector<double> > allParticles, double nT, do
     for(i=0; i<allParticles.size(); i++)
     {
         Np++;
-        if((allParticles[i][1]>=infBorn)&(allParticles[i][1]<supBorn))
+        if((allParticles[i][1]>=infBorn)&&(allParticles[i][1]<supBorn))
             count++;
     }
     nLstar = count*nT/Np;
@@ -172,7 +172,7 @@ double dotAlStar(double lStar, vector<vector< double> > const& allParticles, vec
     for(i=0; i<lNplNvl.size(); i++)          // looking for closest value (to lStar) of li of the lNplNvl vector.
     {
         li = lNplNvl[i][0];
-        if((ls>=(li-deltaL/2))&(ls<(li+deltaL/2)))
+        if((ls>=(li-deltaL/2))&&(ls<(li+deltaL/2)))
         {
             ls = li;                // taking this closest value for source calculation
             rankLstar = i;          // corresponding rank in lNplNvl
@@ -319,7 +319,7 @@ void advancePdf(vector<double>const& alphaVector, vector<vector< double> >& allP
             int j(0);
             for(j=0; j<allParticles.size(); j++)
             {
-                if(allParticles[j][1]>=(li-deltaL/2) & allParticles[j][1]<(li+deltaL/2))
+                if(allParticles[j][1]>=(li-deltaL/2) && allParticles[j][1]<(li+deltaL/2))
                 {
                     allPartLiRanks.push_back(j);
                     countAllPartLi++;
