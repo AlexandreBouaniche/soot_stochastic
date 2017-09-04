@@ -165,9 +165,25 @@ double HomogeneousGasPhase::getYPAHnucl(double t)
 {
     int rank = getRankt(t);
     
+    double tSup = m_t[rank];
+    double coefSup(1.0);
+    double coefInf(0.0);
+    double interpolated(0);
+    
     if(m_YPAHnucl.size()>rank && m_YPAHnucl.size()>0)
     {
-        return m_YPAHnucl[rank];
+        if(t>=tSup || t<=m_t[0])
+        {
+            return m_YPAHnucl[rank];
+        }
+        else  // we go from equations coefSup * m_t[rank] + coefInf * m_t[rank - 1] = t
+            // and  coefInf + coefSup = 1
+        {
+            coefSup = (t - m_t[rank-1]) / (m_t[rank] - m_t[rank - 1]);
+            coefInf = 1.0 - coefSup;
+            interpolated = coefInf * m_YPAHnucl[rank -1] + coefSup * m_YPAHnucl[rank];
+            return interpolated;
+        }
     }
     
     else
@@ -182,9 +198,25 @@ double HomogeneousGasPhase::getYA1(double t)
 {
     int rank = getRankt(t);
     
+    double tSup = m_t[rank];
+    double coefSup(1.0);
+    double coefInf(0.0);
+    double interpolated(0);
+    
     if(m_YA1.size()>rank && m_YA1.size()>0)
     {
-        return m_YA1[rank];
+        if(t>=tSup || t<=m_t[0])
+        {
+            return m_YA1[rank];
+        }
+        else  // we go from equations coefSup * m_t[rank] + coefInf * m_t[rank - 1] = t
+            // and  coefInf + coefSup = 1
+        {
+            coefSup = (t - m_t[rank-1]) / (m_t[rank] - m_t[rank - 1]);
+            coefInf = 1.0 - coefSup;
+            interpolated = coefInf * m_YA1[rank -1] + coefSup * m_YA1[rank];
+            return interpolated;
+        }
     }
     
     else
@@ -199,9 +231,25 @@ double HomogeneousGasPhase::getYA2(double t)
 {
     int rank = getRankt(t);
     
+    double tSup = m_t[rank];
+    double coefSup(1.0);
+    double coefInf(0.0);
+    double interpolated(0);
+    
     if(m_YA2.size()>rank && m_YA2.size()>0)
     {
-        return m_YA2[rank];
+        if(t>=tSup || t<=m_t[0])
+        {
+            return m_YA2[rank];
+        }
+        else  // we go from equations coefSup * m_t[rank] + coefInf * m_t[rank - 1] = t
+            // and  coefInf + coefSup = 1
+        {
+            coefSup = (t - m_t[rank-1]) / (m_t[rank] - m_t[rank - 1]);
+            coefInf = 1.0 - coefSup;
+            interpolated = coefInf * m_YA2[rank -1] + coefSup * m_YA2[rank];
+            return interpolated;
+        }
     }
     
     else
@@ -216,9 +264,25 @@ double HomogeneousGasPhase::getYA3(double t)
 {
     int rank = getRankt(t);
     
+    double tSup = m_t[rank];
+    double coefSup(1.0);
+    double coefInf(0.0);
+    double interpolated(0);
+    
     if(m_YA3.size()> rank  &&  m_YA3.size()>0)
     {
-        return m_YA3[rank];
+        if(t>=tSup || t<=m_t[0])
+        {
+            return m_YA3[rank];
+        }
+        else  // we go from equations coefSup * m_t[rank] + coefInf * m_t[rank - 1] = t
+            // and  coefInf + coefSup = 1
+        {
+            coefSup = (t - m_t[rank-1]) / (m_t[rank] - m_t[rank - 1]);
+            coefInf = 1.0 - coefSup;
+            interpolated = coefInf * m_YA3[rank -1] + coefSup * m_YA3[rank];
+            return interpolated;
+        }
     }
     
     else
@@ -233,9 +297,25 @@ double HomogeneousGasPhase::getYA4(double t)
 {
     int rank = getRankt(t);
     
+    double tSup = m_t[rank];
+    double coefSup(1.0);
+    double coefInf(0.0);
+    double interpolated(0);
+    
     if(m_YA4.size()>rank  &&  m_YA4.size()>0)
     {
-        return m_YA4[rank];
+        if(t>=tSup || t<=m_t[0])
+        {
+            return m_YA4[rank];
+        }
+        else  // we go from equations coefSup * m_t[rank] + coefInf * m_t[rank - 1] = t
+            // and  coefInf + coefSup = 1
+        {
+            coefSup = (t - m_t[rank-1]) / (m_t[rank] - m_t[rank - 1]);
+            coefInf = 1.0 - coefSup;
+            interpolated = coefInf * m_YA4[rank -1] + coefSup * m_YA4[rank];
+            return interpolated;
+        }
     }
     
     else
@@ -250,9 +330,25 @@ double HomogeneousGasPhase::getYC2H2(double t)
 {
     int rank = getRankt(t);
     
+    double tSup = m_t[rank];
+    double coefSup(1.0);
+    double coefInf(0.0);
+    double interpolated(0);
+    
     if(m_YC2H2.size()>rank  &&  m_YC2H2.size()>0)
     {
-        return m_YC2H2[rank];
+        if(t>=tSup || t<=m_t[0])
+        {
+            return m_YC2H2[rank];
+        }
+        else  // we go from equations coefSup * m_t[rank] + coefInf * m_t[rank - 1] = t
+            // and  coefInf + coefSup = 1
+        {
+            coefSup = (t - m_t[rank-1]) / (m_t[rank] - m_t[rank - 1]);
+            coefInf = 1.0 - coefSup;
+            interpolated = coefInf * m_YC2H2[rank -1] + coefSup * m_YC2H2[rank];
+            return interpolated;
+        }
     }
     
     else
@@ -267,9 +363,25 @@ double HomogeneousGasPhase::getYO2(double t)
 {
     int rank = getRankt(t);
     
+    double tSup = m_t[rank];
+    double coefSup(1.0);
+    double coefInf(0.0);
+    double interpolated(0);
+    
     if(m_YO2.size()>rank  &&  m_YO2.size()>0)
     {
-        return m_YO2[rank];
+        if(t>=tSup || t<=m_t[0])
+        {
+            return m_YO2[rank];
+        }
+        else  // we go from equations coefSup * m_t[rank] + coefInf * m_t[rank - 1] = t
+            // and  coefInf + coefSup = 1
+        {
+            coefSup = (t - m_t[rank-1]) / (m_t[rank] - m_t[rank - 1]);
+            coefInf = 1.0 - coefSup;
+            interpolated = coefInf * m_YO2[rank -1] + coefSup * m_YO2[rank];
+            return interpolated;
+        }
     }
     else
     {
@@ -283,9 +395,25 @@ double HomogeneousGasPhase::getYOH(double t)
 {
     int rank = getRankt(t);
     
+    double tSup = m_t[rank];
+    double coefSup(1.0);
+    double coefInf(0.0);
+    double interpolated(0);
+    
     if(m_YOH.size()>rank  &&  m_YOH.size()>0)
     {
-        return m_YOH[rank];
+        if(t>=tSup || t<=m_t[0])
+        {
+            return m_YOH[rank];
+        }
+        else  // we go from equations coefSup * m_t[rank] + coefInf * m_t[rank - 1] = t
+            // and  coefInf + coefSup = 1
+        {
+            coefSup = (t - m_t[rank-1]) / (m_t[rank] - m_t[rank - 1]);
+            coefInf = 1.0 - coefSup;
+            interpolated = coefInf * m_YOH[rank -1] + coefSup * m_YOH[rank];
+            return interpolated;
+        }
     }
     else
     {
