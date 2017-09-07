@@ -52,7 +52,7 @@ protected:
     std::vector<double> m_YO2;
     std::vector<double> m_YOH;
     
-    // Cantera object reactor/flame...
+    // possible development: integrate here a Cantera object reactor/flame...
 };
 
 #endif /* HomogeneousGasPhase_hpp */

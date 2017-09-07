@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		EC4D26431F5D819A00A6BB5A /* SootSourceTerm.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EC4D26411F5D819A00A6BB5A /* SootSourceTerm.cpp */; };
 		EC7036871EFBA6B00043132D /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EC7036861EFBA6B00043132D /* main.cpp */; };
 		EC70368F1EFBA90B0043132D /* mixing.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EC70368D1EFBA90B0043132D /* mixing.cpp */; };
 		EC7036921EFBEC3F0043132D /* tools.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EC7036901EFBEC3F0043132D /* tools.cpp */; };
@@ -42,6 +43,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		EC4D26411F5D819A00A6BB5A /* SootSourceTerm.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SootSourceTerm.cpp; sourceTree = "<group>"; };
+		EC4D26421F5D819A00A6BB5A /* SootSourceTerm.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SootSourceTerm.hpp; sourceTree = "<group>"; };
 		EC7036831EFBA6B00043132D /* soot_stochastic */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = soot_stochastic; sourceTree = BUILT_PRODUCTS_DIR; };
 		EC7036861EFBA6B00043132D /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		EC70368D1EFBA90B0043132D /* mixing.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = mixing.cpp; sourceTree = "<group>"; };
@@ -115,6 +118,8 @@
 			isa = PBXGroup;
 			children = (
 				EC7036861EFBA6B00043132D /* main.cpp */,
+				EC4D26411F5D819A00A6BB5A /* SootSourceTerm.cpp */,
+				EC4D26421F5D819A00A6BB5A /* SootSourceTerm.hpp */,
 				EC73F31E1F56A784006F4CCF /* HomogeneousGasPhase.cpp */,
 				EC73F31F1F56A784006F4CCF /* HomogeneousGasPhase.hpp */,
 				EC73F31B1F55B5B6006F4CCF /* AerosolPhase.cpp */,
@@ -216,6 +221,7 @@
 			files = (
 				EC7036871EFBA6B00043132D /* main.cpp in Sources */,
 				EC73F3201F56A784006F4CCF /* HomogeneousGasPhase.cpp in Sources */,
+				EC4D26431F5D819A00A6BB5A /* SootSourceTerm.cpp in Sources */,
 				ECB9FFD81F289F5600BEC507 /* aggloGeo2.cpp in Sources */,
 				ECE501DB1EFD607B006964B7 /* nucleation.cpp in Sources */,
 				EC70368F1EFBA90B0043132D /* mixing.cpp in Sources */,

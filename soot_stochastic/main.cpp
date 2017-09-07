@@ -28,6 +28,7 @@
 #include "Bin.hpp"
 #include "Psd.hpp"
 #include "HomogeneousGasPhase.hpp"
+#include "SootSourceTerm.hpp"
 
 using namespace std;
 
@@ -160,26 +161,6 @@ int main()
     cout << "YA4 = " << YA4t1 << "   YC2H2 = " << YC2H2t1 << endl;
     cout << "YO2 = " << YO2t1 << "   YOH = " << YOHt1 << endl;
     
-    /*
-    vector<string> labels = readLabels(pathProject, "/inputs/HomogeneousGasPhase/Kraftrun3/", "labels.txt" );
-    
-    vector<vector<double> > dataArray = readDataArray(pathProject, "/inputs/HomogeneousGasPhase/Kraftrun3/", "data.txt", "labels.txt");
-    
-    //int indext(0);
-    int indexT = dataIndex(labels, "T");
-    int indexYO2 = dataIndex(labels, "YO2");
-    int indext = dataIndex(labels, "t");
-    int indexYC2H2 = dataIndex(labels, "YC2H2");
-    
-    
-    cout << endl;
-    
-    for(i=0; i<10;i++)
-    {
-        cout << "t = " << dataArray[i][indext] << "   T = " << dataArray[i][indexT] << "   YO2 = " << dataArray[i][indexYO2]<< "   YC2H2 = " << dataArray[i][indexYC2H2] << endl;
-    }
-    */
-    
     
     
     
@@ -208,7 +189,11 @@ int main()
     psd1.calcAndSetAllNv();
     psd1.showPsd();
     
+    Psd* psdPtr = &psd1;
+    HomogeneousGasPhase* gasPtr = &gasPhase;
     
+    SootSourceTerm source = SootSourceTerm(gasPtr, psdPtr);
+    source.showBoltzmann();
     
     
     int j;
